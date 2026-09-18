@@ -170,17 +170,17 @@ class FounderDiscoverScreen extends StatelessWidget {
                        Padding(
                          padding: const EdgeInsets.all(24.0),
                          child: Column(children: [
-                           const Row(
+                            Row(
                              children: [
                                Text(
-                                 '132 investors found',
-                                 style: TextStyle(
+                                 '${discoverFounderController.needsAttentionList.length} founders found',
+                                 style: const TextStyle(
                                    color: AppColors.darkGreyColor,
                                    fontSize: 12,
                                  ),
                                ),
                                Spacer(),
-                               Text(
+                               const Text(
                                  'Sort by:',
                                  style: TextStyle(
                                    color: AppColors.darkGreyColor,
@@ -188,14 +188,14 @@ class FounderDiscoverScreen extends StatelessWidget {
                                  ),
                                ),
                                SizedBox(width: 5),
-                               Text(
+                               const Text(
                                  'Relevance',
                                  style: TextStyle(
                                    color: AppColors.whiteColor,
                                    fontSize: 12,
                                  ),
                                ),
-                               Icon(
+                               const Icon(
                                  Icons.keyboard_arrow_down,
                                  color: AppColors.darkGreyColor,
                                  size: 17,
@@ -207,10 +207,10 @@ class FounderDiscoverScreen extends StatelessWidget {
                            ),
                            ListView.builder(
                              shrinkWrap: true,
-                             physics: NeverScrollableScrollPhysics(),
-                             itemCount: investors.length,
+                             physics: const NeverScrollableScrollPhysics(),
+                             itemCount: discoverFounderController.founderList.length,
                              itemBuilder: (context, index) {
-                               final investor = investors[index];
+                               final founder = discoverFounderController.founderList[index];
                                return GestureDetector(
                                  onTap: () {
                                    discoverFounderController.clickFounderDetails();
@@ -225,12 +225,12 @@ class FounderDiscoverScreen extends StatelessWidget {
                                          color: const Color(0xFF292929), width: 1),
                                    ),
                                    child: InvestorWidget(
-                                       name: investor['name']?.toString() ?? '',
-                                       type: investor['type']?.toString() ?? '',
-                                       location: investor['location']?.toString() ?? '',
-                                       investment: investor['raising']?.toString() ?? '',
-                                       stage: investor['timeLine']?.toString() ?? '',
-                                       logo: investor['logo']?.toString() ?? '',
+                                       name: founder.firstName,
+                                       type:  '',
+                                       location: founder.currentLocation,
+                                       investment: founder.preferredInvestment,
+                                       stage: founder.preferredStage,
+                                       logo:  'M',
                                        controller: discoverFounderController,
                                        context: context),
                                  ),

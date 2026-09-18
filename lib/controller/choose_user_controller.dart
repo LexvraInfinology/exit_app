@@ -22,11 +22,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/dashoard_screen/investor_dashboard_screen/investor_dashboard_screen.dart';
 import '../screens/phone_number_screen.dart';
+import 'investor_dashboard_controller.dart';
 
 class ChooseUserController extends GetxController {
   final RxInt selectedIndex = 0.obs;
   var isLoading = false.obs;
   final ApiServices apiServices = ApiServices();
+  final investorHomeController = Get.put(InvestorDashboardController());
   final SharedPreferences prefs = Get.find<SharedPreferences>();
   final List<MarketplaceIndustry> industriesList = <MarketplaceIndustry>[];
   final List<MarketplaceIndustry> stagesList = <MarketplaceIndustry>[];
@@ -444,7 +446,6 @@ class ChooseUserController extends GetxController {
       print("Message: ${response?.message}");
 
       if (response?.status_code == 200) {
-        isLoading.value = false;
         Get.snackbar(
           'Success',
           response?.message ?? 'OTP verify successfully',
@@ -458,6 +459,9 @@ class ChooseUserController extends GetxController {
         print('objectempty ${prefs.getString('token')}');
 
         if (prefs.getString('token') != null) {
+          if(response?.data?.user?.role == 'investor'){
+            await investorHomeController.loadHomePage();
+          }
           response?.data?.user?.role == 'investor'
               ? Get.to(() => InvestorDashBoardScreen())
               : response?.data?.user?.role == 'founder'
@@ -481,6 +485,7 @@ class ChooseUserController extends GetxController {
           colorText: AppColors.whiteColor,
         );
       }
+      isLoading.value = false;
     } catch (e) {
       isLoading.value = false;
       Get.snackbar(
@@ -700,6 +705,7 @@ class ChooseUserController extends GetxController {
           backgroundColor: AppColors.blackColor,
           colorText: AppColors.whiteColor,
         );
+       await investorHomeController.loadHomePage();
         Get.to(() =>  InvestorDashBoardScreen());
       } else {
         isLoading.value = false;
