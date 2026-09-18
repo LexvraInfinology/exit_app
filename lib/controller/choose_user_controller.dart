@@ -211,8 +211,11 @@ class ChooseUserController extends GetxController {
     if (selectedIndex.value == 0) {
       clickCreateProfileInvestor();
     } else if (selectedIndex.value == 1) {
+
+      phoneNumberController.text='';
+      otpControllers.clear();
       createProfileApi();
-      getPlanApi();
+
     } else {
       Get.to(() => const ChoosePlanScreen());
     }
@@ -545,6 +548,7 @@ class ChooseUserController extends GetxController {
   }
 
   Future<void> createProfileApi() async {
+
     final first_name = firstNameController.value.text.trim();
     final last_name = lastNameController.value.text.trim();
     final email = emailController.value.text.trim();
@@ -605,7 +609,9 @@ class ChooseUserController extends GetxController {
           backgroundColor: AppColors.blackColor,
           colorText: AppColors.whiteColor,
         );
-          Get.to(() => const ChoosePlanScreen());
+        Get.to(() => const ChoosePlanScreen());
+        getPlanApi();
+
       } else {
         isLoading.value = false;
         Get.snackbar(
@@ -750,7 +756,6 @@ class ChooseUserController extends GetxController {
   Future<void> getMarketplaceStagesApi() async {
     try {
       isLoading.value = true;
-
       final MarketplaceIndustriesResponse? response =
       await apiServices.getMarketplaceStagesApi();
 
@@ -779,7 +784,6 @@ class ChooseUserController extends GetxController {
 
         planList.assignAll(response?.data ?? []);
 
-        print("Plan List Length: ${planList.length}");
         Get.snackbar(
           'Success',
           response?.message ?? 'Plan fetch successfully',
@@ -832,6 +836,8 @@ class ChooseUserController extends GetxController {
           backgroundColor: AppColors.blackColor,
           colorText: AppColors.whiteColor,
         );
+        prefs.setString('plan_credit','' );
+        prefs.setString('plan_name','' );
         Get.to(() => FounderDashboardScreen());
       } else {
         isLoading.value = false;

@@ -8,11 +8,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../api_utils/api_services.dart';
+import '../models/marketplace_Industries_model.dart';
+
 class RaiseFundsRequestController extends GetxController {
   RxInt currentStep = 0.obs;
 
   final ImagePicker _picker = ImagePicker();
   final Rxn<File> selectedImage = Rxn<File>();
+  var isLoading = false.obs;
+  final ApiServices apiServices = ApiServices();
+  final List<MarketplaceIndustry> purposeList = <MarketplaceIndustry>[];
+  final List<MarketplaceIndustry> stageList = <MarketplaceIndustry>[];
 
   final TextEditingController amountController =
   TextEditingController();
@@ -21,8 +28,6 @@ class RaiseFundsRequestController extends GetxController {
   void changeIndustry(String value) {
     industry.value = value;
   }
-
-
 
   final List<String> purposes = [
     'Expansion',
@@ -47,6 +52,20 @@ class RaiseFundsRequestController extends GetxController {
   void selectInvestor(int index) {
     selectedInvestor.value = index;
   }
+
+  @override
+  void onInit() {
+    super.onInit();
+
+  }
+
+  Future<void> loadApi() async {
+    isLoading.value = true;
+    await getMarketplaceStagesApi();
+    await  getFundsRaisePurposeApi();
+    isLoading.value = false;
+  }
+
 
   void postSubmitButton(){
     Get.to(() =>  PostSuccefullyCreatedScreen());
@@ -151,6 +170,46 @@ class RaiseFundsRequestController extends GetxController {
       print('PDF path: ${file.path}');
     }
   }
+
+
+  Future<void> getFundsRaisePurposeApi() async {
+    try {
+      isLoading.value = true;
+
+      final MarketplaceIndustriesResponse? response =
+      await apiServices.getFundsRaisePurposeApi();
+
+      if (response?.statusCode == 200) {
+        purposeList.assignAll(response?.data ?? []);
+      } else {
+        Get.snackbar('Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      print('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> getMarketplaceStagesApi() async {
+    try {
+      isLoading.value = true;
+      final MarketplaceIndustriesResponse? response =
+      await apiServices.getMarketplaceStagesApi();
+      if (response?.statusCode == 200) {
+        purposeList.assignAll(response?.data ?? []);
+      } else {
+        Get.snackbar('Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      print('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
 }
 
 
