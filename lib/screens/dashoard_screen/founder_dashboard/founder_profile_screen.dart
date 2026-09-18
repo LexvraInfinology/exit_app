@@ -1,6 +1,7 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/controller/founder_dashboard_controller.dart';
 import 'package:exit_app/screens/dashoard_screen/founder_dashboard/widgets/settings_row_widget.dart';
+import 'package:exit_app/screens/notification_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -46,9 +47,7 @@ class FounderProfileScreen extends StatelessWidget {
                   ),
                   const Spacer(),
                   IconButton(
-                    onPressed: () {
-                      profileController.clickNotification();
-                    },
+                    onPressed: (){Get.to(const NotificationScreen());},
                     icon: const Icon(
                       Icons.notifications_none_rounded,
                       size: 32,
@@ -662,9 +661,7 @@ class FounderProfileScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             GestureDetector(
-                              onTap: () {
-                                profileController.clickNotification();
-                              },
+                              onTap: (){Get.to(const NotificationScreen());},
                               child: SettingsRowWidget(
                                   icon: Icons.notifications_none_rounded,
                                   title: 'Notifications',

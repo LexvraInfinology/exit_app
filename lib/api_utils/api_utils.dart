@@ -17,6 +17,9 @@ class ApiUtils{
   static const String getUserProfile = '$baseUrl/accounts/users/';
   static const String getAllPurposeApi = '$baseUrl/marketplace/purposes/';
   static const String logoutApi = '$baseUrl/auth/logout/';
-
-
+  static const String marketplaceIndustriesApi = '$baseUrl/marketplace/industries/';
+  static const String marketplaceStagesApi = '$baseUrl/marketplace/stages/';
+  static const String needsAttentionApi = '$baseUrl/investor/dashboard/needs-attention/';
+  static const String needsAttentionAllApi = '$baseUrl/investor/dashboard/needs-attention/all/';
+  static const String founderDiscoveryApi = '$baseUrl/profiles/founder-discovery/';
 }

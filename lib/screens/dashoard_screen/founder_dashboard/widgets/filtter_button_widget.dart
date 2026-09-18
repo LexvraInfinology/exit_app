@@ -2,6 +2,120 @@ import 'package:exit_app/constants/app_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:exit_app/controller/investor_dashboard_controller.dart';
+import 'package:get/get.dart';
+
+
+
+
+class FilterListWidget extends StatelessWidget {
+
+  final BuildContext buildContext;
+  final String? text;
+  final IconData? icon;
+  final bool showArrow;
+  final List<FilterListModel> items;
+  final void Function(String)? onTap;
+  final Color backgroundColor;
+  final double fadeWidth;
+
+  const FilterListWidget({
+    super.key,
+    required this.backgroundColor,
+    this.onTap,
+    this.fadeWidth = 60,
+    this.text,
+    this.icon,
+    required this.items,
+    required this.buildContext,
+    required this.showArrow
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.put(InvestorDashboardController(), tag: UniqueKey().toString());
+    return SizedBox(
+      height: 44,
+      child: Stack(
+        children: [
+          ListView.separated(
+            controller: controller.scrollController,
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            itemCount: items.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 10),
+            itemBuilder: (context, index) {
+              final label = items[index].title;
+              return FilterButtonWidget(context: buildContext, showArrow: showArrow, options: items[index].options,text: label,icon: icon);
+            },
+          ),
+          // ---- Left fade overlay ----
+          Positioned(
+            left: 0,
+            top: 0,
+            bottom: 0,
+            child: IgnorePointer(
+              child: Obx(
+                    () => AnimatedOpacity(
+                  duration: const Duration(milliseconds: 120),
+                  opacity: controller.leftOpacity.value,
+                  child: Container(
+                    width: fadeWidth,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        stops: const [0.0, 0.5, 1.0],
+                        colors: [
+                          backgroundColor,
+                          backgroundColor.withOpacity(0.6),
+                          backgroundColor.withOpacity(0.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // ---- Right fade overlay ----
+          Positioned(
+            right: 0,
+            top: 0,
+            bottom: 0,
+            child: IgnorePointer(
+              child: Obx(
+                    () => AnimatedOpacity(
+                  duration: const Duration(milliseconds: 120),
+                  opacity: controller.rightOpacity.value,
+                  child: Container(
+                    width: fadeWidth,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.centerRight,
+                        end: Alignment.centerLeft,
+                        stops: const [0.0, 0.5, 1.0],
+                        colors: [
+                          backgroundColor,
+                          backgroundColor.withOpacity(0.6),
+                          backgroundColor.withOpacity(0.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
 
 Widget FilterButtonWidget({
   required BuildContext context,
@@ -146,3 +260,11 @@ void showFilterPopup(
 //     ),
 //   );
 // }
+
+class FilterListModel {
+  String title;
+  List<String> options;
+
+  FilterListModel({required this.title,required this.options, });
+}
+

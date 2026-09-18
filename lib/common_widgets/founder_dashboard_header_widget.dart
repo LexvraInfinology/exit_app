@@ -1,7 +1,8 @@
 import 'package:exit_app/controller/investor_dashboard_controller.dart';
+import 'package:exit_app/screens/notification_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import '../constants/app_images.dart';
 import '../controller/founder_dashboard_controller.dart';
 
@@ -24,11 +25,11 @@ Widget FounderHeaderWidget(FounderDashboardController dashboardController) {
       const Spacer(),
 
       GestureDetector(
-        onTap: (){dashboardController.clickNotification();},
+        onTap: (){Get.to(const NotificationScreen());},
         child: Container(
           width: 42,
           height: 42,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.transparent,
           ),

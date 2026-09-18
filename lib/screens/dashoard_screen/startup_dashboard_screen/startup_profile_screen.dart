@@ -1,4 +1,5 @@
 import 'package:exit_app/controller/startUp_dashboard_controller.dart';
+import 'package:exit_app/screens/notification_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,9 +44,7 @@ class StartUpProfileScreen extends StatelessWidget {
                   ),
                   const Spacer(),
                   IconButton(
-                    onPressed: () {
-                      controller.clickNotification();
-                    },
+                    onPressed: (){Get.to(const NotificationScreen());},
                     icon: const Icon(
                       Icons.notifications_none_rounded,
                       size: 32,

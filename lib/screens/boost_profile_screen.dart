@@ -1,5 +1,6 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/controller/boost_profile_controller.dart';
+import 'package:exit_app/screens/notification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -67,7 +68,7 @@ class BoostProfileScreen extends StatelessWidget {
                           ),
                         ),
                         _headerAction(
-                          onTap: controller.clickNotificationIcon,
+                          onTap: (){Get.to(const NotificationScreen());},
                           icon: const Icon(
                             Icons.notifications_none_rounded,
                             size: 36,

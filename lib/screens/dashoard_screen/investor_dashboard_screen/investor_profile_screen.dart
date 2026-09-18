@@ -1,5 +1,6 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/controller/investor_dashboard_controller.dart';
+import 'package:exit_app/screens/notification_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,7 +44,7 @@ class InvestorProfileScreen extends StatelessWidget {
                   ),
                   const Spacer(),
                   IconButton(
-                    onPressed: () {profileController.clickNotification();},
+                    onPressed: (){Get.to(const NotificationScreen());},
                     icon: const Icon(
                       Icons.notifications_none_rounded,
                       size: 32,

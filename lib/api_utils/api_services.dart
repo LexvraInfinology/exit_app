@@ -1,9 +1,13 @@
 import 'dart:convert';
 
 import 'package:exit_app/models/create_profile_model.dart';
+import 'package:exit_app/models/founder_discovery_response.dart';
 import 'package:exit_app/models/get_plan_model.dart';
 import 'package:exit_app/models/profile_model.dart';
+import 'package:exit_app/models/marketplace_Industries_model.dart';
+import 'package:exit_app/models/need_attention_response.dart';
 import 'package:exit_app/models/saved_investor_model.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
@@ -29,9 +33,9 @@ class ApiServices {
       },
       body: jsonEncode(data),
     );
-    print("API URL: $url");
-    print("Status Code: ${response.statusCode}");
-    print("Response Body: ${response.body}");
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
@@ -52,9 +56,9 @@ class ApiServices {
       },
       body: jsonEncode(data),
     );
-    print("API URL: $url");
-    print("Status Code: ${response.statusCode}");
-    print("Response Body: ${response.body}");
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
@@ -66,7 +70,7 @@ class ApiServices {
   Future<CreateProfileModel?> createProfileApi(String first_name,
       String last_name, String email, String current_location) async {
     final token = prefs.getString('token');
-    print('object${token}');
+    debugPrint('object${token}');
     final Uri url = Uri.parse(ApiUtils.createProfileApi);
     var data = {
       "first_name": first_name,
@@ -84,15 +88,109 @@ class ApiServices {
       },
       body: jsonEncode(data),
     );
-    print("API URL: $url");
-    print("Status Code: ${response.statusCode}");
-    print("Response Body: ${response.body}");
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
       getPlanApi();
       return CreateProfileModel.fromJson(jsonResponse);
     }
+  }
+
+
+  Future<CreateProfileModel?> setYourPreferencesApi(
+      String firstName,
+      String lastName,
+      String email,
+      String location,
+      String preferredInvestment,
+      String preferredStage,
+      String preferredIndustries,
+      String preferredLocation,
+      ) async {
+    final token = prefs.getString('token');
+    debugPrint('object${token}');
+    final Uri url = Uri.parse(ApiUtils.createProfileApi);
+    var data = {
+      "first_name": firstName,
+      "last_name": lastName,
+      "email": email,
+      "current_location": location,
+      "preferred_investment": preferredInvestment,
+      "preferred_stage": preferredStage,
+      "preferred_industries": preferredIndustries,
+      "preferred_location": preferredLocation
+    };
+
+    final response = await http.post(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+      body: jsonEncode(data),
+    );
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      getPlanApi();
+      return CreateProfileModel.fromJson(jsonResponse);
+    }
+  }
+
+  Future<MarketplaceIndustriesResponse?> getMarketplaceIndustriesApi() async {
+    final token = prefs.getString('token');
+
+    final Uri url = Uri.parse(ApiUtils.marketplaceIndustriesApi);
+
+    final response = await http.get(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      return MarketplaceIndustriesResponse.fromJson(jsonResponse);
+    }
+  }
+
+  Future<MarketplaceIndustriesResponse?> getMarketplaceStagesApi() async {
+    final token = prefs.getString('token');
+
+    final Uri url = Uri.parse(ApiUtils.marketplaceStagesApi);
+
+    final response = await http.get(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      return MarketplaceIndustriesResponse.fromJson(jsonResponse);
+    }
+    return null;
   }
 
   Future<GetPlanModel?> getPlanApi() async {
@@ -108,21 +206,22 @@ class ApiServices {
         "Authorization": "token $token",
       },
     );
-    print("API URL: $url");
-    print("Status Code: ${response.statusCode}");
-    print("Response Body: ${response.body}");
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
       return GetPlanModel.fromJson(jsonResponse);
     }
+    return null;
   }
 
   Future<BuyPlanModel?> payPlanApi(String plan_id, String mock_payment_success,
       String payment_reference) async {
     final token = prefs.getString('token');
-    print('object${token}');
+    debugPrint('object${token}');
     final Uri url = Uri.parse(ApiUtils.payPlanApi);
     var data = {
       "plan_id": plan_id,
@@ -139,15 +238,16 @@ class ApiServices {
       },
       body: jsonEncode(data),
     );
-    print("API URL: $url");
-    print("Status Code: ${response.statusCode}");
-    print("Response Body: ${response.body}");
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
       getPlanApi();
       return BuyPlanModel.fromJson(jsonResponse);
     }
+    return null;
   }
 
   Future<GetInvestorListModel?> getInvestorListApi() async {
@@ -161,14 +261,15 @@ class ApiServices {
         "Authorization": "token $token",
       },
     );
-    print("API URL: $url");
-    print("Status Code: ${response.statusCode}");
-    print("Response Body: ${response.body}");
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
       return GetInvestorListModel.fromJson(jsonResponse);
     }
+    return null;
   }
 
   Future<SavedInvestorModel?> savedInvestorApi(
@@ -176,7 +277,7 @@ class ApiServices {
   )
   async {
     final token = prefs.getString('token');
-    print('object${token}');
+    debugPrint('object${token}');
     final Uri url = Uri.parse(ApiUtils.savedInvestorApi);
     var data = {"investor_id": investor_id};
 
@@ -189,15 +290,16 @@ class ApiServices {
       },
       body: jsonEncode(data),
     );
-    print("API URL: $url");
-    print("Status Code: ${response.statusCode}");
-    print("Response Body: ${response.body}");
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
 
     if (response.statusCode == 201) {
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
       return SavedInvestorModel.fromJson(jsonResponse);
     }
+    return null;
   }
 
   Future<SavedInvestorModel?> removeInvestorApi(
@@ -205,7 +307,7 @@ class ApiServices {
   )
   async {
     final token = prefs.getString('token');
-    print('object${token}');
+    debugPrint('object${token}');
 
     final Uri url = Uri.parse(
       '${ApiUtils.removeInvestorApi}/$investor_id/',
@@ -218,9 +320,9 @@ class ApiServices {
         "Authorization": "token $token",
       },
     );
-    print("API URL: $url");
-    print("Status Code: ${response.statusCode}");
-    print("Response Body: ${response.body}");
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
 
     if (response.statusCode == 201) {
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
@@ -257,4 +359,100 @@ class ApiServices {
       return ProfileModel.fromJson(jsonResponse);
     }
   }
+
+  // Investor Home Apis
+
+
+  Future<NeedsAttentionResponse?> getNeedsAttentionApi({int? limit}) async {
+    final token = prefs.getString('token');
+
+    final Uri url = Uri.parse(ApiUtils.needsAttentionApi).replace(
+      queryParameters: limit != null ? {'limit': '$limit'} : null,
+    );
+
+    final response = await http.get(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final dynamic decoded = jsonDecode(response.body);
+      return NeedsAttentionResponse.fromJson(decoded);
+    }
+    return null;
+  }
+
+
+  Future<NeedsAttentionAllResponse?> getNeedsAttentionAllApi() async {
+    final token = prefs.getString('token');
+
+    final Uri url = Uri.parse(ApiUtils.needsAttentionAllApi);
+
+    final response = await http.get(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      return NeedsAttentionAllResponse.fromJson(jsonResponse);
+    }
+    return null;
+  }
+
+
+  Future<FounderDiscoveryResponse?> getFounderDiscoveryApi({
+    int? limit,
+    int? page,
+    String? view, // pass 'all' for the full paginated list
+  }) async {
+    final token = prefs.getString('token');
+
+    final Map<String, String> queryParams = {};
+    if (limit != null) queryParams['limit'] = '$limit';
+    if (page != null) queryParams['page'] = '$page';
+    if (view != null) queryParams['view'] = view;
+
+    final Uri url = Uri.parse(ApiUtils.founderDiscoveryApi).replace(
+      queryParameters: queryParams.isNotEmpty ? queryParams : null,
+    );
+
+    final response = await http.get(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      return FounderDiscoveryResponse.fromJson(jsonResponse);
+    }
+    return null;
+  }
+
 }
+
+
+
+
+

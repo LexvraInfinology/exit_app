@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:exit_app/api_utils/api_services.dart';
+import 'package:exit_app/models/founder_discovery_response.dart';
+import 'package:exit_app/models/need_attention_response.dart';
 import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/founder_details_screen.dart';
 import 'package:exit_app/screens/edit_profile_screen.dart';
 import 'package:exit_app/screens/help_and_support_screen.dart';
@@ -13,12 +18,66 @@ import '../constants/app_color.dart';
 import '../constants/app_images.dart';
 import '../screens/chat_details_screen.dart';
 
-class InvestorDashboardController extends GetxController{
-
-
+class InvestorDashboardController extends GetxController {
   RxInt selectedIndex = 0.obs;
   int selectedFilter = 0;
 
+  final ApiServices apiServices = ApiServices();
+
+  final RxBool isLoading = false.obs;
+  final RxList<NeedsAttentionItem> needsAttentionList =
+      <NeedsAttentionItem>[].obs;
+  final RxList<FounderProfile> founderList = <FounderProfile>[].obs;
+  final RxList<NeedsAttentionItem> needsAttentionAllList =
+      <NeedsAttentionItem>[].obs;
+
+  final ScrollController scrollController = ScrollController();
+
+  final RxDouble leftOpacity = 0.0.obs;
+  final RxDouble rightOpacity = 0.0.obs;
+
+  double _lastPixels = 0;
+  Timer? _stopTimer;
+
+  static const double normalOpacity = 0.0;
+  static const double scrollingOpacity = 1.0;
+  static const Duration stopDelay = Duration(milliseconds: 150);
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadHomePage();
+    scrollController.addListener(_onScroll);
+  }
+
+  Future<void> loadHomePage() async {
+   isLoading.value = true;
+   await getNeedsAttentionApi();
+   await  getNeedsAttentionAllApi();
+   await  getFounderDiscoveryApi();
+   isLoading.value = false;
+  }
+
+
+  void _onScroll() {
+    if (!scrollController.hasClients) return;
+    final currentPixels = scrollController.position.pixels;
+    if (currentPixels < _lastPixels) {
+      rightOpacity.value = scrollingOpacity;
+      leftOpacity.value = normalOpacity;
+    } else if (currentPixels > _lastPixels) {
+      leftOpacity.value = scrollingOpacity;
+      rightOpacity.value = normalOpacity;
+    }
+
+    _lastPixels = currentPixels;
+
+    _stopTimer?.cancel();
+    _stopTimer = Timer(stopDelay, () {
+      leftOpacity.value = normalOpacity;
+      rightOpacity.value = normalOpacity;
+    });
+  }
 
   void onItemSelected(int index) {
     selectedIndex.value = index;
@@ -31,6 +90,7 @@ class InvestorDashboardController extends GetxController{
   void clickFounderDetails() {
     Get.to(() => FounderDetailsScreen());
   }
+
   void clickInvestmentDetails() {
     Get.to(() => ViewInvestmentDetailsScreen());
   }
@@ -38,6 +98,7 @@ class InvestorDashboardController extends GetxController{
   void clickChatItem() {
     Get.to(() => ChatDetailsScreen());
   }
+
   void clickEditProfile() {
     Get.to(() => EditProfileScreen());
   }
@@ -45,9 +106,11 @@ class InvestorDashboardController extends GetxController{
   void clickNotification() {
     Get.to(() => NotificationListScreen());
   }
+
   void clickPrivacyPolicy() {
     Get.to(() => PrivacyPolicyScreen());
   }
+
   void clickHelpAndSupport() {
     Get.to(() => HelpAndSupportScreen());
   }
@@ -106,9 +169,7 @@ class InvestorDashboardController extends GetxController{
                           ),
                         ),
                       ),
-
                       const SizedBox(width: 12),
-
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -118,8 +179,11 @@ class InvestorDashboardController extends GetxController{
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child:  Text("Log Out",
-                            style: GoogleFonts.montserrat(fontWeight: FontWeight.w600), ),
+                          child: Text(
+                            "Log Out",
+                            style: GoogleFonts.montserrat(
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ),
                     ],
@@ -133,5 +197,91 @@ class InvestorDashboardController extends GetxController{
     );
   }
 
+  Future<void> getNeedsAttentionApi() async {
+    try {
+      isLoading.value = true;
+      final response = await apiServices.getNeedsAttentionApi(limit: 4);
+      if (response != null) {
+        needsAttentionList.assignAll(response.data);
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
+  Future<void> getNeedsAttentionAllApi() async {
+    try {
+      isLoading.value = true;
+
+      final NeedsAttentionAllResponse? response =
+          await apiServices.getNeedsAttentionAllApi();
+
+      debugPrint("Status Code: ${response?.statusCode}");
+      debugPrint("Message: ${response?.message}");
+
+      if (response?.statusCode == 200) {
+        needsAttentionAllList.assignAll(response?.data ?? []);
+        debugPrint(
+            "Needs Attention All List Length: ${needsAttentionAllList.length}");
+
+        Get.snackbar(
+          'Success',
+          response?.message ?? 'Conversations fetched successfully',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: AppColors.blackColor,
+          colorText: AppColors.whiteColor,
+        );
+      } else {
+        Get.snackbar(
+          'Fetch Failed',
+          response?.message ?? 'Failed to fetch conversations',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: AppColors.blackColor,
+          colorText: AppColors.whiteColor,
+        );
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar(
+        'Error',
+        'Something went wrong. Please try again.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.blackColor,
+        colorText: AppColors.whiteColor,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> getFounderDiscoveryApi({bool viewAll = false}) async {
+    try {
+      isLoading.value = true;
+      final response = await apiServices.getFounderDiscoveryApi(
+        limit: 5,
+        view: viewAll ? 'all' : null,
+      );
+      if (response?.statusCode == 200) {
+        founderList.assignAll(response!.data.results);
+      } else {
+        Get.snackbar('Failed', response?.message ?? 'Something went wrong');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  @override
+  void onClose() {
+    _stopTimer?.cancel();
+    scrollController.removeListener(_onScroll);
+    scrollController.dispose();
+    super.onClose();
+  }
 }

@@ -11,6 +11,9 @@ class AppImages {
   static const String OTPVerifyImage = 'assets/images/otp_verify_image.png';
   static const String createProfileImage =
       'assets/images/create_profile_image.png';
+  static const String setPrefrenceImage =
+      'assets/images/set_prefrence_image.png';
+
   static const String backIcon = 'assets/images/back_icon.png';
   static const String listIcon = 'assets/images/list_icon.png';
   static const String selectedHomeIcon = 'assets/images/selected_home_icon.png';
