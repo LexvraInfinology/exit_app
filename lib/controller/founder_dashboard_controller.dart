@@ -2,6 +2,7 @@ import 'package:exit_app/models/get_investor_list_model.dart';
 import 'package:exit_app/screens/boost_profile_screen.dart';
 import 'package:exit_app/screens/chat_details_screen.dart';
 import 'package:exit_app/screens/edit_profile_screen.dart';
+import 'package:exit_app/screens/phone_number_screen.dart';
 import 'package:exit_app/screens/post_details_screen.dart';
 import 'package:exit_app/screens/raise_funds_screen/create_funds_request_screen.dart';
 import 'package:exit_app/screens/dashoard_screen/founder_dashboard/funding_request_list_screen.dart';
@@ -16,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../api_utils/api_services.dart';
 import '../constants/app_color.dart';
 import '../constants/app_images.dart';
+import '../models/profile_model.dart';
 import '../screens/help_and_support_screen.dart';
 import '../screens/notification_list_screen.dart';
 import '../screens/plan_details_screen.dart';
@@ -35,12 +37,15 @@ class FounderDashboardController extends GetxController {
 
   var savedItems = <int, bool>{}.obs;
 
+  ResultsProfile resultsProfile = new ResultsProfile();
   final RxList<Results> investorList = <Results>[].obs;
+  final RxList<ResultsProfile> resultProfile = <ResultsProfile>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     getInvestorListApi();
+    getuserProfileApi(prefs.getString('id').toString());
   }
 
   void onItemSelected(int index) {
@@ -425,7 +430,9 @@ class FounderDashboardController extends GetxController {
                             foregroundColor: AppColors.blackColor,
                           ),
                           onPressed: () {
-                            Navigator.pop(context);
+                            prefs.clear();
+                            Get.offAll(() => const PhoneNumberScreen(),);
+                            
                           },
                           child: Text(
                             "Log Out",
@@ -638,6 +645,48 @@ class FounderDashboardController extends GetxController {
       }
       getInvestorListApi();
       update();
+    } catch (e) {
+      isLoading.value = false;
+      Get.snackbar(
+        'Error',
+        'Something went wrong. Please try again.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.blackColor,
+        colorText: AppColors.whiteColor,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> getuserProfileApi(String id) async {
+    try {
+      isLoading.value = true;
+      final response = await apiServices.getUserProfileApi(id);
+      print("Status Code: ${response?.statusCode}");
+      print("Message: ${response?.message}");
+      if (response?.statusCode == 200) {
+        isLoading.value = false;
+        // Get.snackbar(
+        //   'Success',
+        //   response?.message ?? 'Profile fetch successfully',
+        //   snackPosition: SnackPosition.TOP,
+        //   backgroundColor: AppColors.blackColor,
+        //   colorText: AppColors.whiteColor,
+        // );
+      } else {
+        isLoading.value = false;
+        // Get.snackbar(
+        //   'Error ',
+        //   response?.message ?? 'Profile fetch failed',
+        //   snackPosition: SnackPosition.TOP,
+        //   backgroundColor: AppColors.blackColor,
+        //   colorText: AppColors.whiteColor,
+        // );
+      }
+
+      resultProfile.value = response?.data!.results ?? [];
+      print('click dat ${resultProfile.single.firstName}');
     } catch (e) {
       print('object ${e}');
       isLoading.value = false;

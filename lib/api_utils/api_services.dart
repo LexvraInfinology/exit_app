@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:exit_app/models/create_profile_model.dart';
 import 'package:exit_app/models/get_plan_model.dart';
+import 'package:exit_app/models/profile_model.dart';
 import 'package:exit_app/models/saved_investor_model.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -225,6 +226,35 @@ class ApiServices {
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
       return SavedInvestorModel.fromJson(jsonResponse);
+    }
+  }
+
+  Future<ProfileModel?> getUserProfileApi(
+    String id,
+  )
+  async {
+    final token = prefs.getString('token');
+    print('object${token}');
+
+    final Uri url = Uri.parse(
+      '${ApiUtils.getUserProfile}',
+    );
+
+    final response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    print("API URL: $url");
+    print("Status Code: ${response.statusCode}");
+    print("Response Body: ${response.body}");
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      return ProfileModel.fromJson(jsonResponse);
     }
   }
 }

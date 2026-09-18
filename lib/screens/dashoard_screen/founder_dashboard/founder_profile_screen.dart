@@ -10,6 +10,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../constants/app_images.dart';
 
 class FounderProfileScreen extends StatelessWidget {
+  const FounderProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<FounderDashboardController>(builder: (profileController) {
@@ -114,12 +116,16 @@ class FounderProfileScreen extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Aarav Mehta',
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.whiteColor),
+                                  Obx(
+                                    () => Text(
+                                      profileController.resultProfile.isNotEmpty
+                                          ? '${profileController.resultProfile.first.firstName} ${profileController.resultProfile.first.lastName}'
+                                          : '',
+                                      style: GoogleFonts.montserrat(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.whiteColor),
+                                    ),
                                   ),
                                   const SizedBox(height: 3),
                                   Text(
@@ -130,23 +136,30 @@ class FounderProfileScreen extends StatelessWidget {
                                       color: AppColors.darkGreyColor,
                                     ),
                                   ),
-                                  SizedBox(height: 4),
+                                  const SizedBox(height: 4),
                                   Row(
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.location_on_outlined,
                                         size: 14,
                                         color: AppColors.darkGreyColor,
                                       ),
-                                      SizedBox(width: 3),
-                                      Text(
-                                        'Mohali',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.darkGreyColor,
-                                        ),
-                                      ),
+                                      const SizedBox(width: 3),
+                                      Obx(() => Text(
+                                            profileController
+                                                    .resultProfile.isNotEmpty
+                                                ? profileController
+                                                        .resultProfile
+                                                        .first
+                                                        .currentLocation ??
+                                                    ''
+                                                : '',
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.darkGreyColor,
+                                            ),
+                                          )),
                                     ],
                                   ),
                                   const SizedBox(height: 8),
@@ -378,13 +391,17 @@ class FounderProfileScreen extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                      Text(
-                        'Founder and product builder focused on building technology that solves real business problems.',
-                        style: GoogleFonts.montserrat(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.darkGreyColor,
-                          height: 1.7,
+                      Obx(
+                        () => Text(
+                          profileController.resultProfile.isNotEmpty
+                              ? profileController.resultProfile.first.bio ?? ''
+                              : '',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.darkGreyColor,
+                            height: 1.7,
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -497,7 +514,7 @@ class FounderProfileScreen extends StatelessWidget {
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500),
                                     ),
-                                     Text(
+                                    Text(
                                       'Current Stage',
                                       style: GoogleFonts.montserrat(
                                           color: AppColors.darkGreyColor,
@@ -521,20 +538,21 @@ class FounderProfileScreen extends StatelessWidget {
                                   color: AppColors.containerBackgroundColor,
                                   borderRadius: BorderRadius.circular(11),
                                   border: Border.all(
-                                      color: AppColors.containerBorderColor, width: 1),
+                                      color: AppColors.containerBorderColor,
+                                      width: 1),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                     Text(
+                                    Text(
                                       '2-10',
                                       style: GoogleFonts.montserrat(
                                           color: AppColors.whiteColor,
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500),
                                     ),
-                                     Text(
+                                    Text(
                                       'Team Size',
                                       style: GoogleFonts.montserrat(
                                           color: AppColors.darkGreyColor,
@@ -566,7 +584,7 @@ class FounderProfileScreen extends StatelessWidget {
                                 children: [
                                   Row(
                                     children: [
-                                       Text(
+                                      Text(
                                         'Current Plan',
                                         style: GoogleFonts.montserrat(
                                           fontSize: 14,
@@ -587,7 +605,7 @@ class FounderProfileScreen extends StatelessWidget {
                                         ),
                                         child: Text(
                                           'SCALE',
-                                          style:  GoogleFonts.montserrat(
+                                          style: GoogleFonts.montserrat(
                                             fontSize: 12,
                                             color: AppColors.whiteColor,
                                           ),
@@ -596,13 +614,12 @@ class FounderProfileScreen extends StatelessWidget {
                                     ],
                                   ),
                                   const SizedBox(height: 6),
-                                   Text(
+                                  Text(
                                     '100 credits remaining',
                                     style: GoogleFonts.montserrat(
-                                      fontSize: 15,
-                                      color: AppColors.whiteColor,
-                                      fontWeight: FontWeight.w500
-                                    ),
+                                        fontSize: 15,
+                                        color: AppColors.whiteColor,
+                                        fontWeight: FontWeight.w500),
                                   ),
                                 ],
                               ),
@@ -622,8 +639,8 @@ class FounderProfileScreen extends StatelessWidget {
                                 ),
                                 child: Text(
                                   'Manage Plan',
-                                  style:  GoogleFonts.montserrat(
-                                    color:AppColors.blackColor,
+                                  style: GoogleFonts.montserrat(
+                                    color: AppColors.blackColor,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                   ),

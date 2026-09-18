@@ -11,45 +11,6 @@ import '../../../controller/founder_dashboard_controller.dart';
 import '../../../models/get_investor_list_model.dart';
 
 class ViewAllInvestorScreen extends StatelessWidget {
-  List investors = [
-    {
-      'name': 'Northstar Ventures',
-      'type': 'VC Fund',
-      'location': 'Bengaluru, India',
-      'investment': '₹25L – ₹2Cr',
-      'stage': 'Seed – Series A',
-      'tags': ['SaaS', 'FinTech', 'B2B'],
-      'logo': 'N',
-    },
-    {
-      'name': 'Elevate Capital',
-      'type': 'Venture Capital',
-      'location': 'Mumbai, India',
-      'investment': '₹50L – ₹3Cr',
-      'stage': 'Seed – Series B',
-      'tags': ['SaaS', 'AI / ML'],
-      'logo': 'E',
-    },
-    {
-      'name': 'Artha Ventures',
-      'type': 'VC Fund',
-      'location': 'Delhi, India',
-      'investment': '₹25L – ₹1.5Cr',
-      'stage': 'Pre-Seed – Series A',
-      'tags': ['FinTech', 'Consumer'],
-      'logo': 'A',
-    },
-    {
-      'name': 'Momentum Capital',
-      'type': 'Venture Capital',
-      'location': 'Bengaluru, India',
-      'investment': '₹1Cr – ₹5Cr',
-      'stage': 'Series A – Series C',
-      'tags': ['SaaS', 'Deep Tech'],
-      'logo': 'M',
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<FounderDashboardController>(builder: (controller) {
@@ -83,15 +44,50 @@ class ViewAllInvestorScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Icon(
-                      Icons.bookmark_border,
-                      color: AppColors.whiteColor,
-                      size: 23,
-                    ),
-                  ),
                 ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                height: 58,
+                decoration: BoxDecoration(
+                  color: AppColors.containerBackgroundColor,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(
+                    color: AppColors.containerBorderColor,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 20),
+                    Icon(
+                      Icons.search,
+                      color: AppColors.whiteColor,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: TextField(
+                        style: GoogleFonts.montserrat(
+                          color: AppColors.whiteColor,
+                          fontSize: 14,
+                        ),
+                        cursorColor: AppColors.whiteColor,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText:
+                              'Search by investor name, fund, or industry',
+                          hintStyle: GoogleFonts.montserrat(
+                            color: Color(0xFF9A9A9A),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 10,
@@ -100,46 +96,6 @@ class ViewAllInvestorScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      Container(
-                        height: 58,
-                        decoration: BoxDecoration(
-                          color: AppColors.containerBackgroundColor,
-                          borderRadius: BorderRadius.circular(18),
-                          border: Border.all(
-                            color: AppColors.containerBorderColor,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 20),
-                            Icon(
-                              Icons.search,
-                              color: AppColors.whiteColor,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 20),
-                            Expanded(
-                              child: TextField(
-                                style: GoogleFonts.montserrat(
-                                  color: AppColors.whiteColor,
-                                  fontSize: 14,
-                                ),
-                                cursorColor: AppColors.whiteColor,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText:
-                                      'Search by investor name, fund, or industry',
-                                  hintStyle: GoogleFonts.montserrat(
-                                    color: Color(0xFF9A9A9A),
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                          ],
-                        ),
-                      ),
                       SizedBox(
                         height: 60,
                         child: ListView(
@@ -251,9 +207,10 @@ class ViewAllInvestorScreen extends StatelessWidget {
                               final investor = controller.investorList[index];
                               return GestureDetector(
                                 onTap: () {
-                                  controller?.InvestorDetails();
+                                  controller.InvestorDetails();
                                 },
                                 child: Container(
+                                  width: double.infinity,
                                   margin:
                                       const EdgeInsets.symmetric(vertical: 10),
                                   padding: const EdgeInsets.all(24),
@@ -261,19 +218,25 @@ class ViewAllInvestorScreen extends StatelessWidget {
                                     color: AppColors.blackColor,
                                     borderRadius: BorderRadius.circular(11),
                                     border: Border.all(
-                                        color: const Color(0xFF292929),
-                                        width: 1),
+                                      color: const Color(0xFF292929),
+                                      width: 1,
+                                    ),
                                   ),
                                   child: InvestorWidget(
-                                      name:
-                                          '${investor.firstName} ${investor.lastName}' ??
-                                              '',
-                                      type: investor.role ?? '',
-                                      location: investor.currentLocation ?? '',
-                                      investment: '' ?? '',
-                                      stage: investor.currentStage ?? '',
-                                      logo: '' ?? '',
-                                      controller: controller),
+                                    name:
+                                        '${investor.firstName ?? ''} ${investor.lastName ?? ''}'
+                                            .trim(),
+                                    type: investor.role ?? '',
+                                    location: investor.currentLocation ?? '',
+                                    investment: '',
+                                    // replace with your API field
+                                    stage: investor.currentStage ?? '',
+                                    logo: investor.firstName?.isNotEmpty == true
+                                        ? investor.firstName![0].toUpperCase()
+                                        : '',
+                                    investor: investor,
+                                    controller: controller,
+                                  ),
                                 ),
                               );
                             },
@@ -289,263 +252,245 @@ class ViewAllInvestorScreen extends StatelessWidget {
     });
   }
 
-  Widget InvestorWidget(
-      {required String name,
-      required String type,
-      required String location,
-      required String investment,
-      required String stage,
-      required String logo,
-      int? index,
-      FounderDashboardController? controller}) {
-
-    Results? investor;
-
-      if (controller != null &&
-          index != null &&
-          index! >= 0 &&
-          index! < controller.investorList.length) {
-        investor = controller.investorList[index!];
-      }
-
-      return Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ... your existing UI
-
-              const SizedBox(width: 8),
-
-              if (investor != null)
-                GestureDetector(
-                  onTap: () {
-                    controller!.clickSavedApi(
-                      investor!.id.toString(),
-                    );
-                  },
-                  child: Icon(
-                    Icons.bookmark_border,
-                    color: investor!.isSaved == true
-                        ? AppColors.whiteColor
-                        : AppColors.darkGreyColor,
-                    size: 22,
+  Widget InvestorWidget({
+    required String name,
+    required String type,
+    required String location,
+    required String investment,
+    required String stage,
+    required String logo,
+    required Results investor,
+    required FounderDashboardController controller,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // TOP SECTION
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Logo
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: AppColors.blackColor,
+                borderRadius: BorderRadius.circular(11),
+                border: Border.all(
+                  color: const Color(0xFF292929),
+                  width: 1,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  logo,
+                  style: GoogleFonts.montserrat(
+                    color: AppColors.whiteColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-            ],
-          ),
+              ),
+            ),
 
-          Column(
-            children: [
-              Row(
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: AppColors.blackColor,
-                      borderRadius: BorderRadius.circular(11),
-                      border:
-                          Border.all(color: const Color(0xFF292929), width: 1),
-                    ),
-                    child: Center(
-                      child: Text(
-                        logo,
-                        style: GoogleFonts.montserrat(
-                          color: AppColors.whiteColor,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.montserrat(
-                                  color: AppColors.whiteColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                            const Icon(
-                              Icons.verified,
-                              color: AppColors.verifiedColor,
-                              size: 18,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          ' $location',
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Color(0xFF777777),
-                            fontSize: 11,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const SizedBox(height: 20),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Obx(() {
-                    if (controller == null) {
-                      return const SizedBox.shrink();
-                    }
-
-                    if (index == null) {
-                      return const SizedBox.shrink();
-                    }
-
-                    if (index! < 0 ||
-                        index! >= controller!.investorList.length) {
-                      return const SizedBox.shrink();
-                    }
-
-                    final investor = controller!.investorList[index!];
-
-                    return GestureDetector(
-                      onTap: () {
-                        controller!.clickSavedApi(
-                          investor.id.toString(),
-                        );
-                      },
-                      child: Icon(
-                        Icons.bookmark_border,
-                        color: investor.isSaved == true
-                            ? AppColors.whiteColor
-                            : AppColors.darkGreyColor,
-                        size: 22,
-                      ),
-                    );
-                  })
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Range',
-                        style: GoogleFonts.montserrat(
-                          color: AppColors.darkGreyColor,
-                          fontSize: 10,
-                        ),
-                      ),
-                      Text(
-                        '₹25L – ₹2Cr',
-                        style: GoogleFonts.montserrat(
-                            color: AppColors.whiteColor,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Stage',
-                        style: GoogleFonts.montserrat(
-                          color: AppColors.darkGreyColor,
-                          fontSize: 10,
-                        ),
-                      ),
-                      Text(
-                        'Seed – Series A',
-                        style: GoogleFonts.montserrat(
-                            color: AppColors.whiteColor,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 30,
-                      child: ListView.builder(
-                          itemCount: 2,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 5),
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 6),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: AppColors.blackColor,
-                                borderRadius: BorderRadius.circular(11),
-                                border: Border.all(
-                                    color: const Color(0xFF292929), width: 1),
-                              ),
-                              child: const Text(
-                                'Fintech',
-                                style: TextStyle(
-                                    color: AppColors.darkGreyColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            );
-                          }),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  InkWell(
-                    onTap: () {
-                      controller?.InvestorDetails();
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'View Profile',
                           style: GoogleFonts.montserrat(
                             color: AppColors.whiteColor,
-                            fontSize: 14,
+                            fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(width: 6),
-                        const Icon(
-                          Icons.arrow_forward_rounded,
-                          color: AppColors.whiteColor,
-                          size: 18,
-                        ),
-                      ],
+                      ),
+                      const SizedBox(width: 5),
+                      const Icon(
+                        Icons.verified,
+                        color: AppColors.verifiedColor,
+                        size: 18,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    location,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Color(0xFF777777),
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(width: 8),
+
+            investor.isSaved ?? false
+                ? GestureDetector(
+                    onTap: () {
+                      controller.clickRemoveApi(
+                        investor.id.toString(),
+                      );
+                    },
+                    child: const Icon(
+                      Icons.bookmark,
+                      color: AppColors.whiteColor,
+                      size: 22,
                     ),
                   )
+                : GestureDetector(
+                    onTap: () {
+                      controller.clickSavedApi(
+                        investor.id.toString(),
+                      );
+                    },
+                    child: const Icon(
+                      Icons.bookmark_border,
+                      color: Color(0xFF777777),
+                      size: 22,
+                    ),
+                  ),
+          ],
+        ),
+
+        const SizedBox(height: 20),
+
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Range',
+                    style: GoogleFonts.montserrat(
+                      color: AppColors.darkGreyColor,
+                      fontSize: 10,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    investment.isEmpty ? '-' : investment,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.montserrat(
+                      color: AppColors.whiteColor,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
-              )
-            ],
-          )
-          // ... rest of your existing UI
-        ],
-      );
-    }
+              ),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Stage',
+                    style: GoogleFonts.montserrat(
+                      color: AppColors.darkGreyColor,
+                      fontSize: 10,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    stage.isEmpty ? '-' : stage,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.montserrat(
+                      color: AppColors.whiteColor,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 10),
+
+        // BOTTOM SECTION
+        Row(
+          children: [
+            Expanded(
+              child: SizedBox(
+                height: 30,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(right: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                      ),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: AppColors.blackColor,
+                        borderRadius: BorderRadius.circular(11),
+                        border: Border.all(
+                          color: const Color(0xFF292929),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        type.isEmpty ? '-' : type,
+                        style: const TextStyle(
+                          color: AppColors.darkGreyColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(width: 10),
+
+            // VIEW PROFILE
+            InkWell(
+              onTap: () {
+                controller.InvestorDetails();
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'View Profile',
+                    style: GoogleFonts.montserrat(
+                      color: AppColors.whiteColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  const Icon(
+                    Icons.arrow_forward_rounded,
+                    color: AppColors.whiteColor,
+                    size: 18,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 }

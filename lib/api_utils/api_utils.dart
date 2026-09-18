@@ -13,6 +13,9 @@ class ApiUtils{
   static const String getInvestorListApi = '$baseUrl/profiles/';
   static const String savedInvestorApi = '$baseUrl/profiles/saved-investors/';
   static const String removeInvestorApi = '$baseUrl/profiles/saved-investors';
+  // static const String getUserProfile = '$baseUrl/profiles';
+  static const String getUserProfile = '$baseUrl/accounts/users/';
+  static const String getAllPurposeApi = '$baseUrl/marketplace/purposes/';
   static const String logoutApi = '$baseUrl/auth/logout/';
 
 

@@ -188,7 +188,6 @@ class ChooseUserController extends GetxController {
   void clickCreateProfile() {
     if (selectedIndex.value == 0) {
       createProfileApi();
-
     } else if (selectedIndex.value == 1) {
       createProfileApi();
       getPlanApi();
@@ -354,7 +353,7 @@ class ChooseUserController extends GetxController {
           colorText: AppColors.whiteColor,
         );
         Get.to(() => OTPScreen());
-        phoneNumberController.text='';
+        // phoneNumberController.text='';
       } else {
         isLoading.value = false;
         Get.snackbar(
@@ -431,6 +430,8 @@ class ChooseUserController extends GetxController {
           colorText: AppColors.whiteColor,
         );
 
+        await prefs.setString(
+            'id', response?.data?.user?.id.toString() ?? '');
         print('objectempty ${prefs.getString('token')}');
 
         if (prefs.getString('token') != null) {
@@ -441,10 +442,12 @@ class ChooseUserController extends GetxController {
                   : Get.to(() => StartupDashboardScreen());
         } else {
           await prefs.setString('token', response?.data?.token ?? '');
+          await prefs.setString(
+              'id', response?.data?.user?.id.toString() ?? '');
           print('objectcc ${prefs.getString('token')}');
           Get.to(() => const CreateProfileScreen());
         }
-        otp_value='';
+        otp_value = '';
       } else {
         isLoading.value = false;
         Get.snackbar(
