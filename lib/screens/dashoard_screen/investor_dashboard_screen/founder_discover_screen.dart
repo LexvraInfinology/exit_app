@@ -47,6 +47,31 @@ class FounderDiscoverScreen extends StatelessWidget {
       'logo': 'M',
     },
   ];
+  List<FilterListModel> items =  [
+  FilterListModel(title: "Stage", options: [
+  'Pre-Seed',
+  'Seed',
+  'Series A',
+  'Series B',
+  ]),
+  FilterListModel(title: "Sector", options: [
+  'SaaS',
+  'FinTech',
+  'AI / ML',
+  'HealthTech',
+  ]),
+  FilterListModel(title: "Under ₹25L", options: [
+  'Under ₹25L',
+  '₹25L–₹50L',
+  '₹50L–₹1Cr',
+  '₹1Cr–₹5Cr',
+  ]),  FilterListModel(title: "India", options: [
+  'India',
+  'Delhi NCR',
+  'Mumbai',
+  'Bengaluru',
+  ]),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -55,218 +80,171 @@ class FounderDiscoverScreen extends StatelessWidget {
       return Scaffold(
         backgroundColor: AppColors.blackColor,
         body: SafeArea(
-            child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
             child: Column(
               children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        discoverFounderController.selectedIndex.value = 0;
-                        // Get.back();
-                      },
-                      child: Image.asset(
-                        AppImages.backIcon,
-                        width: 42,
-                        height: 42,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    const Expanded(
-                      child: Text(
-                        'Discover Founders',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                    const Icon(
-                      Icons.bookmark_border,
-                      color: Colors.white,
-                      size: 23,
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 58,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF111111),
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(
-                      color: const Color(0xFF292929),
-                    ),
-                  ),
-                  child: Row(
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(children: [  Row(
                     children: [
-                      const SizedBox(width: 20),
-                      const Icon(
-                        Icons.search,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: TextField(
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
-                          cursorColor: Colors.white,
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText:
-                                'Search by investor name, fund, or industry',
-                            hintStyle: TextStyle(
-                              color: Color(0xFF9A9A9A),
-                              fontSize: 13,
-                            ),
-                          ),
+                      GestureDetector(
+                        onTap: () {
+                          discoverFounderController.selectedIndex.value = 0;
+                          // Get.back();
+                        },
+                        child: Image.asset(
+                          AppImages.backIcon,
+                          width: 42,
+                          height: 42,
                         ),
                       ),
                       const SizedBox(width: 12),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 60,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.only(
-                      right: 24,
-                      top: 20,
-                    ),
-                    children: [
-                      FilterButtonWidget(
-                        context: context,
-                        text: 'Stage',
-                        showArrow: true,
-                        options: [
-                          'Pre-Seed',
-                          'Seed',
-                          'Series A',
-                          'Series B',
-                        ],
-                      ),
-                      const SizedBox(width: 8),
-                      FilterButtonWidget(
-                        context: context,
-                        text: 'Sector',
-                        showArrow: true,
-                        options: [
-                          'SaaS',
-                          'FinTech',
-                          'AI / ML',
-                          'HealthTech',
-                        ],
-                      ),
-                      const SizedBox(width: 8),
-                      FilterButtonWidget(
-                        context: context,
-                        text: 'Under ₹25L',
-                        showArrow: true,
-                        options: [
-                          'Under ₹25L',
-                          '₹25L–₹50L',
-                          '₹50L–₹1Cr',
-                          '₹1Cr–₹5Cr',
-                        ],
-                      ),
-                      const SizedBox(width: 8),
-                      FilterButtonWidget(
-                        context: context,
-                        text: 'India',
-                        showArrow: true,
-                        options: [
-                          'India',
-                          'Delhi NCR',
-                          'Mumbai',
-                          'Bengaluru',
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                const Row(
-                  children: [
-                    Text(
-                      '132 investors found',
-                      style: TextStyle(
-                        color: AppColors.darkGreyColor,
-                        fontSize: 12,
-                      ),
-                    ),
-                    Spacer(),
-                    Text(
-                      'Sort by:',
-                      style: TextStyle(
-                        color: AppColors.darkGreyColor,
-                        fontSize: 12,
-                      ),
-                    ),
-                    SizedBox(width: 5),
-                    Text(
-                      'Relevance',
-                      style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: 12,
-                      ),
-                    ),
-                    Icon(
-                      Icons.keyboard_arrow_down,
-                      color: AppColors.darkGreyColor,
-                      size: 17,
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: investors.length,
-                  itemBuilder: (context, index) {
-                    final investor = investors[index];
-                    return GestureDetector(
-                      onTap: () {
-                        discoverFounderController.clickFounderDetails();
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: AppColors.blackColor,
-                          borderRadius: BorderRadius.circular(11),
-                          border: Border.all(
-                              color: const Color(0xFF292929), width: 1),
+                      const Expanded(
+                        child: Text(
+                          'Discover Founders',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                        child: InvestorWidget(
-                            name: investor['name']?.toString() ?? '',
-                            type: investor['type']?.toString() ?? '',
-                            location: investor['location']?.toString() ?? '',
-                            investment: investor['raising']?.toString() ?? '',
-                            stage: investor['timeLine']?.toString() ?? '',
-                            logo: investor['logo']?.toString() ?? '',
-                            controller: discoverFounderController,
-                            context: context),
                       ),
-                    );
-                  },
-                )
+                    ],
+                  ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: 58,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF111111),
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(
+                          color: const Color(0xFF292929),
+                        ),
+                      ),
+                      child: const Row(
+                        children: [
+                          SizedBox(width: 20),
+                          Icon(
+                            Icons.search,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          SizedBox(width: 20),
+                          Expanded(
+                            child: TextField(
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                              cursorColor: Colors.white,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText:
+                                'Search by investor name, fund, or industry',
+                                hintStyle: TextStyle(
+                                  color: Color(0xFF9A9A9A),
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 12),
+                        ],
+                      ),
+                    ),],),
+                ),
+               Expanded(
+                 child: SingleChildScrollView(
+                   child: Column(
+                     children: [
+                       SizedBox(
+                         height: 40,
+                         child: FilterListWidget( items: items, backgroundColor: Colors.black,
+                           buildContext: context,
+                           showArrow: true,),
+                       ),
+                       const SizedBox(
+                         height: 20,
+                       ),
+                       Padding(
+                         padding: const EdgeInsets.all(24.0),
+                         child: Column(children: [
+                           const Row(
+                             children: [
+                               Text(
+                                 '132 investors found',
+                                 style: TextStyle(
+                                   color: AppColors.darkGreyColor,
+                                   fontSize: 12,
+                                 ),
+                               ),
+                               Spacer(),
+                               Text(
+                                 'Sort by:',
+                                 style: TextStyle(
+                                   color: AppColors.darkGreyColor,
+                                   fontSize: 12,
+                                 ),
+                               ),
+                               SizedBox(width: 5),
+                               Text(
+                                 'Relevance',
+                                 style: TextStyle(
+                                   color: AppColors.whiteColor,
+                                   fontSize: 12,
+                                 ),
+                               ),
+                               Icon(
+                                 Icons.keyboard_arrow_down,
+                                 color: AppColors.darkGreyColor,
+                                 size: 17,
+                               ),
+                             ],
+                           ),
+                           const SizedBox(
+                             height: 20,
+                           ),
+                           ListView.builder(
+                             shrinkWrap: true,
+                             physics: NeverScrollableScrollPhysics(),
+                             itemCount: investors.length,
+                             itemBuilder: (context, index) {
+                               final investor = investors[index];
+                               return GestureDetector(
+                                 onTap: () {
+                                   discoverFounderController.clickFounderDetails();
+                                 },
+                                 child: Container(
+                                   margin: const EdgeInsets.symmetric(vertical: 10),
+                                   padding: const EdgeInsets.all(24),
+                                   decoration: BoxDecoration(
+                                     color: AppColors.blackColor,
+                                     borderRadius: BorderRadius.circular(11),
+                                     border: Border.all(
+                                         color: const Color(0xFF292929), width: 1),
+                                   ),
+                                   child: InvestorWidget(
+                                       name: investor['name']?.toString() ?? '',
+                                       type: investor['type']?.toString() ?? '',
+                                       location: investor['location']?.toString() ?? '',
+                                       investment: investor['raising']?.toString() ?? '',
+                                       stage: investor['timeLine']?.toString() ?? '',
+                                       logo: investor['logo']?.toString() ?? '',
+                                       controller: discoverFounderController,
+                                       context: context),
+                                 ),
+                               );
+                             },
+                           )
+                         ],),
+                       )
+                     ],
+                   ),
+                 ),
+               )
               ],
-            ),
-          ),
-        )),
+            )),
       );
     });
   }

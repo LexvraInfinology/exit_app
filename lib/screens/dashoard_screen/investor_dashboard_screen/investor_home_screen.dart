@@ -1,5 +1,6 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/controller/investor_dashboard_controller.dart';
+import 'package:exit_app/screens/notification_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,8 +16,10 @@ class InvestorHomeScreen extends StatelessWidget {
     return GetBuilder<InvestorDashboardController>(builder: (homeController) {
       return Scaffold(
         backgroundColor: AppColors.blackColor,
+
         body: SafeArea(
-            child:
+            child: homeController.isLoading.value  ?
+            const Center(child: CupertinoActivityIndicator(radius: 15,color: Colors.white,)):
             SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
@@ -45,7 +48,7 @@ class InvestorHomeScreen extends StatelessWidget {
                       const Spacer(),
                       GestureDetector(
                         onTap: (){
-                          homeController.clickNotification();
+                          Get.to(const NotificationScreen());
                         },
                         child: Container(
                           width: 42,
