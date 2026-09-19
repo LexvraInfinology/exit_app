@@ -310,9 +310,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _continue() {
-
-    print('click object');
-
     final currentIndex = currentPage.value;
     if (currentIndex < videos.length - 1) {
       pageController.nextPage(

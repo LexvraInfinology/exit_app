@@ -12,7 +12,7 @@ class PhoneNumberScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ChooseUserController>(builder: (controller) {
+    return GetBuilder(init: ChooseUserController(),  builder: (controller) {
       return Scaffold(
         backgroundColor: AppColors.blackColor,
         body: SafeArea(

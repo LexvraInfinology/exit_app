@@ -6,7 +6,8 @@ import 'package:exit_app/common_widgets/confirm_plan_widget.dart';
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/models/confirm_plan_model.dart';
 import 'package:exit_app/models/get_plan_model.dart';
-import 'package:exit_app/models/marketplace_Industries_model.dart' show MarketplaceIndustriesResponse, MarketplaceIndustry;
+import 'package:exit_app/models/marketplace_Industries_model.dart'
+    show MarketplaceIndustriesResponse, MarketplaceIndustry;
 import 'package:exit_app/screens/choose_plan_screen.dart';
 import 'package:exit_app/screens/create_profile_screen.dart';
 import 'package:exit_app/screens/dashoard_screen/founder_dashboard/founder_dashboard_screen.dart';
@@ -35,20 +36,17 @@ class ChooseUserController extends GetxController {
 
   var isChecked = false.obs;
 
-
-
-
   void clickCheckbox(bool? value) {
     isChecked.value = value ?? false;
   }
 
   final List<TextEditingController> otpControllers = List.generate(
     4,
-    (_) => TextEditingController(),
+        (_) => TextEditingController(),
   );
   final List<FocusNode> focusNodes = List.generate(
     4,
-    (_) => FocusNode(),
+        (_) => FocusNode(),
   );
   final RxInt focusedIndex = 0.obs;
   final RxInt remainingSeconds = 180.obs;
@@ -65,18 +63,23 @@ class ChooseUserController extends GetxController {
   Rx<TextEditingController> emailController = TextEditingController().obs;
   Rx<TextEditingController> locationController = TextEditingController().obs;
 
-  Rx<TextEditingController> preferredInvestmentController = TextEditingController().obs;
-  Rx<TextEditingController> preferredLocationController = TextEditingController().obs;
-  Rx<TextEditingController> preferredStageController = TextEditingController().obs;
-  Rx<TextEditingController> preferredIndustryController = TextEditingController().obs;
+  Rx<TextEditingController> preferredInvestmentController =
+      TextEditingController().obs;
+  Rx<TextEditingController> preferredLocationController =
+      TextEditingController().obs;
+  Rx<TextEditingController> preferredStageController =
+      TextEditingController().obs;
+  Rx<TextEditingController> preferredIndustryController =
+      TextEditingController().obs;
 
   final RxList<Data> planList = <Data>[].obs;
 
-  void onChangeStage(String value){
+  void onChangeStage(String value) {
     preferredStageController.value.text = value;
     update();
   }
-  void onChangeIndustry(String value){
+
+  void onChangeIndustry(String value) {
     preferredIndustryController.value.text = value;
     update();
   }
@@ -85,8 +88,10 @@ class ChooseUserController extends GetxController {
   void onInit() {
     super.onInit();
     startTimer();
-    termsRecognizer = TapGestureRecognizer()..onTap = clickTermsOfService;
-    privacyRecognizer = TapGestureRecognizer()..onTap = clickPrivacyPolicy;
+    termsRecognizer = TapGestureRecognizer()
+      ..onTap = clickTermsOfService;
+    privacyRecognizer = TapGestureRecognizer()
+      ..onTap = clickPrivacyPolicy;
     for (int i = 0; i < focusNodes.length; i++) {
       focusNodes[i].addListener(() {
         if (focusNodes[i].hasFocus) {
@@ -95,7 +100,6 @@ class ChooseUserController extends GetxController {
       });
     }
   }
-
 
   void resendOTP() {
     startTimer();
@@ -108,7 +112,7 @@ class ChooseUserController extends GetxController {
 
     timer = Timer.periodic(
       const Duration(seconds: 1),
-      (timer) {
+          (timer) {
         if (remainingSeconds.value > 0) {
           remainingSeconds.value--;
         } else {
@@ -193,11 +197,12 @@ class ChooseUserController extends GetxController {
   }
 
   void continuePressed() {
-    print('object${selectedIndex.value}');
+    print('object click ${selectedIndex.value}');
     Get.to(() => const PhoneNumberScreen());
   }
 
   void clickSendOTPButton() {
+    print('object role value ${selectedIndex.value}');
     sendOTP();
   }
 
@@ -211,24 +216,23 @@ class ChooseUserController extends GetxController {
 
   void clickCreateProfile() {
     if (selectedIndex.value == 0) {
+      phoneNumberController.text = '';
+      otpControllers.clear();
       clickCreateProfileInvestor();
     } else if (selectedIndex.value == 1) {
-
-      phoneNumberController.text='';
+      phoneNumberController.text = '';
       otpControllers.clear();
       createProfileApi();
-
     } else {
       Get.to(() => const ChoosePlanScreen());
     }
   }
 
-
   void clickChoosePlanButton(ConfirmPlanModel plan) {
     agreedToTerms = false;
     update();
     Get.to(
-      () => ConfirmPlanWidget(plan: plan),
+          () => ConfirmPlanWidget(plan: plan),
     );
   }
 
@@ -364,12 +368,13 @@ class ChooseUserController extends GetxController {
       } else {
         role = 'startup';
       }
+
       isLoading.value = true;
       final response = await apiServices.sendOTP(
         phoneNumber,
         role,
       );
-      print("Status Codebb: ${response?.status_code}");
+      print("Status Codebb: ${response?.status_code}${role} ${selectedIndex.value}");
       print("Message: ${response?.message}");
       if (response?.status_code == 200) {
         isLoading.value = false;
@@ -457,25 +462,41 @@ class ChooseUserController extends GetxController {
           colorText: AppColors.whiteColor,
         );
 
+        await prefs.setString('id', response?.data?.user?.id.toString() ?? '');
         await prefs.setString(
-            'id', response?.data?.user?.id.toString() ?? '');
+            'role', response?.data?.user?.role.toString() ?? '');
         print('objectempty ${prefs.getString('token')}');
 
         if (prefs.getString('token') != null) {
-          if(response?.data?.user?.role == 'investor'){
+          if (response?.data?.user?.role == 'investor') {
             await investorHomeController.loadHomePage();
           }
-          response?.data?.user?.role == 'investor'
+
+          // response?.data?.user?.role == 'investor'
+          //     ? Get.to(() => InvestorDashBoardScreen())
+          //     : response?.data?.user?.role == 'founder'
+          //         ? Get.to(() => FounderDashboardScreen())
+          //         : Get.to(() => StartupDashboardScreen());
+
+          response?.data?.user?.has_profile == true
+              ? response?.data?.user?.role == 'investor'
               ? Get.to(() => InvestorDashBoardScreen())
               : response?.data?.user?.role == 'founder'
-                  ? Get.to(() => FounderDashboardScreen())
-                  : Get.to(() => StartupDashboardScreen());
+              ? Get.to(() => FounderDashboardScreen())
+              : Get.to(() => StartupDashboardScreen())
+              : Get.to(() => const CreateProfileScreen());
         } else {
           await prefs.setString('token', response?.data?.token ?? '');
           await prefs.setString(
               'id', response?.data?.user?.id.toString() ?? '');
           print('objectcc ${prefs.getString('token')}');
-          Get.to(() => const CreateProfileScreen());
+          response?.data?.user?.has_profile == true
+              ? response?.data?.user?.role == 'investor'
+              ? Get.to(() => InvestorDashBoardScreen())
+              : response?.data?.user?.role == 'founder'
+              ? Get.to(() => FounderDashboardScreen())
+              : Get.to(() => StartupDashboardScreen())
+              : Get.to(() => const CreateProfileScreen());
         }
         otp_value = '';
       } else {
@@ -547,13 +568,12 @@ class ChooseUserController extends GetxController {
     }
     isLoading.value = true;
     await getMarketplaceStagesApi();
-    await  getMarketplaceIndustriesApi();
-    Get.to(() =>  const SetPreferencesScreen());
+    await getMarketplaceIndustriesApi();
+    Get.to(() => const SetPreferencesScreen());
     isLoading.value = false;
   }
 
   Future<void> createProfileApi() async {
-
     final first_name = firstNameController.value.text.trim();
     final last_name = lastNameController.value.text.trim();
     final email = emailController.value.text.trim();
@@ -616,7 +636,6 @@ class ChooseUserController extends GetxController {
         );
         Get.to(() => const ChoosePlanScreen());
         getPlanApi();
-
       } else {
         isLoading.value = false;
         Get.snackbar(
@@ -711,8 +730,8 @@ class ChooseUserController extends GetxController {
           backgroundColor: AppColors.blackColor,
           colorText: AppColors.whiteColor,
         );
-       await investorHomeController.loadHomePage();
-        Get.to(() =>  InvestorDashBoardScreen());
+        await investorHomeController.loadHomePage();
+        Get.to(() => InvestorDashBoardScreen());
       } else {
         isLoading.value = false;
         Get.snackbar(
@@ -738,7 +757,6 @@ class ChooseUserController extends GetxController {
     }
   }
 
-
   Future<void> getMarketplaceIndustriesApi() async {
     try {
       isLoading.value = true;
@@ -749,7 +767,8 @@ class ChooseUserController extends GetxController {
       if (response?.statusCode == 200) {
         industriesList.assignAll(response?.data ?? []);
       } else {
-        Get.snackbar('Failed', response?.message ?? 'Failed to fetch industries');
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
       }
     } catch (e) {
       print('object $e');
@@ -768,7 +787,8 @@ class ChooseUserController extends GetxController {
       if (response?.statusCode == 200) {
         stagesList.assignAll(response?.data ?? []);
       } else {
-        Get.snackbar('Failed', response?.message ?? 'Failed to fetch industries');
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
       }
     } catch (e) {
       print('object $e');
@@ -777,7 +797,6 @@ class ChooseUserController extends GetxController {
       isLoading.value = false;
     }
   }
-
 
   Future<void> getPlanApi() async {
     try {
@@ -842,8 +861,8 @@ class ChooseUserController extends GetxController {
           backgroundColor: AppColors.blackColor,
           colorText: AppColors.whiteColor,
         );
-        prefs.setString('plan_credit','' );
-        prefs.setString('plan_name','' );
+        prefs.setString('plan_credit', '');
+        prefs.setString('plan_name', '');
         Get.to(() => FounderDashboardScreen());
       } else {
         isLoading.value = false;

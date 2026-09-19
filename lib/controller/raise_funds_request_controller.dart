@@ -18,13 +18,14 @@ class RaiseFundsRequestController extends GetxController {
   final Rxn<File> selectedImage = Rxn<File>();
   var isLoading = false.obs;
   final ApiServices apiServices = ApiServices();
-  final List<MarketplaceIndustry> purposeList = <MarketplaceIndustry>[];
-  final List<MarketplaceIndustry> stageList = <MarketplaceIndustry>[];
+  final RxList<MarketplaceIndustry> purposeList = <MarketplaceIndustry>[].obs;
+  final RxList<MarketplaceIndustry> stageList = <MarketplaceIndustry>[].obs;
 
   final TextEditingController amountController =
   TextEditingController();
 
   final RxString industry = 'FinTech'.obs;
+
   void changeIndustry(String value) {
     industry.value = value;
   }
@@ -47,32 +48,35 @@ class RaiseFundsRequestController extends GetxController {
     selectedPurpose.value = index;
   }
 
-  final RxInt selectedInvestor = (-1).obs;
+  // final RxInt selectedInvestor = (-1).obs;
+  var selectedInvestor = 0.obs;
 
   void selectInvestor(int index) {
     selectedInvestor.value = index;
+    update();
   }
 
   @override
   void onInit() {
     super.onInit();
-
+    loadApi();
   }
 
   Future<void> loadApi() async {
     isLoading.value = true;
     await getMarketplaceStagesApi();
-    await  getFundsRaisePurposeApi();
+    await getFundsRaisePurposeApi();
     isLoading.value = false;
   }
 
+  void postSubmitButton() {
+    Get.to(() => PostSuccefullyCreatedScreen());
+  }
 
-  void postSubmitButton(){
-    Get.to(() =>  PostSuccefullyCreatedScreen());
+  void clickSubmitButton() {
+    Get.to(() => KYCVerifiedScreen());
   }
-  void clickSubmitButton(){
-    Get.to(() =>  KYCVerifiedScreen());
-  }
+
   void clickContinueButton(int step) {
     if (step == 1) {
       currentStep.value = 1;
@@ -180,9 +184,10 @@ class RaiseFundsRequestController extends GetxController {
       await apiServices.getFundsRaisePurposeApi();
 
       if (response?.statusCode == 200) {
-        purposeList.assignAll(response?.data ?? []);
+        purposeList.value = response?.data ?? [];
       } else {
-        Get.snackbar('Failed', response?.message ?? 'Failed to fetch industries');
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
       }
     } catch (e) {
       print('object $e');
@@ -198,9 +203,11 @@ class RaiseFundsRequestController extends GetxController {
       final MarketplaceIndustriesResponse? response =
       await apiServices.getMarketplaceStagesApi();
       if (response?.statusCode == 200) {
-        purposeList.assignAll(response?.data ?? []);
+        stageList.value = response?.data ?? [];
+        // purposeList.assignAll(response?.data ?? []);
       } else {
-        Get.snackbar('Failed', response?.message ?? 'Failed to fetch industries');
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
       }
     } catch (e) {
       print('object $e');

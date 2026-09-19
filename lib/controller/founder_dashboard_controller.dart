@@ -18,8 +18,10 @@ import '../api_utils/api_services.dart';
 import '../constants/app_color.dart';
 import '../constants/app_images.dart';
 import '../models/profile_model.dart';
+import '../screens/choose_user_screen.dart';
 import '../screens/help_and_support_screen.dart';
 import '../screens/notification_list_screen.dart';
+import '../screens/onboarding_screen.dart';
 import '../screens/plan_details_screen.dart';
 import '../screens/privacy_policy_screen.dart';
 
@@ -431,7 +433,7 @@ class FounderDashboardController extends GetxController {
                           ),
                           onPressed: () {
                             prefs.clear();
-                            Get.offAll(() => const PhoneNumberScreen(),);
+                            Get.offAll(() =>  OnboardingScreen(),);
                             
                           },
                           child: Text(

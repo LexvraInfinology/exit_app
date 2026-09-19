@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:exit_app/api_utils/api_services.dart';
 import 'package:exit_app/models/founder_discovery_response.dart';
 import 'package:exit_app/models/need_attention_response.dart';
+import 'package:exit_app/screens/choose_user_screen.dart';
 import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/founder_details_screen.dart';
 import 'package:exit_app/screens/edit_profile_screen.dart';
 import 'package:exit_app/screens/help_and_support_screen.dart';
@@ -13,10 +14,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/app_color.dart';
 import '../constants/app_images.dart';
 import '../screens/chat_details_screen.dart';
+import '../screens/onboarding_screen.dart';
+import '../screens/phone_number_screen.dart';
 
 class InvestorDashboardController extends GetxController {
   RxInt selectedIndex = 0.obs;
@@ -30,6 +34,9 @@ class InvestorDashboardController extends GetxController {
   final RxList<FounderProfile> founderList = <FounderProfile>[].obs;
   final RxList<NeedsAttentionItem> needsAttentionAllList =
       <NeedsAttentionItem>[].obs;
+
+  final SharedPreferences prefs = Get.find<SharedPreferences>();
+
 
   final ScrollController scrollController = ScrollController();
 
@@ -177,7 +184,8 @@ class InvestorDashboardController extends GetxController {
                             foregroundColor: AppColors.blackColor,
                           ),
                           onPressed: () {
-                            Navigator.pop(context);
+                            prefs.clear();
+                            Get.offAll(() =>  OnboardingScreen(),);
                           },
                           child: Text(
                             "Log Out",

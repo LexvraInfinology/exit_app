@@ -448,11 +448,11 @@ class CreateFundsRequestScreen extends StatelessWidget {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          SizedBox(width: 4),
-                          Icon(
+                          const SizedBox(width: 4),
+                          const Icon(
                             Icons.keyboard_arrow_down,
                             size: 14,
-                            color: Colors.white,
+                            color: AppColors.whiteColor,
                           ),
                         ],
                       ),
@@ -552,25 +552,22 @@ class CreateFundsRequestScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Obx(
-                () => Column(
-                  children: List.generate(
-                    investors.length,
-                    (index) {
+                () => ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: controller.purposeList.length,
+                    itemBuilder: (context, index) {
                       final isSelected =
                           controller.selectedInvestor.value == index;
-
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 9),
                         child: _buildInvestorCard(
                           index,
-                          investors[index],
                           controller,
                           isSelected,
                         ),
                       );
-                    },
-                  ),
-                ),
+                    }),
               ),
               const SizedBox(
                 height: 20,
@@ -2752,7 +2749,6 @@ class CreateFundsRequestScreen extends StatelessWidget {
 
   Widget _buildInvestorCard(
     int index,
-    _InvestorOption investor,
     RaiseFundsRequestController controller,
     bool isSelected,
   ) {
@@ -2774,18 +2770,18 @@ class CreateFundsRequestScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColors.whiteColor, width: 1)),
-              child: Icon(
-                investor.icon,
-                size: 32,
-                color: AppColors.whiteColor,
-              ),
-            ),
-            SizedBox(
+            // Container(
+            //   padding: EdgeInsets.all(8),
+            //   decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(10),
+            //       border: Border.all(color: AppColors.whiteColor, width: 1)),
+            //   child: Icon(
+            //     investor.icon,
+            //     size: 32,
+            //     color: AppColors.whiteColor,
+            //   ),
+            // ),
+            const SizedBox(
               width: 10,
             ),
 
@@ -2794,19 +2790,19 @@ class CreateFundsRequestScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    investor.name,
+                    controller.purposeList[index].name,
                     style: GoogleFonts.montserrat(
                         color: AppColors.whiteColor,
                         fontSize: 15,
                         fontWeight: FontWeight.w600),
                   ),
-                  Text(
-                    '${investor.subtitle},${investor.subtitle}',
-                    style: GoogleFonts.montserrat(
-                      color: AppColors.darkGreyColor,
-                      fontSize: 13,
-                    ),
-                  ),
+                  // Text(
+                  //   '${controller.purposeList[index].subtitle},${investor.subtitle}',
+                  //   style: GoogleFonts.montserrat(
+                  //     color: AppColors.darkGreyColor,
+                  //     fontSize: 13,
+                  //   ),
+                  // ),
                 ],
               ),
             ),

@@ -47,7 +47,9 @@ class FounderProfileScreen extends StatelessWidget {
                   ),
                   const Spacer(),
                   IconButton(
-                    onPressed: (){Get.to(const NotificationScreen());},
+                    onPressed: () {
+                      Get.to(const NotificationScreen());
+                    },
                     icon: const Icon(
                       Icons.notifications_none_rounded,
                       size: 32,
@@ -430,13 +432,15 @@ class FounderProfileScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      '6+ years',
-                                      style: GoogleFonts.montserrat(
-                                          color: AppColors.whiteColor,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
+                                   Obx(()=> Text(
+                                     profileController.resultProfile.isNotEmpty?
+                                     '${profileController.resultProfile.first.experience}+ Years' ??
+                                         '':'',
+                                     style: GoogleFonts.montserrat(
+                                         color: AppColors.whiteColor,
+                                         fontSize: 14,
+                                         fontWeight: FontWeight.w500),
+                                   )),
                                     const Text(
                                       'Experience',
                                       style: TextStyle(
@@ -468,13 +472,15 @@ class FounderProfileScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      'Bengaluru',
-                                      style: GoogleFonts.montserrat(
-                                          color: AppColors.whiteColor,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
-                                    ),
+                                   Obx(()=> Text(
+                                     profileController.resultProfile.isNotEmpty?
+                                     '${profileController.resultProfile.first.preferredLocation}' ??
+                                         '':'',
+                                     style: GoogleFonts.montserrat(
+                                         color: AppColors.whiteColor,
+                                         fontSize: 14,
+                                         fontWeight: FontWeight.w500),
+                                   )),
                                     Text(
                                       'Location',
                                       style: GoogleFonts.montserrat(
@@ -506,13 +512,15 @@ class FounderProfileScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      'Seed Satge',
+                                    Obx(()=>Text(
+                                      profileController.resultProfile.isNotEmpty?
+                                      '${profileController.resultProfile.first.preferredStage}' ??
+                                          '':'',
                                       style: GoogleFonts.montserrat(
                                           color: AppColors.whiteColor,
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500),
-                                    ),
+                                    )),
                                     Text(
                                       'Current Stage',
                                       style: GoogleFonts.montserrat(
@@ -544,13 +552,15 @@ class FounderProfileScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      '2-10',
+                                    Obx(()=>Text(
+                                      profileController.resultProfile.isNotEmpty?
+                                      '${profileController.resultProfile.first.teamSize}' ??
+                                          '':'',
                                       style: GoogleFonts.montserrat(
                                           color: AppColors.whiteColor,
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500),
-                                    ),
+                                    )),
                                     Text(
                                       'Team Size',
                                       style: GoogleFonts.montserrat(
@@ -661,7 +671,9 @@ class FounderProfileScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             GestureDetector(
-                              onTap: (){Get.to(const NotificationScreen());},
+                              onTap: () {
+                                Get.to(const NotificationScreen());
+                              },
                               child: SettingsRowWidget(
                                   icon: Icons.notifications_none_rounded,
                                   title: 'Notifications',
