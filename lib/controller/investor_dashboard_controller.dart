@@ -25,8 +25,8 @@ class InvestorDashboardController extends GetxController {
   final ApiServices apiServices = ApiServices();
 
   final RxBool isLoading = false.obs;
-  final RxList<NeedsAttentionItem> needsAttentionList =
-      <NeedsAttentionItem>[].obs;
+  final List<NeedsAttentionItem> needsAttentionList =
+      <NeedsAttentionItem>[];
   final RxList<FounderProfile> founderList = <FounderProfile>[].obs;
   final RxList<NeedsAttentionItem> needsAttentionAllList =
       <NeedsAttentionItem>[].obs;
@@ -46,14 +46,14 @@ class InvestorDashboardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    loadHomePage();
+
     scrollController.addListener(_onScroll);
   }
 
   Future<void> loadHomePage() async {
    isLoading.value = true;
    await getNeedsAttentionApi();
-   await  getNeedsAttentionAllApi();
+   // await  getNeedsAttentionAllApi();
    await  getFounderDiscoveryApi();
    isLoading.value = false;
   }
@@ -200,9 +200,12 @@ class InvestorDashboardController extends GetxController {
   Future<void> getNeedsAttentionApi() async {
     try {
       isLoading.value = true;
-      final response = await apiServices.getNeedsAttentionApi(limit: 4);
+      final response = await apiServices.getNeedsAttentionApi();
       if (response != null) {
         needsAttentionList.assignAll(response.data);
+        update();
+        debugPrint(
+            "Needs Attention All List Length: ${needsAttentionList.length}");
       }
     } catch (e) {
       debugPrint('object $e');
@@ -227,13 +230,6 @@ class InvestorDashboardController extends GetxController {
         debugPrint(
             "Needs Attention All List Length: ${needsAttentionAllList.length}");
 
-        Get.snackbar(
-          'Success',
-          response?.message ?? 'Conversations fetched successfully',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: AppColors.blackColor,
-          colorText: AppColors.whiteColor,
-        );
       } else {
         Get.snackbar(
           'Fetch Failed',
@@ -260,10 +256,7 @@ class InvestorDashboardController extends GetxController {
   Future<void> getFounderDiscoveryApi({bool viewAll = false}) async {
     try {
       isLoading.value = true;
-      final response = await apiServices.getFounderDiscoveryApi(
-        limit: 5,
-        view: viewAll ? 'all' : null,
-      );
+      final response = await apiServices.getFounderDiscoveryApi();
       if (response?.statusCode == 200) {
         founderList.assignAll(response!.data.results);
       } else {

@@ -3,7 +3,6 @@ import 'package:exit_app/controller/choose_user_controller.dart';
 import 'package:exit_app/models/marketplace_Industries_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class SetPreferencesScreen extends StatelessWidget {
   const SetPreferencesScreen({super.key});

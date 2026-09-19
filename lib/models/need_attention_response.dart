@@ -1,12 +1,30 @@
-
 class NeedsAttentionResponse {
+  final int statusCode;
+  final String message;
   final List<NeedsAttentionItem> data;
-  NeedsAttentionResponse({required this.data});
+
+  NeedsAttentionResponse({
+    required this.statusCode,
+    required this.message,
+    required this.data,
+  });
 
   factory NeedsAttentionResponse.fromJson(dynamic json) {
-    final List<dynamic> list = json as List<dynamic>;
+    if (json is List) {
+      return NeedsAttentionResponse(
+        statusCode: 200,
+        message: '',
+        data: json
+            .map((e) => NeedsAttentionItem.fromJson(e as Map<String, dynamic>))
+            .toList(),
+      );
+    }
+
+    final Map<String, dynamic> map = json as Map<String, dynamic>;
     return NeedsAttentionResponse(
-      data: list
+      statusCode: map['status_code'] as int? ?? 0,
+      message: map['message']?.toString() ?? '',
+      data: (map['data'] as List<dynamic>? ?? [])
           .map((e) => NeedsAttentionItem.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -90,4 +108,3 @@ class NeedsAttentionItem {
     };
   }
 }
-
