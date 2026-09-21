@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:exit_app/api_utils/api_services.dart';
 import 'package:exit_app/models/founder_discovery_response.dart';
+import 'package:exit_app/models/marketplace_Industries_model.dart';
 import 'package:exit_app/models/need_attention_response.dart';
+import 'package:exit_app/models/profile_model.dart';
 import 'package:exit_app/screens/choose_user_screen.dart';
+import 'package:exit_app/screens/dashoard_screen/founder_dashboard/widgets/filtter_button_widget.dart';
 import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/founder_details_screen.dart';
 import 'package:exit_app/screens/edit_profile_screen.dart';
 import 'package:exit_app/screens/help_and_support_screen.dart';
@@ -20,7 +23,6 @@ import '../constants/app_color.dart';
 import '../constants/app_images.dart';
 import '../screens/chat_details_screen.dart';
 import '../screens/onboarding_screen.dart';
-import '../screens/phone_number_screen.dart';
 
 class InvestorDashboardController extends GetxController {
   RxInt selectedIndex = 0.obs;
@@ -29,62 +31,131 @@ class InvestorDashboardController extends GetxController {
   final ApiServices apiServices = ApiServices();
 
   final RxBool isLoading = false.obs;
+  final SharedPreferences prefs = Get.find<SharedPreferences>();
+
+
+  final RxList<ResultsProfile> resultProfile = <ResultsProfile>[].obs;
   final List<NeedsAttentionItem> needsAttentionList =
       <NeedsAttentionItem>[];
   final RxList<FounderProfile> founderList = <FounderProfile>[].obs;
   final RxList<NeedsAttentionItem> needsAttentionAllList =
       <NeedsAttentionItem>[].obs;
 
-  final SharedPreferences prefs = Get.find<SharedPreferences>();
+  final List<MarketplaceIndustry> industriesList = <MarketplaceIndustry>[];
+  final List<MarketplaceIndustry> stagesList = <MarketplaceIndustry>[];
+  final List<MarketplaceIndustry> rangesList = <MarketplaceIndustry>[];
+  final List<MarketplaceIndustry> locationsList = <MarketplaceIndustry>[];
 
 
-  final ScrollController scrollController = ScrollController();
 
-  final RxDouble leftOpacity = 0.0.obs;
-  final RxDouble rightOpacity = 0.0.obs;
+  List<FilterListModel> filterListItems =  [
+    FilterListModel(title: "Stage", options: []),
+    FilterListModel(title: "Sector", options: []),
+    FilterListModel(title: "Under ₹25L", options: []),
+    FilterListModel(title: "Location", options: []),
+  ];
 
-  double _lastPixels = 0;
-  Timer? _stopTimer;
+  final Rxn<MarketplaceIndustry> selectedStage = Rxn<MarketplaceIndustry>();
+  final Rxn<MarketplaceIndustry> selectedIndustry = Rxn<MarketplaceIndustry>();
+  final Rxn<MarketplaceIndustry> selectedRange = Rxn<MarketplaceIndustry>();
+  final Rxn<MarketplaceIndustry> selectedLocation = Rxn<MarketplaceIndustry>();
 
-  static const double normalOpacity = 0.0;
-  static const double scrollingOpacity = 1.0;
-  static const Duration stopDelay = Duration(milliseconds: 150);
+
 
   @override
   void onInit() {
     super.onInit();
-
-    scrollController.addListener(_onScroll);
+    loadHomePage();
   }
 
-  Future<void> loadHomePage() async {
-   isLoading.value = true;
-   await getNeedsAttentionApi();
-   // await  getNeedsAttentionAllApi();
-   await  getFounderDiscoveryApi();
-   isLoading.value = false;
-  }
-
-
-  void _onScroll() {
-    if (!scrollController.hasClients) return;
-    final currentPixels = scrollController.position.pixels;
-    if (currentPixels < _lastPixels) {
-      rightOpacity.value = scrollingOpacity;
-      leftOpacity.value = normalOpacity;
-    } else if (currentPixels > _lastPixels) {
-      leftOpacity.value = scrollingOpacity;
-      rightOpacity.value = normalOpacity;
+  void _replaceItemOptions(String title, List<MarketplaceIndustry> newOptions) {
+    if (newOptions.isEmpty) return;
+    final index = filterListItems.indexWhere((e) => e.title == title);
+    if (index != -1) {
+      filterListItems[index] = FilterListModel(title: title, options: newOptions);
     }
-
-    _lastPixels = currentPixels;
-
-    _stopTimer?.cancel();
-    _stopTimer = Timer(stopDelay, () {
-      leftOpacity.value = normalOpacity;
-      rightOpacity.value = normalOpacity;
-    });
   }
+
+
+MarketplaceIndustry? selectedFor(String title) {
+    debugPrint("Checking ===> $title");
+    switch (title) {
+      case 'Stage':
+        return selectedStage.value;
+      case 'Sector':
+        return selectedIndustry.value;
+      case 'Under ₹25L':
+        return selectedRange.value;
+      case 'Location':
+        return selectedLocation.value;
+      default:
+        return null;
+    }
+  }
+
+  void onFilterSelected(String title, MarketplaceIndustry? value) {
+    debugPrint("Checking ===> ${value?.name}");
+    switch (title) {
+      case 'Stage':
+        selectedStage.value = value;
+        break;
+      case 'Sector':
+        selectedIndustry.value = value;
+        break;
+      case 'Under ₹25L':
+        selectedRange.value = value;
+        break;
+      case 'Location':
+        selectedLocation.value = value;
+        break;
+    }
+    update();
+  }
+
+
+Future<void> loadHomePage() async {
+    isLoading.value = true;
+    update();
+
+    try {
+      final results = await Future.wait([
+        _safeCall(getNeedsAttentionApi),
+        _safeCall(getFounderDiscoveryApi),
+        _safeCall(getMarketplaceStagesApi),
+        _safeCall(getMarketplaceIndustriesApi),
+        _safeCall(getMarketplaceRangesApi),
+        _safeCall(getMarketplaceLocationsApi),
+        _safeCall(getuserProfileApi),
+        // _safeCall(getNeedsAttentionAllApi),
+      ]);
+
+      final allFailed = results.every((success) => success == false);
+      if (allFailed) {
+        Get.snackbar(
+          'Error',
+          'Unable to load dashboard. Please check your connection.',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+        );
+      }
+    } finally {
+      isLoading.value = false;
+      update();
+    }
+  }
+
+  Future<bool> _safeCall(Future<void> Function() apiCall) async {
+    try {
+      await apiCall();
+      return true;
+    } catch (e) {
+      debugPrint('object $e');
+      return false;
+    }
+  }
+
+
 
   void onItemSelected(int index) {
     selectedIndex.value = index;
@@ -185,7 +256,7 @@ class InvestorDashboardController extends GetxController {
                           ),
                           onPressed: () {
                             prefs.clear();
-                            Get.offAll(() =>  OnboardingScreen(),);
+                            Get.offAll(() =>  const OnboardingScreen(),);
                           },
                           child: Text(
                             "Log Out",
@@ -207,7 +278,6 @@ class InvestorDashboardController extends GetxController {
 
   Future<void> getNeedsAttentionApi() async {
     try {
-      isLoading.value = true;
       final response = await apiServices.getNeedsAttentionApi();
       if (response != null) {
         needsAttentionList.assignAll(response.data);
@@ -219,13 +289,11 @@ class InvestorDashboardController extends GetxController {
       debugPrint('object $e');
       Get.snackbar('Error', 'Something went wrong. Please try again.');
     } finally {
-      isLoading.value = false;
     }
   }
 
   Future<void> getNeedsAttentionAllApi() async {
     try {
-      isLoading.value = true;
 
       final NeedsAttentionAllResponse? response =
           await apiServices.getNeedsAttentionAllApi();
@@ -256,14 +324,11 @@ class InvestorDashboardController extends GetxController {
         backgroundColor: AppColors.blackColor,
         colorText: AppColors.whiteColor,
       );
-    } finally {
-      isLoading.value = false;
     }
   }
 
   Future<void> getFounderDiscoveryApi({bool viewAll = false}) async {
     try {
-      isLoading.value = true;
       final response = await apiServices.getFounderDiscoveryApi();
       if (response?.statusCode == 200) {
         founderList.assignAll(response!.data.results);
@@ -273,16 +338,107 @@ class InvestorDashboardController extends GetxController {
     } catch (e) {
       debugPrint('object $e');
       Get.snackbar('Error', 'Something went wrong. Please try again.');
+    }
+  }
+
+  Future<void> getMarketplaceIndustriesApi() async {
+    try {
+
+      final MarketplaceIndustriesResponse? response =
+      await apiServices.getMarketplaceIndustriesApi();
+
+      if (response?.statusCode == 200) {
+        industriesList.assignAll(response?.data ?? []);
+        final options = industriesList.map((e) => e.name).toList();
+        _replaceItemOptions("Sector",industriesList);
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    }
+  }
+
+  Future<void> getMarketplaceStagesApi() async {
+    try {
+      isLoading.value = true;
+      final MarketplaceIndustriesResponse? response =
+      await apiServices.getMarketplaceStagesApi();
+
+      if (response?.statusCode == 200) {
+        stagesList.assignAll(response?.data ?? []);
+        _replaceItemOptions("Stage",stagesList);
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    }
+  }
+
+  Future<void> getMarketplaceRangesApi() async {
+    try {
+      isLoading.value = true;
+      final MarketplaceIndustriesResponse? response =
+      await apiServices.getMarketplaceRangesApi();
+
+      if (response?.statusCode == 200) {
+        rangesList.assignAll(response?.data ?? []);
+        _replaceItemOptions("Under ₹25L",rangesList);
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    }
+  }
+
+  Future<void> getMarketplaceLocationsApi() async {
+    try {
+      isLoading.value = true;
+      final MarketplaceIndustriesResponse? response =
+      await apiServices.getMarketplaceLocationsApi();
+
+      if (response?.statusCode == 200) {
+        locationsList.assignAll(response?.data ?? []);
+        _replaceItemOptions("Location",locationsList);
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    }
+  }
+
+  Future<void> getuserProfileApi() async {
+    try {
+      isLoading.value = true;
+      final response = await apiServices.getUserProfileApi(prefs.getString('id').toString());
+      debugPrint("Status Code: ${response?.statusCode}");
+      debugPrint("Message: ${response?.message}");
+      resultProfile.value = response?.data!.results ?? [];
+      debugPrint('click dat ${resultProfile.single.firstName}');
+    } catch (e) {
+      debugPrint('object ${e}');
+      isLoading.value = false;
+      Get.snackbar(
+        'Error',
+        'Something went wrong. Please try again.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.blackColor,
+        colorText: AppColors.whiteColor,
+      );
     } finally {
       isLoading.value = false;
     }
   }
 
-  @override
-  void onClose() {
-    _stopTimer?.cancel();
-    scrollController.removeListener(_onScroll);
-    scrollController.dispose();
-    super.onClose();
-  }
 }

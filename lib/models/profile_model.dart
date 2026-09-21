@@ -71,7 +71,7 @@ class ResultsProfile {
   String? teamSize;
   String? preferredInvestment;
   String? preferredStage;
-  List<Null>? preferredIndustries;
+  String? preferredIndustries;
   String? preferredLocation;
   String? role;
   String? mobile;
@@ -115,12 +115,7 @@ class ResultsProfile {
     teamSize = json['team_size'];
     preferredInvestment = json['preferred_investment'];
     preferredStage = json['preferred_stage'];
-    if (json['preferred_industries'] != null) {
-      preferredIndustries = <Null>[];
-      // json['preferred_industries'].forEach((v) {
-      //   preferredIndustries!.add(new Null.fromJson(v));
-      // });
-    }
+    preferredIndustries = json['preferred_industries'];
     preferredLocation = json['preferred_location'];
     role = json['role'];
     mobile = json['mobile'];
@@ -144,10 +139,7 @@ class ResultsProfile {
     data['team_size'] = this.teamSize;
     data['preferred_investment'] = this.preferredInvestment;
     data['preferred_stage'] = this.preferredStage;
-    if (this.preferredIndustries != null) {
-      // data['preferred_industries'] =
-      //     this.preferredIndustries!.map((v) => v.toJson()).toList();
-    }
+    data['preferred_industries'] = this.preferredIndustries;
     data['preferred_location'] = this.preferredLocation;
     data['role'] = this.role;
     data['mobile'] = this.mobile;

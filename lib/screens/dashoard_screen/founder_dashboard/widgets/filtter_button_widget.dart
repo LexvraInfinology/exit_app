@@ -1,4 +1,5 @@
 import 'package:exit_app/constants/app_color.dart';
+import 'package:exit_app/models/marketplace_Industries_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,6 +19,10 @@ class FilterListWidget extends StatelessWidget {
   final void Function(String)? onTap;
   final Color backgroundColor;
   final double fadeWidth;
+  final MarketplaceIndustry? selectedStage;
+  final MarketplaceIndustry? selectedIndustry;
+  final MarketplaceIndustry? selectedRange;
+  final MarketplaceIndustry? selectedLocation;
 
   const FilterListWidget({
     super.key,
@@ -28,18 +33,21 @@ class FilterListWidget extends StatelessWidget {
     this.icon,
     required this.items,
     required this.buildContext,
-    required this.showArrow
+    required this.showArrow,
+     this.selectedStage,
+     this.selectedIndustry,
+     this.selectedRange,
+     this.selectedLocation
   });
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(InvestorDashboardController(), tag: UniqueKey().toString());
+
     return SizedBox(
       height: 44,
       child: Stack(
         children: [
           ListView.separated(
-            controller: controller.scrollController,
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 12),
             itemCount: items.length,
@@ -54,26 +62,18 @@ class FilterListWidget extends StatelessWidget {
             left: 0,
             top: 0,
             bottom: 0,
-            child: IgnorePointer(
-              child: Obx(
-                    () => AnimatedOpacity(
-                  duration: const Duration(milliseconds: 120),
-                  opacity: controller.leftOpacity.value,
-                  child: Container(
-                    width: fadeWidth,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        stops: const [0.0, 0.5, 1.0],
-                        colors: [
-                          backgroundColor,
-                          backgroundColor.withOpacity(0.6),
-                          backgroundColor.withOpacity(0.0),
-                        ],
-                      ),
-                    ),
-                  ),
+            child: Container(
+              width: fadeWidth,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  stops: const [0.0, 0.5, 1.0],
+                  colors: [
+                    backgroundColor,
+                    backgroundColor.withOpacity(0.6),
+                    backgroundColor.withOpacity(0.0),
+                  ],
                 ),
               ),
             ),
@@ -85,24 +85,18 @@ class FilterListWidget extends StatelessWidget {
             top: 0,
             bottom: 0,
             child: IgnorePointer(
-              child: Obx(
-                    () => AnimatedOpacity(
-                  duration: const Duration(milliseconds: 120),
-                  opacity: controller.rightOpacity.value,
-                  child: Container(
-                    width: fadeWidth,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.centerRight,
-                        end: Alignment.centerLeft,
-                        stops: const [0.0, 0.5, 1.0],
-                        colors: [
-                          backgroundColor,
-                          backgroundColor.withOpacity(0.6),
-                          backgroundColor.withOpacity(0.0),
-                        ],
-                      ),
-                    ),
+              child: Container(
+                width: fadeWidth,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerRight,
+                    end: Alignment.centerLeft,
+                    stops: const [0.0, 0.5, 1.0],
+                    colors: [
+                      backgroundColor,
+                      backgroundColor.withOpacity(0.6),
+                      backgroundColor.withOpacity(0.0),
+                    ],
                   ),
                 ),
               ),
@@ -122,11 +116,15 @@ Widget FilterButtonWidget({
   String? text,
   IconData? icon,
   required bool showArrow,
-  required List<String> options,
+  required   List<MarketplaceIndustry> options,
 }) {
   return GestureDetector(
     onTap: () {
-      showFilterPopup(context, options);
+      if(options.isEmpty){
+        showNoOptionsPopup(context,title: text);
+      }else{
+        showFilterPopup(context, options);
+      }
     },
     child: Container(
       height: 40,
@@ -172,7 +170,7 @@ Widget FilterButtonWidget({
 
 void showFilterPopup(
   BuildContext context,
-  List<String> options,
+List<MarketplaceIndustry> options,
 ) {
   final RenderBox button = context.findRenderObject() as RenderBox;
 
@@ -195,9 +193,9 @@ void showFilterPopup(
     ),
     items: options.map((option) {
       return PopupMenuItem<String>(
-        value: option,
+        value: option.id,
         child: Text(
-          option,
+          option.name,
           style: GoogleFonts.montserrat(
             color: AppColors.whiteColor,
             fontSize: 16,
@@ -261,9 +259,82 @@ void showFilterPopup(
 //   );
 // }
 
+void showNoOptionsPopup(BuildContext context, {String? title}) {
+  showDialog(
+    context: context,
+    barrierColor: Colors.black54,
+    builder: (context) => Dialog(
+      backgroundColor: const Color(0xFF1E1E1E),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: const BoxDecoration(
+                color: Colors.white10,
+                shape: BoxShape.circle,
+              ),
+              alignment: Alignment.center,
+              child: const Icon(
+                Icons.filter_list_off_rounded,
+                color: Colors.white70,
+                size: 28,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              title != null ? 'No ${title.toLowerCase()} options' : 'No options available',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'We couldn\'t find any options to show right now. Please try again later.',
+              style: TextStyle(
+                color: Colors.white54,
+                fontSize: 13,
+                height: 1.4,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+
 class FilterListModel {
   String title;
-  List<String> options;
+  List<MarketplaceIndustry> options;
 
   FilterListModel({required this.title,required this.options, });
 }

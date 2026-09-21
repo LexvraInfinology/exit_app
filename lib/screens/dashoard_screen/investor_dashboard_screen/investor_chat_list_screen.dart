@@ -83,7 +83,13 @@ class InvestorChatListScreen extends StatelessWidget{
       return Scaffold(
         backgroundColor: AppColors.blackColor,
         body: SafeArea(
-            child: Padding(
+            child:  investorDashboardController.isLoading.value
+                ? const Center(
+                child: CupertinoActivityIndicator(
+                  radius: 15,
+                  color: Colors.white,
+                ))
+                : Padding(
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

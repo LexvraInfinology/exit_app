@@ -20,6 +20,8 @@ class ApiUtils{
   static const String logoutApi = '$baseUrl/auth/logout/';
   static const String marketplaceIndustriesApi = '$baseUrl/marketplace/industries/';
   static const String marketplaceStagesApi = '$baseUrl/marketplace/stages/';
+  static const String marketplaceRangesApi = '$baseUrl/marketplace/ranges/';
+  static const String marketplaceLocationsApi = '$baseUrl/marketplace/locations/';
   static const String needsAttentionApi = '$baseUrl/investor/dashboard/needs-attention/';
   static const String needsAttentionAllApi = '$baseUrl/investor/dashboard/needs-attention/all/';
   static const String founderDiscoveryApi = '$baseUrl/profiles/founder-discovery/';

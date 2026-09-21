@@ -17,7 +17,13 @@ class InvestorPortfolioScreen extends StatelessWidget {
       return Scaffold(
         backgroundColor: AppColors.blackColor,
         body: SafeArea(
-          child: Column(
+          child:  portfolioController.isLoading.value
+              ? const Center(
+              child: CupertinoActivityIndicator(
+                radius: 15,
+                color: Colors.white,
+              ))
+              : Column(
             children: [
               Padding(
                 padding: const EdgeInsets.all(24.0),
