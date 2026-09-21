@@ -25,4 +25,5 @@ class ApiUtils{
   static const String needsAttentionApi = '$baseUrl/investor/dashboard/needs-attention/';
   static const String needsAttentionAllApi = '$baseUrl/investor/dashboard/needs-attention/all/';
   static const String founderDiscoveryApi = '$baseUrl/profiles/founder-discovery/';
+  static const String chatListApi = '$baseUrl/communication/conversations/';
 }

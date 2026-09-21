@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:exit_app/api_utils/api_services.dart';
+import 'package:exit_app/models/conversation_response.dart';
 import 'package:exit_app/models/founder_discovery_response.dart';
 import 'package:exit_app/models/marketplace_Industries_model.dart';
 import 'package:exit_app/models/need_attention_response.dart';
@@ -45,6 +46,7 @@ class InvestorDashboardController extends GetxController {
   final List<MarketplaceIndustry> stagesList = <MarketplaceIndustry>[];
   final List<MarketplaceIndustry> rangesList = <MarketplaceIndustry>[];
   final List<MarketplaceIndustry> locationsList = <MarketplaceIndustry>[];
+  final List<ConversationItem> chats = <ConversationItem>[];
 
 
 
@@ -126,6 +128,7 @@ Future<void> loadHomePage() async {
         _safeCall(getMarketplaceRangesApi),
         _safeCall(getMarketplaceLocationsApi),
         _safeCall(getuserProfileApi),
+        _safeCall(getChatListApi),
         // _safeCall(getNeedsAttentionAllApi),
       ]);
 
@@ -154,7 +157,6 @@ Future<void> loadHomePage() async {
       return false;
     }
   }
-
 
 
   void onItemSelected(int index) {
@@ -420,15 +422,13 @@ Future<void> loadHomePage() async {
 
   Future<void> getuserProfileApi() async {
     try {
-      isLoading.value = true;
       final response = await apiServices.getUserProfileApi(prefs.getString('id').toString());
       debugPrint("Status Code: ${response?.statusCode}");
       debugPrint("Message: ${response?.message}");
       resultProfile.value = response?.data!.results ?? [];
       debugPrint('click dat ${resultProfile.single.firstName}');
     } catch (e) {
-      debugPrint('object ${e}');
-      isLoading.value = false;
+      debugPrint('object $e');
       Get.snackbar(
         'Error',
         'Something went wrong. Please try again.',
@@ -436,8 +436,24 @@ Future<void> loadHomePage() async {
         backgroundColor: AppColors.blackColor,
         colorText: AppColors.whiteColor,
       );
-    } finally {
-      isLoading.value = false;
+    }
+  }
+
+  Future<void> getChatListApi() async {
+    try {
+      isLoading.value = true;
+      final ConversationResponse? response =
+      await apiServices.getChatListApi();
+
+      if (response?.statusCode == 200) {
+        chats.assignAll(response?.data ?? []);
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
     }
   }
 
