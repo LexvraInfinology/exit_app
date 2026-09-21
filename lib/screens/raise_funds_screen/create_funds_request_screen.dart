@@ -2259,7 +2259,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                   Text(
                     'Seed · Market Expansion',
                     style: GoogleFonts.montserrat(
-                      color: Colors.white,
+                      color: AppColors.whiteColor,
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                     ),
@@ -2269,7 +2269,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
 
                   // Description
                   Text(
-                    '“Expanding into new markets while\ngrowing our product and sales team.”',
+                    '“Expanding into new markets while growing our product and sales team.”',
                     style: GoogleFonts.montserrat(
                       color: const Color(0xFF858585),
                       fontSize: 13,

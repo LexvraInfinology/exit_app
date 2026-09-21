@@ -71,7 +71,6 @@ class CreateProfileScreen extends StatelessWidget {
                                       ),
                                     ),
 
-                                    // Main illustration
                                     Image.asset(
                                       AppImages.createProfileImage,
                                       width: 180,
@@ -145,7 +144,84 @@ class CreateProfileScreen extends StatelessWidget {
                                 textInputAction: TextInputAction.done,
                                 context: context,
                               ),
-                              const SizedBox(height: 30),
+                              const SizedBox(height: 26),
+                              _label('Role'),
+                              const SizedBox(height: 12),
+                              Obx(
+                                    () => Container(
+                                  height: 53,
+                                  padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.containerBackgroundColor,
+                                    borderRadius: BorderRadius.circular(11),
+                                    border: Border.all(
+                                      color: AppColors.containerBorderColor,
+                                    ),
+                                  ),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
+                                      value: controller.user_role.value.isEmpty
+                                          ? null
+                                          : controller.user_role.value,
+                                      hint: Text(
+                                        'Select User role',
+                                        style: GoogleFonts.montserrat(
+                                            color: AppColors.darkGreyColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      isExpanded: true,
+                                      dropdownColor: const Color(0xFF171717),
+                                      icon: const Icon(
+                                        Icons.keyboard_arrow_down,
+                                        color: Color(0xFF777777),
+                                      ),
+                                      style: GoogleFonts.montserrat(
+                                        color: Color(0xFFE7E7E7),
+                                        fontSize: 15,
+                                      ),
+                                      items: [
+                                        DropdownMenuItem(
+                                          value: 'Founder',
+                                          child: Text(
+                                            'Founder',
+                                            style: GoogleFonts.montserrat(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 'CEO',
+                                          child: Text('CEO',
+                                              style: GoogleFonts.montserrat(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600)),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 'VP',
+                                          child: Text('VP',
+                                              style: GoogleFonts.montserrat(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600)),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: 'Politician',
+                                          child: Text('Politician',
+                                              style: GoogleFonts.montserrat(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600)),
+                                        ),
+                                      ],
+                                      onChanged: (value) {
+                                        if (value != null) {
+                                          controller.user_role(value);
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),

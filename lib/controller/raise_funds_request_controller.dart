@@ -25,9 +25,12 @@ class RaiseFundsRequestController extends GetxController {
   final TextEditingController amountController = TextEditingController();
   final TextEditingController companyNameController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
-  final TextEditingController companyWebsiteController = TextEditingController();
-  final TextEditingController companyDescriptionController = TextEditingController();
-  final TextEditingController raiseDescriptionController = TextEditingController();
+  final TextEditingController companyWebsiteController =
+      TextEditingController();
+  final TextEditingController companyDescriptionController =
+      TextEditingController();
+  final TextEditingController raiseDescriptionController =
+      TextEditingController();
 
   final RxString industry = 'FinTech'.obs;
 
@@ -64,11 +67,12 @@ class RaiseFundsRequestController extends GetxController {
   }
 
   void postSubmitButton() {
-    Get.to(() => PostSuccefullyCreatedScreen());
+    Get.to(() => const PostSuccefullyCreatedScreen());
   }
 
   void clickSubmitButton() {
-    Get.to(() => KYCVerifiedScreen());
+    createFundsRaiseApi();
+    // Get.to(() => KYCVerifiedScreen());
   }
 
   void clickContinueButton(int step) {
@@ -166,13 +170,12 @@ class RaiseFundsRequestController extends GetxController {
     }
   }
 
-
   Future<void> getFundsRaisePurposeApi() async {
     try {
       isLoading.value = true;
 
       final MarketplaceIndustriesResponse? response =
-      await apiServices.getFundsRaisePurposeApi();
+          await apiServices.getFundsRaisePurposeApi();
 
       if (response?.statusCode == 200) {
         purposeList.value = response?.data ?? [];
@@ -192,7 +195,7 @@ class RaiseFundsRequestController extends GetxController {
     try {
       isLoading.value = true;
       final MarketplaceIndustriesResponse? response =
-      await apiServices.getMarketplaceStagesApi();
+          await apiServices.getMarketplaceStagesApi();
       if (response?.statusCode == 200) {
         stageList.value = response?.data ?? [];
         // purposeList.assignAll(response?.data ?? []);
@@ -208,107 +211,104 @@ class RaiseFundsRequestController extends GetxController {
     }
   }
 
+  Future<void> createFundsRaiseApi() async {
+    final amount = amountController.value.text.trim();
+    final companyName = companyNameController.value.text.trim();
+    final location = locationController.value.text.trim();
+    final companyWebsite = companyWebsiteController.value.text.trim();
+    final companyDescription = companyDescriptionController.value.text.trim();
+    final raiseDescription = raiseDescriptionController.value.text.trim();
+
+    // if (amount.isEmpty) {
+    //   Get.snackbar(
+    //     'Error',
+    //     'Please enter preferred investment',
+    //     snackPosition: SnackPosition.TOP,
+    //     backgroundColor: Colors.redAccent,
+    //     colorText: AppColors.whiteColor,
+    //   );
+    //   return;
+    // }
+    // else if (preferredStage.isEmpty) {
+    //   Get.snackbar(
+    //     'Error',
+    //     'Please enter preferred stage',
+    //     snackPosition: SnackPosition.TOP,
+    //     backgroundColor: Colors.redAccent,
+    //     colorText: AppColors.whiteColor,
+    //   );
+    //   return;
+    // }
+    // else if (preferredIndustry.isEmpty) {
+    //   Get.snackbar(
+    //     'Error',
+    //     'Please enter preferred industries',
+    //     snackPosition: SnackPosition.TOP,
+    //     backgroundColor: Colors.redAccent,
+    //     colorText: AppColors.whiteColor,
+    //   );
+    //   return;
+    // }
+    // else if (preferredLocation.isEmpty) {
+    //   Get.snackbar(
+    //     'Error',
+    //     'Please enter preferred location',
+    //     snackPosition: SnackPosition.TOP,
+    //     backgroundColor: Colors.redAccent,
+    //     colorText: AppColors.whiteColor,
+    //   );
+    //   return;
+    // }
+    try {
+      isLoading.value = true;
 
 
-  // Future<void> createFundsRaiseApi() async {
-  //   final amount = amountController.value.text.trim();
-  //   final companyName = companyNameController.value.text.trim();
-  //   final location = locationController.value.text.trim();
-  //   final companyWebsite = companyWebsiteController.value.text.trim();
-  //   final companyDescription = companyDescriptionController.value.text.trim();
-  //   final raiseDescription = raiseDescriptionController.value.text.trim();
-  //
-  //   // if (amount.isEmpty) {
-  //   //   Get.snackbar(
-  //   //     'Error',
-  //   //     'Please enter preferred investment',
-  //   //     snackPosition: SnackPosition.TOP,
-  //   //     backgroundColor: Colors.redAccent,
-  //   //     colorText: AppColors.whiteColor,
-  //   //   );
-  //   //   return;
-  //   // }
-  //   // else if (preferredStage.isEmpty) {
-  //   //   Get.snackbar(
-  //   //     'Error',
-  //   //     'Please enter preferred stage',
-  //   //     snackPosition: SnackPosition.TOP,
-  //   //     backgroundColor: Colors.redAccent,
-  //   //     colorText: AppColors.whiteColor,
-  //   //   );
-  //   //   return;
-  //   // }
-  //   // else if (preferredIndustry.isEmpty) {
-  //   //   Get.snackbar(
-  //   //     'Error',
-  //   //     'Please enter preferred industries',
-  //   //     snackPosition: SnackPosition.TOP,
-  //   //     backgroundColor: Colors.redAccent,
-  //   //     colorText: AppColors.whiteColor,
-  //   //   );
-  //   //   return;
-  //   // }
-  //   // else if (preferredLocation.isEmpty) {
-  //   //   Get.snackbar(
-  //   //     'Error',
-  //   //     'Please enter preferred location',
-  //   //     snackPosition: SnackPosition.TOP,
-  //   //     backgroundColor: Colors.redAccent,
-  //   //     colorText: AppColors.whiteColor,
-  //   //   );
-  //   //   return;
-  //   // }
-  //   try {
-  //     isLoading.value = true;
-  //     final response = await apiServices.createFundsRaiseApi(
-  //       amount,
-  //       ,
-  //       email,
-  //       location,
-  //       preferredInvestment,
-  //       preferredStage,
-  //       preferredIndustry,
-  //       preferredLocation,
-  //     );
-  //     print("Status Code: ${response?.statusCode}");
-  //     print("Message: ${response?.message}");
-  //     if (response?.statusCode == 201) {
-  //       isLoading.value = false;
-  //       Get.snackbar(
-  //         'Success',
-  //         response?.message ?? 'Set Preferences successfully',
-  //         snackPosition: SnackPosition.TOP,
-  //         backgroundColor: AppColors.blackColor,
-  //         colorText: AppColors.whiteColor,
-  //       );
-  //
-  //     } else {
-  //       isLoading.value = false;
-  //       Get.snackbar(
-  //         'Set Preferences Failed',
-  //         response?.message ?? 'Preferences failed',
-  //         snackPosition: SnackPosition.TOP,
-  //         backgroundColor: AppColors.blackColor,
-  //         colorText: AppColors.whiteColor,
-  //       );
-  //     }
-  //   } catch (e) {
-  //     print('object ${e}');
-  //     isLoading.value = false;
-  //     Get.snackbar(
-  //       'Error',
-  //       'Something went wrong. Please try again.',
-  //       snackPosition: SnackPosition.TOP,
-  //       backgroundColor: AppColors.blackColor,
-  //       colorText: AppColors.whiteColor,
-  //     );
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
-
-
-
+      final response = await apiServices.createFundsRaiseApi(
+          amount,
+          "",
+          "",
+          "",
+          companyName,
+          "",
+          location,
+          companyWebsite,
+          companyDescription,
+          "",
+          "",
+          raiseDescription);
+      print("Status Code: ${response?.statusCode}");
+      print("Message: ${response?.message}");
+      if (response?.statusCode == 201) {
+        isLoading.value = false;
+        Get.snackbar(
+          'Success',
+          response?.message ?? 'Funds Raise successfully',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: AppColors.blackColor,
+          colorText: AppColors.whiteColor,
+        );
+      } else {
+        isLoading.value = false;
+        Get.snackbar(
+          'Funds raise Failed',
+          response?.message ?? 'Funds raise failed',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: AppColors.blackColor,
+          colorText: AppColors.whiteColor,
+        );
+      }
+    } catch (e) {
+      print('object ${e}');
+      isLoading.value = false;
+      Get.snackbar(
+        'Error',
+        'Something went wrong. Please try again.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.blackColor,
+        colorText: AppColors.whiteColor,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }
-
-

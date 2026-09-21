@@ -436,7 +436,7 @@ class ApiServices {
   }
 
   Future<CreateFundRaiseModel?> createFundsRaiseApi(String funding_goal,
-      String stage, String purpose, String company_name, String industry,
+      String currency,String stage, String purpose, String company_name, String industry,
       String location, String company_website, String company_description,
       String raise_description, String funding_timeline,String pitch_deck,)
   async {
@@ -445,6 +445,7 @@ class ApiServices {
     final Uri url = Uri.parse(ApiUtils.createFundsRaiseApi);
     var data = {
       "funding_goal": funding_goal,
+      "currency": currency,
       "stage": stage,
       "purpose": purpose,
       "company_name": company_name,

@@ -35,6 +35,13 @@ class ChooseUserController extends GetxController {
 
   var isChecked = false.obs;
 
+  final RxString user_role = 'Founder'.obs;
+
+  void change_user_role(String value) {
+    user_role.value = value;
+  }
+
+
   void clickCheckbox(bool? value) {
     isChecked.value = value ?? false;
   }
@@ -472,9 +479,9 @@ class ChooseUserController extends GetxController {
           //     : response?.data?.user?.role == 'founder'
           //         ? Get.to(() => FounderDashboardScreen())
           //         : Get.to(() => StartupDashboardScreen());
-          if (response?.data?.user?.role == 'investor') {
-          await  Get.put(InvestorDashboardController()).loadHomePage();
-          }
+          // if (response?.data?.user?.role == 'investor') {
+          // await  Get.put(InvestorDashboardController()).loadHomePage();
+          // }
           response?.data?.user?.has_profile == true
               ? response?.data?.user?.role == 'investor'
               ? Get.to(() => InvestorDashBoardScreen())
