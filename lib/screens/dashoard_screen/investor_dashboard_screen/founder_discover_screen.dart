@@ -65,7 +65,8 @@ class FounderDiscoverScreen extends StatelessWidget {
   '₹25L–₹50L',
   '₹50L–₹1Cr',
   '₹1Cr–₹5Cr',
-  ]),  FilterListModel(title: "India", options: [
+  ]),
+    FilterListModel(title: "India", options: [
   'India',
   'Delhi NCR',
   'Mumbai',

@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../api_utils/api_services.dart';
+import '../constants/app_color.dart';
 import '../models/marketplace_Industries_model.dart';
 
 class RaiseFundsRequestController extends GetxController {
@@ -21,8 +22,12 @@ class RaiseFundsRequestController extends GetxController {
   final RxList<MarketplaceIndustry> purposeList = <MarketplaceIndustry>[].obs;
   final RxList<MarketplaceIndustry> stageList = <MarketplaceIndustry>[].obs;
 
-  final TextEditingController amountController =
-  TextEditingController();
+  final TextEditingController amountController = TextEditingController();
+  final TextEditingController companyNameController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController companyWebsiteController = TextEditingController();
+  final TextEditingController companyDescriptionController = TextEditingController();
+  final TextEditingController raiseDescriptionController = TextEditingController();
 
   final RxString industry = 'FinTech'.obs;
 
@@ -30,22 +35,11 @@ class RaiseFundsRequestController extends GetxController {
     industry.value = value;
   }
 
-  final List<String> purposes = [
-    'Expansion',
-    'Seed',
-    'Series A',
-    'Series B',
-    'Later',
-    'Series B',
-    'Later',
-    'Expansion',
-    'Seed',
-    'Series A',
-  ];
   final RxInt selectedPurpose = 0.obs;
 
   void selectPurpose(int index) {
     selectedPurpose.value = index;
+    update();
   }
 
   // final RxInt selectedInvestor = (-1).obs;
@@ -112,7 +106,6 @@ class RaiseFundsRequestController extends GetxController {
     }
   }
 
-
   void showUploadOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -155,7 +148,6 @@ class RaiseFundsRequestController extends GetxController {
     final XFile? image = await _picker.pickImage(
       source: source,
     );
-
     if (image != null) {
       selectedImage.value = File(image.path);
       print('Image path: ${image.path}');
@@ -167,7 +159,6 @@ class RaiseFundsRequestController extends GetxController {
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
-
     if (result != null) {
       final file = result.files.single;
 
@@ -216,6 +207,107 @@ class RaiseFundsRequestController extends GetxController {
       isLoading.value = false;
     }
   }
+
+
+
+  Future<void> createFundsRaiseApi() async {
+    final amount = amountController.value.text.trim();
+    final companyName = companyNameController.value.text.trim();
+    final location = locationController.value.text.trim();
+    final companyWebsite = companyWebsiteController.value.text.trim();
+    final companyDescription = companyDescriptionController.value.text.trim();
+    final raiseDescription = raiseDescriptionController.value.text.trim();
+
+    // if (amount.isEmpty) {
+    //   Get.snackbar(
+    //     'Error',
+    //     'Please enter preferred investment',
+    //     snackPosition: SnackPosition.TOP,
+    //     backgroundColor: Colors.redAccent,
+    //     colorText: AppColors.whiteColor,
+    //   );
+    //   return;
+    // }
+    // else if (preferredStage.isEmpty) {
+    //   Get.snackbar(
+    //     'Error',
+    //     'Please enter preferred stage',
+    //     snackPosition: SnackPosition.TOP,
+    //     backgroundColor: Colors.redAccent,
+    //     colorText: AppColors.whiteColor,
+    //   );
+    //   return;
+    // }
+    // else if (preferredIndustry.isEmpty) {
+    //   Get.snackbar(
+    //     'Error',
+    //     'Please enter preferred industries',
+    //     snackPosition: SnackPosition.TOP,
+    //     backgroundColor: Colors.redAccent,
+    //     colorText: AppColors.whiteColor,
+    //   );
+    //   return;
+    // }
+    // else if (preferredLocation.isEmpty) {
+    //   Get.snackbar(
+    //     'Error',
+    //     'Please enter preferred location',
+    //     snackPosition: SnackPosition.TOP,
+    //     backgroundColor: Colors.redAccent,
+    //     colorText: AppColors.whiteColor,
+    //   );
+    //   return;
+    // }
+    try {
+      isLoading.value = true;
+      final response = await apiServices.createFundsRaiseApi(
+        amount,
+        ,
+        email,
+        location,
+        preferredInvestment,
+        preferredStage,
+        preferredIndustry,
+        preferredLocation,
+      );
+      print("Status Code: ${response?.statusCode}");
+      print("Message: ${response?.message}");
+      if (response?.statusCode == 201) {
+        isLoading.value = false;
+        Get.snackbar(
+          'Success',
+          response?.message ?? 'Set Preferences successfully',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: AppColors.blackColor,
+          colorText: AppColors.whiteColor,
+        );
+
+      } else {
+        isLoading.value = false;
+        Get.snackbar(
+          'Set Preferences Failed',
+          response?.message ?? 'Preferences failed',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: AppColors.blackColor,
+          colorText: AppColors.whiteColor,
+        );
+      }
+    } catch (e) {
+      print('object ${e}');
+      isLoading.value = false;
+      Get.snackbar(
+        'Error',
+        'Something went wrong. Please try again.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.blackColor,
+        colorText: AppColors.whiteColor,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
 
 }
 

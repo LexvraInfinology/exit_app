@@ -15,33 +15,6 @@ class CreateFundsRequestScreen extends StatelessWidget {
   int selectedPurpose = 1;
   int selectedInvestor = 1;
 
-  final List<_InvestorOption> investors = [
-    _InvestorOption(
-      icon: Icons.public,
-      name: 'Product Development',
-      subtitle: 'Build and improve your product',
-    ),
-    _InvestorOption(
-      icon: Icons.business_center_outlined,
-      name: 'Market Expansion',
-      subtitle: 'Grow into new markets',
-    ),
-    _InvestorOption(
-      icon: Icons.people_outline,
-      name: 'Team Hiring',
-      subtitle: 'Hire key people and build your team',
-    ),
-    _InvestorOption(
-      icon: Icons.campaign_outlined,
-      name: 'Marketing & Growth',
-      subtitle: 'Increase awareness and customers',
-    ),
-    _InvestorOption(
-      icon: Icons.inventory_2_outlined,
-      name: 'Working Capital',
-      subtitle: 'Support day-to-day operations',
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -121,8 +94,9 @@ class CreateFundsRequestScreen extends StatelessWidget {
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Row(
@@ -339,7 +313,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                 'How much are you looking to raise?',
                 style: GoogleFonts.montserrat(
                   color: AppColors.whiteColor,
-                  fontSize: 15,
+                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -348,7 +322,8 @@ class CreateFundsRequestScreen extends StatelessWidget {
                 'Tell us how much capital you are looking to raise.',
                 style: GoogleFonts.montserrat(
                   color: Color(0xFF777777),
-                  fontSize: 10,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500
                 ),
               ),
               const SizedBox(height: 12),
@@ -478,15 +453,14 @@ class CreateFundsRequestScreen extends StatelessWidget {
               ),
               const SizedBox(height: 11),
               Obx(
-                () => Wrap(
+                    () => Wrap(
                   spacing: 8,
                   runSpacing: 8,
                   children: List.generate(
-                    controller.purposes.length,
-                    (index) {
+                    controller.stageList.length,
+                        (index) {
                       final selected =
                           controller.selectedPurpose.value == index;
-
                       return GestureDetector(
                         onTap: () {
                           controller.selectedPurpose.value = index;
@@ -510,14 +484,15 @@ class CreateFundsRequestScreen extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            controller.purposes[index],
+                            controller.stageList[index].name,
                             style: GoogleFonts.montserrat(
                               color: selected
                                   ? AppColors.whiteColor
                                   : const Color(0xFF777777),
                               fontSize: 10,
-                              fontWeight:
-                                  selected ? FontWeight.w600 : FontWeight.w400,
+                              fontWeight: selected
+                                  ? FontWeight.w600
+                                  : FontWeight.w400,
                             ),
                           ),
                         ),
@@ -525,7 +500,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                     },
                   ),
                 ),
-              ),
+              )
             ],
           ),
           SizedBox(
@@ -1114,37 +1089,38 @@ class CreateFundsRequestScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              Text(
-                'Company Stage',
-                style: GoogleFonts.montserrat(
-                  color: Color(0xFF858585),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
 
-              const SizedBox(height: 8),
-              Container(
-                height: 53,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF111111),
-                  borderRadius: BorderRadius.circular(11),
-                  border: Border.all(
-                    color: const Color(0xFF2B2B2B),
-                  ),
-                ),
-                child: TextField(
-                  style: const TextStyle(
-                    color: Color(0xFFE7E7E7),
-                    fontSize: 15,
-                  ),
-                  cursorColor: AppColors.whiteColor,
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
+              // Text(
+              //   'Company Stage',
+              //   style: GoogleFonts.montserrat(
+              //     color: Color(0xFF858585),
+              //     fontSize: 12,
+              //     fontWeight: FontWeight.w400,
+              //   ),
+              // ),
+              // const SizedBox(height: 8),
+              // Container(
+              //   height: 53,
+              //   decoration: BoxDecoration(
+              //     color: const Color(0xFF111111),
+              //     borderRadius: BorderRadius.circular(11),
+              //     border: Border.all(
+              //       color: const Color(0xFF2B2B2B),
+              //     ),
+              //   ),
+              //   child: TextField(
+              //     style: const TextStyle(
+              //       color: Color(0xFFE7E7E7),
+              //       fontSize: 15,
+              //     ),
+              //     cursorColor: AppColors.whiteColor,
+              //     decoration: const InputDecoration(
+              //       contentPadding: EdgeInsets.symmetric(horizontal: 16),
+              //       border: InputBorder.none,
+              //     ),
+              //   ),
+              // ),
+
               const SizedBox(height: 20),
               Text(
                 'GST Number',

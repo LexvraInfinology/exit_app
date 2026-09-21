@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:exit_app/models/create_fund_model_class.dart';
 import 'package:exit_app/models/create_profile_model.dart';
 import 'package:exit_app/models/founder_discovery_response.dart';
 import 'package:exit_app/models/get_plan_model.dart';
@@ -7,6 +8,7 @@ import 'package:exit_app/models/profile_model.dart';
 import 'package:exit_app/models/marketplace_Industries_model.dart';
 import 'package:exit_app/models/need_attention_response.dart';
 import 'package:exit_app/models/saved_investor_model.dart';
+import 'package:exit_app/screens/raise_funds_screen/create_funds_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -68,7 +70,8 @@ class ApiServices {
   }
 
   Future<CreateProfileModel?> createProfileApi(String first_name,
-      String last_name, String email, String current_location) async {
+      String last_name, String email, String current_location)
+  async {
     final token = prefs.getString('token');
     debugPrint('object${token}');
     final Uri url = Uri.parse(ApiUtils.createProfileApi);
@@ -215,7 +218,6 @@ class ApiServices {
     }
     return null;
   }
-
 
   Future<GetPlanModel?> getPlanApi() async {
     final token = prefs.getString('token');
@@ -381,6 +383,47 @@ class ApiServices {
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
       return ProfileModel.fromJson(jsonResponse);
+    }
+  }
+
+  Future<CreateFundRaiseModel?> createFundsRaiseApi(String funding_goal,
+      String stage, String purpose, String company_name, String industry,
+      String location, String company_website, String company_description,
+      String raise_description, String funding_timeline,String pitch_deck,)
+  async {
+    final token = prefs.getString('token');
+    debugPrint('object${token}');
+    final Uri url = Uri.parse(ApiUtils.createFundsRaiseApi);
+    var data = {
+      "funding_goal": funding_goal,
+      "stage": stage,
+      "purpose": purpose,
+      "company_name": company_name,
+      "industry": industry,
+      "location": location,
+      "company_website": company_website,
+      "company_description": company_description,
+      "raise_description": raise_description,
+      "funding_timeline": funding_timeline,
+      "pitch_deck": pitch_deck,
+    };
+
+    final response = await http.post(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+      body: jsonEncode(data),
+    );
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      return CreateFundRaiseModel.fromJson(jsonResponse);
     }
   }
 
