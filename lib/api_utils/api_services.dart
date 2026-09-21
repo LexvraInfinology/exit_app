@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:exit_app/models/conversation_response.dart';
 import 'package:exit_app/models/create_fund_model_class.dart';
 import 'package:exit_app/models/create_profile_model.dart';
 import 'package:exit_app/models/founder_discovery_response.dart';
@@ -8,6 +9,7 @@ import 'package:exit_app/models/profile_model.dart';
 import 'package:exit_app/models/marketplace_Industries_model.dart';
 import 'package:exit_app/models/need_attention_response.dart';
 import 'package:exit_app/models/saved_investor_model.dart';
+import 'package:exit_app/models/update_profile_response.dart';
 import 'package:exit_app/screens/raise_funds_screen/create_funds_request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -238,6 +240,29 @@ class ApiServices {
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
       return MarketplaceIndustriesResponse.fromJson(jsonResponse);
+    }
+    return null;
+  }
+
+  Future<ConversationResponse?> getChatListApi() async {
+    final token = prefs.getString('token');
+    final Uri url = Uri.parse(ApiUtils.chatListApi);
+    final response = await http.get(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      return ConversationResponse.fromJson(jsonResponse);
     }
     return null;
   }
@@ -563,6 +588,103 @@ class ApiServices {
       return FounderDiscoveryResponse.fromJson(jsonResponse);
     }
     return null;
+  }
+
+  Future<UpdateProfileResponse?> updateProfileApi({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String currentLocation,
+    required String userRole,
+    String? profileImagePath,
+    required String bio,
+    required String experience,
+    required String currentStage,
+    required String teamSize,
+    required String preferredInvestment,
+    required String preferredStage,
+    required String preferredIndustries,
+    required String preferredLocation,
+  }) async {
+    try {
+      final token = prefs.getString('token');
+
+      final Uri url = Uri.parse(ApiUtils.getUserProfile);
+
+      final request = http.MultipartRequest(
+        'PATCH',
+        url,
+      );
+
+      // Headers
+      request.headers.addAll({
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      });
+
+      // Fields
+      request.fields.addAll({
+        "first_name": firstName,
+        "last_name": lastName,
+        "email": email,
+        "current_location": currentLocation,
+        "user_role": userRole,
+        "bio": bio,
+        "experience": experience,
+        "current_stage": currentStage,
+        "team_size": teamSize,
+        "preferred_investment": preferredInvestment,
+        "preferred_stage": preferredStage,
+        "preferred_industries": preferredIndustries,
+        "preferred_location": preferredLocation,
+      });
+
+      // Profile Image
+      if (profileImagePath != null &&
+          profileImagePath.isNotEmpty) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            "profile_photo",
+            profileImagePath,
+          ),
+        );
+      }
+
+      debugPrint("API URL: $url");
+      debugPrint("Request Fields: ${request.fields}");
+      debugPrint("Profile Image: $profileImagePath");
+
+      final streamedResponse = await request.send();
+
+      final response = await http.Response.fromStream(
+        streamedResponse,
+      );
+
+      debugPrint("Status Code: ${response.statusCode}");
+      debugPrint("Response Body: ${response.body}");
+
+      if (response.statusCode >= 200 &&
+          response.statusCode < 300) {
+        final Map<String, dynamic> jsonResponse =
+        jsonDecode(response.body);
+
+        await getPlanApi();
+
+        return UpdateProfileResponse.fromJson(jsonResponse);
+      }
+
+      debugPrint(
+        "Update Profile Failed: "
+            "${response.statusCode} - ${response.body}",
+      );
+
+      return null;
+    } catch (e, stackTrace) {
+      debugPrint("Update Profile Error: $e");
+      debugPrint("StackTrace: $stackTrace");
+
+      return null;
+    }
   }
 
 }

@@ -472,9 +472,6 @@ class ChooseUserController extends GetxController {
           //     : response?.data?.user?.role == 'founder'
           //         ? Get.to(() => FounderDashboardScreen())
           //         : Get.to(() => StartupDashboardScreen());
-          if (response?.data?.user?.role == 'investor') {
-          await  Get.put(InvestorDashboardController()).loadHomePage();
-          }
           response?.data?.user?.has_profile == true
               ? response?.data?.user?.role == 'investor'
               ? Get.to(() => InvestorDashBoardScreen())

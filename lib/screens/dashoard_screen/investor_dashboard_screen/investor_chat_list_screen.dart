@@ -1,4 +1,5 @@
 import 'package:exit_app/controller/investor_dashboard_controller.dart';
+import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/investor_home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,62 +22,7 @@ class InvestorChatListScreen extends StatelessWidget{
     'Founders',
     'Team',
   ];
-  final conversations = [
-    {
-      'name': 'Northstar Ventures',
-      'preview1': 'Thanks for sharing the deck.',
-      'preview2': 'Let’s schedule a call this week.',
-      'time': '9:30 AM',
-      'unread': "2",
-      'verified': true,
-      'subtitle': 'Angel',
-    },
-    {
-      'name': 'Accel',
-      'preview1': 'We’d love to learn more about',
-      'preview2': 'NovaNest. Can you share more...',
-      'time': 'Yesterday',
-      'unread': "1",
-      'verified': true,
-      'subtitle': 'Angel',
-    },
-    {
-      'name': 'Sequoia Capital India',
-      'preview1': 'Great traction, NovaNest looks',
-      'preview2': 'promising!',
-      'time': 'Yesterday',
-      'unread': "0",
-      'verified': true,
-      'subtitle': 'Angel',
-    },
-    {
-      'name': 'Arjun Mehta',
-      'preview1': 'Interesting! Let’s connect next week.',
-      'preview2': '',
-      'time': '1w ago',
-      'unread': "0",
-      'verified': false,
-      'subtitle': 'Angel',
-    },
-    {
-      'name': 'Northstar Ventures',
-      'preview1': 'Thanks for sharing the deck.',
-      'preview2': 'Let’s schedule a call this week.',
-      'time': '9:30 AM',
-      'unread': "2",
-      'verified': true,
-      'subtitle': 'Angel',
-    },
-    {
-      'name': 'Accel',
-      'preview1': 'We’d love to learn more about',
-      'preview2': 'NovaNest. Can you share more...',
-      'time': 'Yesterday',
-      'unread': "1",
-      'verified': true,
-      'subtitle': 'Angel',
-    },
-  ];
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<InvestorDashboardController>(builder: (investorDashboardController){
@@ -192,11 +138,11 @@ class InvestorChatListScreen extends StatelessWidget{
                           Column(
                             children: [
                               ListView.builder(
-                                  itemCount: conversations.length,
+                                  itemCount: investorDashboardController.chats.length,
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
-                                    final conversation = conversations[index];
+                                    final conversation = investorDashboardController.chats[index];
                                     return GestureDetector(
                                       onTap: () {
                                         investorDashboardController.clickChatItem();
@@ -235,8 +181,7 @@ class InvestorChatListScreen extends StatelessWidget{
                                                     children: [
                                                       Flexible(
                                                         child: Text(
-                                                          conversation['name']
-                                                              .toString(),
+                                                          conversation.name,
                                                           maxLines: 1,
                                                           overflow:
                                                           TextOverflow.ellipsis,
@@ -249,9 +194,7 @@ class InvestorChatListScreen extends StatelessWidget{
                                                           ),
                                                         ),
                                                       ),
-                                                      if (conversation['verified']
-                                                          .toString() !=
-                                                          true) ...[
+                                                      if (true) ...[
                                                         const SizedBox(width: 3),
                                                         const Icon(
                                                           Icons.verified,
@@ -261,26 +204,10 @@ class InvestorChatListScreen extends StatelessWidget{
                                                       ],
                                                     ],
                                                   ),
-                                                  if (conversation['subtitle'] !=
-                                                      null)
-                                                    Padding(
-                                                      padding:
-                                                      const EdgeInsets.only(
-                                                          top: 0),
-                                                      child: Text(
-                                                        conversation['subtitle']
-                                                            .toString()!,
-                                                        style: const TextStyle(
-                                                          color: Color(0xFF707076),
-                                                          fontSize: 10,
-                                                        ),
-                                                      ),
-                                                    ),
                                                   const SizedBox(height: 5),
                                                   Text(
-                                                    conversation['preview1']
-                                                        .toString(),
-                                                    maxLines: 1,
+                                                    conversation.latestMessage,
+                                                    maxLines: 3,
                                                     overflow: TextOverflow.ellipsis,
                                                     style: const TextStyle(
                                                       color: Color(0xFF707076),
@@ -288,23 +215,7 @@ class InvestorChatListScreen extends StatelessWidget{
                                                       height: 1.2,
                                                     ),
                                                   ),
-                                                  if (conversation['preview2']
-                                                      .toString()
-                                                      .isNotEmpty) ...[
-                                                    const SizedBox(height: 4),
-                                                    Text(
-                                                      conversation['preview2']
-                                                          .toString(),
-                                                      maxLines: 1,
-                                                      overflow:
-                                                      TextOverflow.ellipsis,
-                                                      style: const TextStyle(
-                                                        color: Color(0xFF707076),
-                                                        fontSize: 14,
-                                                        height: 1.2,
-                                                      ),
-                                                    ),
-                                                  ],
+
                                                 ],
                                               ),
                                             ),
@@ -316,19 +227,15 @@ class InvestorChatListScreen extends StatelessWidget{
                                               MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  conversation['time'].toString(),
+                                                  conversation.unreadCount != 0 ? timeAgo(conversation.latestMessageTime):"",
                                                   style: TextStyle(
-                                                    color: conversation['unread']
-                                                        .toString() !=
-                                                        '0'
+                                                    color: conversation.unreadCount != 0
                                                         ? AppColors.whiteColor
                                                         : const Color(0xFF6D6D73),
                                                     fontSize: 10.5,
                                                   ),
                                                 ),
-                                                if (conversation['unread']
-                                                    .toString() !=
-                                                    0) ...[
+                                                if (true) ...[
                                                   const SizedBox(height: 7),
                                                   Container(
                                                     width: 20,
@@ -339,7 +246,7 @@ class InvestorChatListScreen extends StatelessWidget{
                                                     ),
                                                     alignment: Alignment.center,
                                                     child: Text(
-                                                      '${conversation['unread'].toString()}',
+                                                      conversation.unreadCount.toString(),
                                                       style: const TextStyle(
                                                         color:AppColors.blackColor,
                                                         fontSize: 11,

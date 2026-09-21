@@ -898,20 +898,40 @@ class InvestorHomeScreen extends StatelessWidget {
   }
 }
 
-String timeAgo(String dateString) {
-  final dateTime = DateTime.parse(dateString).toLocal();
-  final now = DateTime.now();
-  final difference = now.difference(dateTime);
+String timeAgo(String? dateString) {
+  if (dateString == null || dateString.trim().isEmpty) {
+    return '';
+  }
 
-  if (difference.inSeconds < 60) {
-    return '${difference.inSeconds}s ago';
-  } else if (difference.inMinutes < 60) {
-    return '${difference.inMinutes} min ago';
-  } else if (difference.inHours < 24) {
-    return '${difference.inHours} hr ago';
-  } else if (difference.inDays < 7) {
-    return '${difference.inDays} days ago';
-  } else {
+  try {
+    final dateTime = DateTime.parse(dateString).toLocal();
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+
+    if (difference.isNegative) {
+      return 'Just now';
+    }
+
+    if (difference.inSeconds < 60) {
+      return '${difference.inSeconds}s ago';
+    }
+
+    if (difference.inMinutes < 60) {
+      return '${difference.inMinutes} min ago';
+    }
+
+    if (difference.inHours < 24) {
+      return '${difference.inHours} hr ago';
+    }
+
+    if (difference.inDays < 7) {
+      return '${difference.inDays} days ago';
+    }
+
     return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+  } catch (e) {
+    debugPrint('❌ INVALID DATE RECEIVED: "$dateString"');
+    debugPrint('❌ DATE ERROR: $e');
+    return '';
   }
 }
