@@ -1,4 +1,5 @@
 import 'package:exit_app/constants/app_color.dart';
+import 'package:exit_app/models/marketplace_Industries_model.dart';
 import 'package:exit_app/screens/dashoard_screen/founder_dashboard/widgets/filtter_button_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -110,10 +111,10 @@ class ViewAllInvestorScreen extends StatelessWidget {
                               text: 'Stage',
                               showArrow: true,
                               options: [
-                                'Pre-Seed',
-                                'Seed',
-                                'Series A',
-                                'Series B',
+                                MarketplaceIndustry(id: "1",name: "Pre-Seed"),
+                                MarketplaceIndustry(id: "2",name: "Seed"),
+                                MarketplaceIndustry(id: "3",name: "Series A"),
+                                MarketplaceIndustry(id: "4",name: "Series B")
                               ],
                             ),
                             const SizedBox(width: 8),
@@ -122,10 +123,10 @@ class ViewAllInvestorScreen extends StatelessWidget {
                               text: 'Sector',
                               showArrow: true,
                               options: [
-                                'SaaS',
-                                'FinTech',
-                                'AI / ML',
-                                'HealthTech',
+                                MarketplaceIndustry(id: "1",name: "SaaS"),
+                                MarketplaceIndustry(id: "2",name: "FinTech"),
+                                MarketplaceIndustry(id: "3",name: "AI / ML"),
+                                MarketplaceIndustry(id: "4",name: "HealthTech")
                               ],
                             ),
                             const SizedBox(width: 8),
@@ -134,10 +135,10 @@ class ViewAllInvestorScreen extends StatelessWidget {
                               text: 'Under ₹25L',
                               showArrow: true,
                               options: [
-                                'Under ₹25L',
-                                '₹25L–₹50L',
-                                '₹50L–₹1Cr',
-                                '₹1Cr–₹5Cr',
+                                MarketplaceIndustry(id: "1",name: "Under ₹25L"),
+                                MarketplaceIndustry(id: "2",name: "₹25L–₹50L"),
+                                MarketplaceIndustry(id: "3",name: "₹50L–₹1Cr"),
+                                MarketplaceIndustry(id: "4",name: "₹1Cr–₹5Cr")
                               ],
                             ),
                             const SizedBox(width: 8),
@@ -146,10 +147,10 @@ class ViewAllInvestorScreen extends StatelessWidget {
                               text: 'India',
                               showArrow: true,
                               options: [
-                                'India',
-                                'Delhi NCR',
-                                'Mumbai',
-                                'Bengaluru',
+                                MarketplaceIndustry(id: "1",name: "India"),
+                                MarketplaceIndustry(id: "2",name: "Delhi NCR"),
+                                MarketplaceIndustry(id: "3",name: "Mumbai"),
+                                MarketplaceIndustry(id: "4",name: "Bengaluru")
                               ],
                             ),
                           ],

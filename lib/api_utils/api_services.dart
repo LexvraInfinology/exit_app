@@ -191,6 +191,55 @@ class ApiServices {
     return null;
   }
 
+
+  Future<MarketplaceIndustriesResponse?> getMarketplaceRangesApi() async {
+    final token = prefs.getString('token');
+    final Uri url = Uri.parse(ApiUtils.marketplaceRangesApi);
+    final response = await http.get(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      return MarketplaceIndustriesResponse.fromJson(jsonResponse);
+    }
+    return null;
+  }
+
+
+  Future<MarketplaceIndustriesResponse?> getMarketplaceLocationsApi() async {
+    final token = prefs.getString('token');
+    final Uri url = Uri.parse(ApiUtils.marketplaceLocationsApi);
+    final response = await http.get(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      return MarketplaceIndustriesResponse.fromJson(jsonResponse);
+    }
+    return null;
+  }
+
+
   Future<MarketplaceIndustriesResponse?> getFundsRaisePurposeApi() async {
     final token = prefs.getString('token');
 

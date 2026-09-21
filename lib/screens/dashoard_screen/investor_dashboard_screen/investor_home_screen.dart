@@ -131,29 +131,33 @@ class InvestorHomeScreen extends StatelessWidget {
                           child: SingleChildScrollView(
                             child: Column(
                               children: [
-                                Row(
+                                homeController.needsAttentionList.isNotEmpty ? Column(
                                   children: [
-                                    Expanded(
-                                      child: Text(
-                                        'Needs your attention',
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 14,
-                                          color: AppColors.whiteColor,
-                                          fontWeight: FontWeight.w600,
-                                          letterSpacing: -0.2,
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            'Needs your attention',
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 14,
+                                              color: AppColors.whiteColor,
+                                              fontWeight: FontWeight.w600,
+                                              letterSpacing: -0.2,
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                        Text(
+                                          'View all (2)',
+                                          style: GoogleFonts.montserrat(
+                                            color: const Color(0xFF858585),
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      'View all (2)',
-                                      style: GoogleFonts.montserrat(
-                                        color: Color(0xFF858585),
-                                        fontSize: 12,
-                                      ),
-                                    ),
+                                    const SizedBox(height: 20),
                                   ],
-                                ),
-                                const SizedBox(height: 20),
+                                ):const SizedBox(),
                                 Container(
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF111111),
@@ -258,12 +262,12 @@ class InvestorHomeScreen extends StatelessWidget {
                                       //       );
                                       //     }))
 
+                                      homeController.needsAttentionList.isNotEmpty ?
                                       ListView.builder(
-                                        itemCount: homeController.needsAttentionList.length,
+                                        itemCount: 2,
                                         shrinkWrap: true,
                                         itemBuilder: (context, index) {
                                           final item = homeController.needsAttentionList[index];
-
                                           return Padding(
                                             padding: const EdgeInsets.fromLTRB(16, 17, 16, 18),
                                             child: Column(
@@ -330,12 +334,12 @@ class InvestorHomeScreen extends StatelessWidget {
                                             ),
                                           );
                                         },
-                                      )
+                                      ):SizedBox()
                                     ],
                                   ),
                                 ),
-                                const SizedBox(
-                                  height: 20,
+                                SizedBox(
+                                  height: homeController.needsAttentionList.isNotEmpty ? 20:0,
                                 ),
                                 Row(
                                   children: [

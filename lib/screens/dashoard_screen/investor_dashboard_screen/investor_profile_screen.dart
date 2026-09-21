@@ -17,7 +17,13 @@ class InvestorProfileScreen extends StatelessWidget {
       return Scaffold(
         backgroundColor: AppColors.blackColor,
         body: SafeArea(
-            child: Column(
+            child:  profileController.isLoading.value
+                ? const Center(
+                child: CupertinoActivityIndicator(
+                  radius: 15,
+                  color: Colors.white,
+                ))
+                : Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(24.0),
@@ -110,14 +116,17 @@ class InvestorProfileScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Aarav Mehta',
-                                  style: GoogleFonts.montserrat(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.whiteColor),
+                                Obx(() => Text(
+                                    profileController.resultProfile.isNotEmpty
+                                        ? '${profileController.resultProfile.first.firstName} ${profileController.resultProfile.first.lastName}'
+                                        : '',
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.whiteColor),
+                                  ),
                                 ),
-                                SizedBox(height: 3),
+                                const SizedBox(height: 3),
                                 Text(
                                   'Founder & CEO',
                                   style: GoogleFonts.montserrat(
@@ -125,25 +134,33 @@ class InvestorProfileScreen extends StatelessWidget {
                                     color: AppColors.darkGreyColor,
                                   ),
                                 ),
-                                SizedBox(height: 4),
+                                const SizedBox(height: 4),
                                 Row(
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.location_on_outlined,
                                       size: 14,
                                       color: AppColors.darkGreyColor,
                                     ),
-                                    SizedBox(width: 3),
-                                    Text(
-                                      'Mohali',
+                                    const SizedBox(width: 3),
+                                    Obx(() => Text(
+                                      profileController
+                                          .resultProfile.isNotEmpty
+                                          ? profileController
+                                          .resultProfile
+                                          .first
+                                          .currentLocation ??
+                                          ''
+                                          : '',
                                       style: GoogleFonts.montserrat(
-                                        fontSize: 12,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
                                         color: AppColors.darkGreyColor,
                                       ),
-                                    ),
+                                    )),
                                   ],
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                                 // Row(
                                 //   children: [
                                 //     _Tag(text: 'FinTech'),
@@ -199,17 +216,23 @@ class InvestorProfileScreen extends StatelessWidget {
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
-                          Text(
-                            'Founder and product builder focused on building technology that solves real business problems.',
-                            style: GoogleFonts.montserrat(
+                          Obx(
+                                () => Text(
+                              profileController.resultProfile.isNotEmpty
+                                  ? profileController.resultProfile.first.bio ?? ''
+                                  : '',
+                              style: GoogleFonts.montserrat(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
                                 color: AppColors.darkGreyColor,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400),
+                                height: 1.7,
+                              ),
+                            ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Text(
@@ -219,15 +242,15 @@ class InvestorProfileScreen extends StatelessWidget {
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Container(
                             width: MediaQuery.sizeOf(context).width,
                             decoration: BoxDecoration(
-                                color: Color(0xFF111111),
+                                color: const Color(0xFF111111),
                                 border: Border.all(
-                                    color: Color(0xFF292929), width: 1),
+                                    color: const Color(0xFF292929), width: 1),
                                 borderRadius: BorderRadius.circular(10)),
                             child: Padding(
                               padding: const EdgeInsets.all(24.0),
@@ -245,7 +268,7 @@ class InvestorProfileScreen extends StatelessWidget {
                                     height: 16,
                                   ),
                                   Text(
-                                    '₹25L – ₹2Cr',
+                                    profileController.resultProfile.first.preferredInvestment ?? "",
                                     style: GoogleFonts.montserrat(
                                         color: AppColors.whiteColor,
                                         fontWeight: FontWeight.w500,
@@ -274,30 +297,24 @@ class InvestorProfileScreen extends StatelessWidget {
                                   ),
                                   SizedBox(
                                     height: 30,
-                                    child: ListView.builder(
-                                        itemCount: 2,
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (context, index) {
-                                          return Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 4),
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 5),
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                    color: Color(0xFF272727))),
-                                            child: Text(
-                                              'Seed',
-                                              style: GoogleFonts.montserrat(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.whiteColor),
-                                            ),
-                                          );
-                                        }),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: Color(0xFF272727))),
+                                      child: Text(
+                                        profileController.resultProfile.first.preferredStage ?? "",
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.whiteColor),
+                                      ),
+                                    ),
                                   ),
                                   const SizedBox(
                                     height: 16,
@@ -322,31 +339,24 @@ class InvestorProfileScreen extends StatelessWidget {
                                   ),
                                   SizedBox(
                                     height: 30,
-                                    child: ListView.builder(
-                                        itemCount: 2,
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.horizontal,
-                                        itemBuilder: (context, index) {
-                                          return Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 4),
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 5),
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                    color: Color(0xFF272727))),
-                                            child: Text(
-                                              'Fintech',
-                                              style: GoogleFonts.montserrat(
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.whiteColor),
-                                            ),
-                                          );
-                                        }),
-                                  ),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: const Color(0xFF272727))),
+                                      child: Text(
+                                          profileController.resultProfile.first.preferredIndustries ?? "",
+                                          style: GoogleFonts.montserrat(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.whiteColor),
+                                    ),
+                                  )),
                                   const SizedBox(
                                     height: 16,
                                   ),
@@ -369,7 +379,7 @@ class InvestorProfileScreen extends StatelessWidget {
                                     height: 16,
                                   ),
                                   Text(
-                                    'India',
+                                      profileController.resultProfile.first.preferredLocation ?? "",
                                     style: GoogleFonts.montserrat(
                                         color: AppColors.whiteColor,
                                         fontWeight: FontWeight.w500,

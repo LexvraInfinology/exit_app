@@ -29,7 +29,6 @@ class ChooseUserController extends GetxController {
   final RxInt selectedIndex = 0.obs;
   var isLoading = false.obs;
   final ApiServices apiServices = ApiServices();
-  final investorHomeController = Get.put(InvestorDashboardController());
   final SharedPreferences prefs = Get.find<SharedPreferences>();
   final List<MarketplaceIndustry> industriesList = <MarketplaceIndustry>[];
   final List<MarketplaceIndustry> stagesList = <MarketplaceIndustry>[];
@@ -468,16 +467,14 @@ class ChooseUserController extends GetxController {
         print('objectempty ${prefs.getString('token')}');
 
         if (prefs.getString('token') != null) {
-          if (response?.data?.user?.role == 'investor') {
-            await investorHomeController.loadHomePage();
-          }
-
           // response?.data?.user?.role == 'investor'
           //     ? Get.to(() => InvestorDashBoardScreen())
           //     : response?.data?.user?.role == 'founder'
           //         ? Get.to(() => FounderDashboardScreen())
           //         : Get.to(() => StartupDashboardScreen());
-
+          if (response?.data?.user?.role == 'investor') {
+          await  Get.put(InvestorDashboardController()).loadHomePage();
+          }
           response?.data?.user?.has_profile == true
               ? response?.data?.user?.role == 'investor'
               ? Get.to(() => InvestorDashBoardScreen())
@@ -487,6 +484,7 @@ class ChooseUserController extends GetxController {
               : Get.to(() => const CreateProfileScreen());
         } else {
           await prefs.setString('token', response?.data?.token ?? '');
+
           await prefs.setString(
               'id', response?.data?.user?.id.toString() ?? '');
           print('objectcc ${prefs.getString('token')}');
@@ -730,7 +728,6 @@ class ChooseUserController extends GetxController {
           backgroundColor: AppColors.blackColor,
           colorText: AppColors.whiteColor,
         );
-        await investorHomeController.loadHomePage();
         Get.to(() => InvestorDashBoardScreen());
       } else {
         isLoading.value = false;

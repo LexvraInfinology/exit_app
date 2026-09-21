@@ -1,12 +1,11 @@
+import 'package:exit_app/common_widgets/filter_widget.dart';
+import 'package:exit_app/models/marketplace_Industries_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../../../constants/app_color.dart';
 import '../../../constants/app_images.dart';
 import '../../../controller/investor_dashboard_controller.dart';
-import '../founder_dashboard/widgets/filtter_button_widget.dart';
 
 class FounderDiscoverScreen extends StatelessWidget {
   List investors = [
@@ -47,31 +46,7 @@ class FounderDiscoverScreen extends StatelessWidget {
       'logo': 'M',
     },
   ];
-  List<FilterListModel> items =  [
-  FilterListModel(title: "Stage", options: [
-  'Pre-Seed',
-  'Seed',
-  'Series A',
-  'Series B',
-  ]),
-  FilterListModel(title: "Sector", options: [
-  'SaaS',
-  'FinTech',
-  'AI / ML',
-  'HealthTech',
-  ]),
-  FilterListModel(title: "Under ₹25L", options: [
-  'Under ₹25L',
-  '₹25L–₹50L',
-  '₹50L–₹1Cr',
-  '₹1Cr–₹5Cr',
-  ]),  FilterListModel(title: "India", options: [
-  'India',
-  'Delhi NCR',
-  'Mumbai',
-  'Bengaluru',
-  ]),
-  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +54,13 @@ class FounderDiscoverScreen extends StatelessWidget {
         builder: (discoverFounderController) {
       return Scaffold(
         backgroundColor: AppColors.blackColor,
-        body: SafeArea(
+        body:  discoverFounderController.isLoading.value
+            ? const Center(
+            child: CupertinoActivityIndicator(
+              radius: 15,
+              color: Colors.white,
+            ))
+            :SafeArea(
             child: Column(
               children: [
                 Padding(
@@ -160,9 +141,12 @@ class FounderDiscoverScreen extends StatelessWidget {
                      children: [
                        SizedBox(
                          height: 40,
-                         child: FilterListWidget( items: items, backgroundColor: Colors.black,
-                           buildContext: context,
-                           showArrow: true,),
+                         child: FilterHandleWidget(
+                           items: discoverFounderController.filterListItems,
+                           backgroundColor: Colors.black,
+                           showArrow: true,
+                           selectedFor: discoverFounderController.selectedFor,
+                           onFilterSelected: discoverFounderController.onFilterSelected,),
                        ),
                        const SizedBox(
                          height: 20,
@@ -179,7 +163,7 @@ class FounderDiscoverScreen extends StatelessWidget {
                                    fontSize: 12,
                                  ),
                                ),
-                               Spacer(),
+                               const Spacer(),
                                const Text(
                                  'Sort by:',
                                  style: TextStyle(
@@ -187,7 +171,7 @@ class FounderDiscoverScreen extends StatelessWidget {
                                    fontSize: 12,
                                  ),
                                ),
-                               SizedBox(width: 5),
+                               const SizedBox(width: 5),
                                const Text(
                                  'Relevance',
                                  style: TextStyle(
