@@ -26,6 +26,7 @@ import '../screens/chat_details_screen.dart';
 import '../screens/onboarding_screen.dart';
 
 class InvestorDashboardController extends GetxController {
+
   RxInt selectedIndex = 0.obs;
   int selectedFilter = 0;
 
@@ -33,7 +34,6 @@ class InvestorDashboardController extends GetxController {
 
   final RxBool isLoading = false.obs;
   final SharedPreferences prefs = Get.find<SharedPreferences>();
-
 
   final RxList<ResultsProfile> resultProfile = <ResultsProfile>[].obs;
   final List<NeedsAttentionItem> needsAttentionList =
@@ -167,8 +167,10 @@ Future<void> loadHomePage() async {
     selectedIndex.value = index;
   }
 
-  void clickFounderDetails() {
-    Get.to(() => FounderDetailsScreen());
+  void clickFounderDetails(FounderProfile? founderDetail) {
+  if(founderDetail != null){
+    Get.to(() => FounderDetailsScreen(founderProfile: founderDetail,));
+  }
   }
 
   void clickInvestmentDetails() {
@@ -177,10 +179,6 @@ Future<void> loadHomePage() async {
 
   void clickChatItem() {
     Get.to(() => ChatDetailsScreen());
-  }
-
-  void clickEditProfile() {
-    Get.to(() => EditProfileScreen());
   }
 
   void clickNotification() {
@@ -256,9 +254,19 @@ Future<void> loadHomePage() async {
                             backgroundColor: AppColors.whiteColor,
                             foregroundColor: AppColors.blackColor,
                           ),
-                          onPressed: () {
-                            prefs.clear();
-                            Get.offAll(() =>  const OnboardingScreen(),);
+                          onPressed: () async {
+                            final success = await apiServices.logoutApi();
+
+                            if (success) {
+                              await prefs.clear();
+                              Get.offAll(() => const OnboardingScreen(),
+                              );
+                            } else {
+                              Get.snackbar(
+                                'Logout Failed',
+                                'Unable to logout. Please try again.',
+                              );
+                            }
                           },
                           child: Text(
                             "Log Out",

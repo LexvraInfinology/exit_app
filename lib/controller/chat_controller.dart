@@ -24,10 +24,12 @@ enum ChatConnectionState {
 
 class ChatController extends GetxController {
   ChatController({
+    required this.conversationId,
     required this.recipientId});
 
 
   final int recipientId;
+  final String? conversationId;
   int? currentUserId;
 
 
@@ -104,6 +106,9 @@ class ChatController extends GetxController {
       }else{
         _connectionId = response.data.id;
         currentUserId = recipientId == response.data.investorId ? response.data.founderId:response.data.investorId;
+        if(conversationId != null && currentUserId != null){
+          getChatHistory(conversationId!,currentUserId!);
+        }
       }
 
 
@@ -387,6 +392,37 @@ class ChatController extends GetxController {
     debugPrint(
       'WebSocket manually disconnected',
     );
+  }
+
+  Future<void> getChatHistory(String conversationId,int currentUserId) async {
+    if (_connectionId == null) {
+      debugPrint('Get History: Conversation ID is null');
+      return;
+    }
+
+    try {
+      isLoadingHistory.value = true;
+
+      final response = await apiServices.getChatHistoryApi(
+        conversationId: conversationId,
+        currentUserId: currentUserId,
+      );
+
+      if (response == null) {
+        debugPrint('Get History: API response is null');
+        return;
+      }
+      messages.assignAll(response.data.results);
+      debugPrint(
+        'Chat History Loaded: ${messages.length} messages',
+      );
+      _scrollToBottom();
+    } catch (e, stackTrace) {
+      debugPrint('Get Chat History Error: $e');
+      debugPrintStack(stackTrace: stackTrace);
+    } finally {
+      isLoadingHistory.value = false;
+    }
   }
 
 

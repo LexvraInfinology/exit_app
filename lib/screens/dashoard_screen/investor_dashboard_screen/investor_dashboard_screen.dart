@@ -28,7 +28,8 @@ class InvestorDashBoardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder(init: InvestorDashboardController(), builder: (dashboardcontroller) {
+    return GetBuilder(init: InvestorDashboardController(),
+        builder: (dashboardcontroller) {
       return Obx(
             () => Scaffold(
           backgroundColor: AppColors.blackColor,

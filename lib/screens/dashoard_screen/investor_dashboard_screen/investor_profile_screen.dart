@@ -1,5 +1,6 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/controller/investor_dashboard_controller.dart';
+import 'package:exit_app/screens/edit_profile_screen.dart';
 import 'package:exit_app/screens/notification_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -82,10 +83,15 @@ class InvestorProfileScreen extends StatelessWidget {
                                     color: AppColors.darkGreyColor,
                                     width: 2,
                                   ),
-                                  // image: const DecorationImage(
-                                  //   image: AssetImage('assets/profile.jpg'),
-                                  //   fit: BoxFit.cover,
-                                  // ),
+                                  image: profileController.resultProfile.isNotEmpty &&
+                                      profileController.resultProfile.first.profilePhoto != null
+                                      ? DecorationImage(
+                                    image: NetworkImage(
+                                      profileController.resultProfile.first.profilePhoto!,
+                                    ),
+                                    fit: BoxFit.cover,
+                                  )
+                                      : null,
                                 ),
                               ),
                               Positioned(
@@ -183,7 +189,9 @@ class InvestorProfileScreen extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(16, 20, 16, 10),
                       child: GestureDetector(
                         onTap: () {
-                          profileController.clickEditProfile();
+                          Get.to(() => EditProfileScreen(
+                            isFounder: false,
+                          profile: profileController.resultProfile.first,));
                         },
                         child: Container(
                           width: MediaQuery.sizeOf(context).width,
@@ -352,8 +360,18 @@ class InvestorProfileScreen extends StatelessWidget {
                                           border: Border.all(
                                               color: const Color(0xFF272727))),
                                       child: Text(
-                                        profileController.resultProfile.isNotEmpty
-                                            ? profileController.resultProfile.first.preferredIndustries ?? "":"",
+                                        profileController.resultProfile.isNotEmpty &&
+                                            profileController.resultProfile.first.preferredIndustries != null
+                                            ? profileController.industriesList
+                                            .where(
+                                              (item) =>
+                                          item.id ==
+                                              profileController.resultProfile.first.preferredIndustries,
+                                        )
+                                            .map((item) => item.name)
+                                            .firstOrNull ??
+                                            ""
+                                            : "",
                                           style: GoogleFonts.montserrat(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w400,
@@ -382,8 +400,18 @@ class InvestorProfileScreen extends StatelessWidget {
                                     height: 16,
                                   ),
                                   Text(
-                                    profileController.resultProfile.isNotEmpty
-                                        ?  profileController.resultProfile.first.preferredLocation ?? "":"",
+                                    profileController.resultProfile.isNotEmpty &&
+                                        profileController.resultProfile.first.preferredLocation != null
+                                        ? profileController.locationsList
+                                        .where(
+                                          (item) =>
+                                      item.id ==
+                                          profileController.resultProfile.first.preferredLocation,
+                                    )
+                                        .map((item) => item.name)
+                                        .firstOrNull ??
+                                        ""
+                                        : "",
                                     style: GoogleFonts.montserrat(
                                         color: AppColors.whiteColor,
                                         fontWeight: FontWeight.w500,

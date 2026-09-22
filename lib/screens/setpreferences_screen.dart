@@ -12,244 +12,202 @@ class SetPreferencesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final isKeyboardOpen = keyboardHeight > 0;
-    return GetBuilder<ChooseUserController>(builder: (controller) {
-      return Scaffold(
+    return GetBuilder<ChooseUserController>(
+        builder: (controller) { return Scaffold(
+      backgroundColor: Colors.black,
+      body: Scaffold(
         backgroundColor: Colors.black,
-        body: Scaffold(
-          backgroundColor: Colors.black,
-          body: Stack(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height,
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 50),
-                      Center(child: Image.asset(AppImages.setPrefrenceImage)),
-                      const SizedBox(height: 24),
-                      const Center(
-                        child: Text(
-                          'Set your preferences',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Center(
-                        child: Text(
-                          'Tell us what fits your investment strategy.',
-                          style: TextStyle(
-                              color: Colors.white60,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w300),
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-                      const Text('Typical Investment',
-                          style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600)),
-                      const SizedBox(height: 8),
-                      CustomTextField(
-                          keyboardType: TextInputType.number,
-                          controller:
-                              controller.preferredInvestmentController.value,
-                          hint: 'Enter amount'),
-                      const SizedBox(height: 24),
-                      const Text('Preferred Stage',
-                          style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600)),
-                      const SizedBox(height: 8),
-                      _buildDropdownField(
-                        hint: 'Select Industry',
-                        value: controller.preferredIndustryController.value.text
-                                .trim()
-                                .isEmpty
-                            ? null
-                            : controller.preferredIndustryController.value.text
-                                .trim(),
-                        items: controller.industriesList,
-                        onChanged: (val) {
-                          if (val != null) {
-                            controller.onChangeIndustry(val);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      const Text('Preferred industries',
-                          style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600)),
-                      const SizedBox(height: 8),
-                      _buildDropdownField(
-                        hint: 'Select stage',
-                        value: controller.preferredStageController.value.text
-                                .trim()
-                                .isEmpty
-                            ? null
-                            : controller.preferredStageController.value.text
-                                .trim(),
-                        items: controller.stagesList,
-                        onChanged: (val) {
-                          if (val != null) {
-                            controller.onChangeStage(val);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      const Text('Preferred location',
-                          style:
-                              TextStyle(color: Colors.white70, fontSize: 13)),
-                      const SizedBox(height: 8),
-                      CustomTextField(
-                          controller:
-                              controller.preferredLocationController.value,
-                          hint: 'Enter your Preferred Location'),
-                      const SizedBox(height: 24),
-                      const Text('Founded',
-                          style:
-                              TextStyle(color: Colors.white70, fontSize: 13)),
-                      const SizedBox(height: 8),
-                      CustomTextField(
-                          controller: controller.foundedController.value,
-                          hint: 'Founded'),
-                      const SizedBox(height: 24),
-                      const Text('Preferred industries',
-                          style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600)),
-                      const SizedBox(height: 8),
-                      _buildDropdownField(
-                        hint: 'Select stage',
-                        value: controller.fundingTypeController.value.text
-                                .trim()
-                                .isEmpty
-                            ? null
-                            : controller.fundingTypeController.value.text
-                                .trim(),
-                        items: controller.fundingTypeList,
-                        onChanged: (val) {
-                          if (val != null) {
-                            controller.onChangeFundType(val);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 150),
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 50,
-                left: 0,
-                child: Row(
+        body: Stack(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Container(
-                      width: 40,
-                      height: 40,
-                      padding: const EdgeInsets.all(1.4),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: const LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.white,
-                            Colors.white54,
-                            Colors.white12,
-                          ],
-                          stops: [0.0, 0.45, 1.0],
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.blackColor.withOpacity(0.35),
-                            blurRadius: 8,
-                            spreadRadius: 0,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF1A1A1A),
-                          shape: BoxShape.circle,
-                        ),
-                        child:  Icon(
-                          Icons.chevron_left,
-                          color: AppColors.whiteColor,
-                          size: 25,
+                    const SizedBox(height: 50),
+                        Center(child: Image.asset(AppImages.setPrefrenceImage)),
+                    const SizedBox(height: 24),
+                    const Center(
+                      child: Text(
+                        'Set your preferences',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
+                    const SizedBox(height: 8),
+                    const Center(
+                      child: Text(
+                        'Tell us what fits your investment strategy.',
+                        style: TextStyle(color: Colors.white60, fontSize: 16,fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    const Text('Typical Investment',
+                        style: TextStyle(color: Colors.white70, fontSize: 13,fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8),
+                     CustomTextField(
+                       keyboardType: TextInputType.number,
+                        controller: controller.preferredInvestmentController.value,
+                        hint: 'Enter amount'),
+                    const SizedBox(height: 24),
+                    const Text('Preferred Stage',
+                        style: TextStyle(color: Colors.white70, fontSize: 13,fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8),
+                    _buildDropdownField(
+                      hint: 'Select Industry',
+                      value: controller.preferredIndustryController.value.text.trim().isEmpty ? null : controller.preferredIndustryController.value.text.trim(),
+                      items: controller.industriesList,
+                      onChanged: (val) {
+                        if(val != null){
+                          controller.onChangeIndustry(val);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    const Text('Preferred industries',
+                        style: TextStyle(color: Colors.white70, fontSize: 13,fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8),
+                    _buildDropdownField(
+                      hint: 'Select stage',
+                      value: controller.preferredStageController.value.text.trim().isEmpty ? null : controller.preferredStageController.value.text.trim(),
+                      items: controller.stagesList,
+                      onChanged: (val) {
+                        if(val != null){
+                          controller.onChangeStage(val);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    const Text('Preferred location',
+                        style: TextStyle(color: Colors.white70, fontSize: 13)),
+                    const SizedBox(height: 8),
+                     CustomTextField(
+                        controller: controller.preferredLocationController.value,
+                        hint: 'Enter your Preferred Location'),
+                    const SizedBox(height: 24),
+                    const Text('Founded',
+                        style: TextStyle(color: Colors.white70, fontSize: 13)),
+                    const SizedBox(height: 8),
+                    CustomTextField(
+                        controller: controller.foundedController.value,
+                        hint: 'Founded'),
+                    const SizedBox(height: 24),
+                    const Text('Funding Type',
+                        style: TextStyle(color: Colors.white70, fontSize: 13,fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8),
+                    _buildDropdownField(
+                      hint: 'Funding Type',
+                      value: controller.fundingTypeController.value.text.trim().isEmpty ? null : controller.fundingTypeController.value.text.trim(),
+                      items: controller.fundingTypeList,
+                      onChanged: (val) {
+                        if(val != null){
+                          controller.onChangeFundType(val);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 150),
                   ],
                 ),
               ),
-              isKeyboardOpen
-                  ? const SizedBox()
-                  : Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        color: AppColors.blackColor,
-                        padding: const EdgeInsets.only(
-                            right: 20, left: 20, top: 30, bottom: 30),
-                        child: SizedBox(
-                          width: MediaQuery.sizeOf(context).width,
-                          height: 58,
-                          child: Obx(
-                            () => GestureDetector(
-                              onTap: controller.isLoading.value
-                                  ? null
-                                  : () async {
-                                      controller.setYourPreferencesApi();
-                                    },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Center(
-                                  child: controller.isLoading.value
-                                      ? const SizedBox(
-                                          width: 32,
-                                          height: 32,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 3,
-                                          ),
-                                        )
-                                      : const Text(
-                                          "Continue",
-                                          style: TextStyle(
-                                              fontSize: 16.5,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w700),
-                                        ),
-                                ),
-                              ),
-                            ),
+            ),
+            Positioned(
+              top: 50,
+              left: 0,
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                    width: 40,
+                    height: 40,
+                    padding: const EdgeInsets.all(1.4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.white,
+                          Colors.white54,
+                          Colors.white12,
+                        ],
+                        stops: [0.0, 0.45, 1.0],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.35),
+                          blurRadius: 8,
+                          spreadRadius: 0,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF1A1A1A),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.chevron_left,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            isKeyboardOpen ? const SizedBox(): Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                color: Colors.black,
+                padding: const EdgeInsets.only(right: 20,left: 20,top: 30,bottom: 30),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 58,
+                  child: Obx(
+                        () =>  GestureDetector(
+                    onTap: controller.isLoading.value
+                        ? null
+                        : () async {
+                      controller.setYourPreferencesApi();
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Center(
+                        child: controller.isLoading.value
+                            ? const SizedBox(
+                          width: 32,
+                          height: 32,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3,
                           ),
+                        )
+                            :const Text(
+                          "Continue",
+                          style: TextStyle(fontSize: 16.5, color: Colors.black,fontWeight: FontWeight.w700),
                         ),
                       ),
-                    )
-            ],
-          ),
+                    ),
+                  ),),
+                ),
+              ),
+            )
+          ],
         ),
-      );
-    });
+      ),
+    );});
   }
 
   Widget _buildDropdownField({

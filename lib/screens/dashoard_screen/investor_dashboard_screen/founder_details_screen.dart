@@ -1,4 +1,7 @@
+import 'package:exit_app/controller/chat_controller.dart';
 import 'package:exit_app/controller/investor_dashboard_controller.dart';
+import 'package:exit_app/models/founder_discovery_response.dart';
+import 'package:exit_app/screens/new_chat_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +12,9 @@ import '../../../constants/app_images.dart';
 import '../../chat_details_screen.dart';
 
 class FounderDetailsScreen extends StatelessWidget {
+  FounderDetailsScreen({super.key, required this.founderProfile});
+
+  final FounderProfile? founderProfile;
   static const tags = ['SaaS', 'FinTech', 'B2B', 'AI / ML'];
 
   List companyList = [
@@ -31,6 +37,9 @@ class FounderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!Get.isRegistered<InvestorDashboardController>()) {
+      Get.put(InvestorDashboardController());
+    }
     return GetBuilder<InvestorDashboardController>(
         builder: (founderDetailsController) {
       return Scaffold(
@@ -87,7 +96,7 @@ class FounderDetailsScreen extends StatelessWidget {
                               ),
                               alignment: Alignment.center,
                               child: Text(
-                                'V',
+                                founderProfile != null ? founderProfile!.firstName[0].toUpperCase() : '',
                                 style: GoogleFonts.montserrat(
                                   color: AppColors.whiteColor,
                                   fontSize: 19,
@@ -104,7 +113,7 @@ class FounderDetailsScreen extends StatelessWidget {
                                     children: [
                                       Flexible(
                                         child: Text(
-                                          'NovaNest',
+                                          founderProfile != null ?  founderProfile!.firstName:"" ,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: GoogleFonts.montserrat(
@@ -115,11 +124,11 @@ class FounderDetailsScreen extends StatelessWidget {
                                         ),
                                       ),
                                       const SizedBox(width: 6),
-                                      const Icon(
+                                      founderProfile != null ? founderProfile!.isVerified ?  const Icon(
                                         Icons.verified_rounded,
                                         color: Color(0xFF777777),
                                         size: 14,
-                                      ),
+                                      ):const SizedBox():const SizedBox(),
                                     ],
                                   ),
                                   const SizedBox(height: 8),
@@ -244,7 +253,7 @@ class FounderDetailsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         SizedBox(
@@ -252,7 +261,16 @@ class FounderDetailsScreen extends StatelessWidget {
                           width: MediaQuery.sizeOf(context).width,
                           child: ElevatedButton(
                             onPressed: () {
-                              Get.to(() => ChatDetailsScreen());
+                              if(founderProfile != null){
+                                if (Get.isRegistered<ChatController>()) {
+                                  Get.delete<ChatController>();
+                                }
+                                Get.to(() => ChatScreen(
+                                  recipientId: founderProfile!.founderId,
+                                  recipientName: founderProfile!.fullName,
+                                  currentUserId: null,
+                                  conversationId: null,));
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.whiteColor,
@@ -271,7 +289,7 @@ class FounderDetailsScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Text(
@@ -283,7 +301,7 @@ class FounderDetailsScreen extends StatelessWidget {
                             letterSpacing: .2,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         Text(

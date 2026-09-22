@@ -64,7 +64,7 @@ class ResultsProfile {
   bool? isVerified;
   String? connectionStatus;
   bool? isSaved;
-  Null? profilePhoto;
+  String? profilePhoto;
   String? bio;
   String? experience;
   String? currentStage;

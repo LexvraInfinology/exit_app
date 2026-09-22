@@ -1,3 +1,4 @@
+import 'package:exit_app/controller/chat_controller.dart';
 import 'package:exit_app/controller/investor_dashboard_controller.dart';
 import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/investor_home_screen.dart';
 import 'package:exit_app/screens/new_chat_screen.dart';
@@ -146,10 +147,14 @@ class InvestorChatListScreen extends StatelessWidget{
                                     final conversation = investorDashboardController.chats[index];
                                     return GestureDetector(
                                       onTap: () {
+                                        if (Get.isRegistered<ChatController>()) {
+                                          Get.delete<ChatController>();
+                                        }
                                         Get.to(() => ChatScreen(
                                             recipientId: conversation.userId,
                                             recipientName: conversation.name,
-                                            currentUserId: null));
+                                            currentUserId: null,
+                                          conversationId: conversation.conversationId,));
                                       },
                                       child: Container(
                                         margin: const EdgeInsets.symmetric(vertical: 10),

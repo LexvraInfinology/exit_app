@@ -1,6 +1,7 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/controller/edit_profile_controller.dart';
 import 'package:exit_app/models/marketplace_Industries_model.dart';
+import 'package:exit_app/models/profile_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,16 +10,22 @@ import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_images.dart';
 
 class EditProfileScreen extends StatelessWidget {
-  const EditProfileScreen({super.key});
+  const EditProfileScreen({super.key, required this.isFounder, this.profile});
+  final bool isFounder;
+  final ResultsProfile? profile;
+
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
-        init: EditProfileController(),
+        init: EditProfileController(profile: profile),
         builder: (controller) {
           return Scaffold(
             backgroundColor: AppColors.blackColor,
-            body: SafeArea(
+            body: controller.isLoading.value ?
+            const Center(child: CupertinoActivityIndicator(
+              radius: 15,color: Colors.white,)):
+            SafeArea(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -316,10 +323,23 @@ class EditProfileScreen extends StatelessWidget {
                             ),
                           ),
                         //INVESTER FIELDS
-                          Column(
+                          isFounder == false ?   Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const SizedBox(height: 8),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                'Investment Preferences',
+                                style: GoogleFonts.montserrat(
+                                  color: AppColors.whiteColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 16,
+                              ),
                               Text(
                                 'Typical Investment',
                                 style: GoogleFonts.montserrat(
@@ -339,18 +359,27 @@ class EditProfileScreen extends StatelessWidget {
                                   ),
                                 ),
                                 child: TextField(
-                                  controller: controller.aboutController.value,
+                                  controller: controller.preferredInvestmentController.value,
                                   style: GoogleFonts.montserrat(
                                       color: const Color(0xFFE7E7E7),
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600),
                                   cursorColor: AppColors.whiteColor,
                                   decoration: const InputDecoration(
-                                    hintText: 'Enter about you.......',
+                                    hintText: '₹25l - ₹2Cr',
                                     contentPadding:
                                     EdgeInsets.symmetric(horizontal: 16),
                                     border: InputBorder.none,
                                   ),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Preferred Stage',
+                                style: GoogleFonts.montserrat(
+                                  color: AppColors.darkGreyColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -365,10 +394,19 @@ class EditProfileScreen extends StatelessWidget {
                                 },
                               ),
                               const SizedBox(height: 8),
+                              Text(
+                                'Industries',
+                                style: GoogleFonts.montserrat(
+                                  color: AppColors.darkGreyColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
                               _buildDropdownField(
                                   hint: 'Industry',
-                                value: controller.preferredIndustryController.value.text.trim().isEmpty ? null : controller.preferredStageController.value.text.trim(),
-                                items: controller.stagesList,
+                                value: controller.preferredIndustryController.value.text.trim().isEmpty ? null : controller.preferredIndustryController.value.text.trim(),
+                                items: controller.industriesList,
                                 onChanged: (val) {
                                   if(val != null){
                                     controller.onChangeIndustry(val);
@@ -376,10 +414,19 @@ class EditProfileScreen extends StatelessWidget {
                                 },
                               ),
                               const SizedBox(height: 8),
+                              Text(
+                                'Preferred Locations',
+                                style: GoogleFonts.montserrat(
+                                  color: AppColors.darkGreyColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
                               _buildDropdownField(
                                 hint: 'Location',
-                                value: controller.preferredLocationController.value.text.trim().isEmpty ? null : controller.preferredStageController.value.text.trim(),
-                                items: controller.stagesList,
+                                value: controller.preferredLocationController.value.text.trim().isEmpty ? null : controller.preferredLocationController.value.text.trim(),
+                                items: controller.locationsList,
                                 onChanged: (val) {
                                   if(val != null){
                                     controller.onChangeLocation(val);
@@ -387,296 +434,296 @@ class EditProfileScreen extends StatelessWidget {
                                 },
                               ),
                             ],
-                          )
+                          ):
                         // FOUNDER FIELDS
-                        // Column(children: [
-                        //   const SizedBox(
-                        //     height: 16,
-                        //   ),
-                        //   Text(
-                        //     'Founder Details',
-                        //     style: GoogleFonts.montserrat(
-                        //       color: AppColors.whiteColor,
-                        //       fontSize: 16,
-                        //       fontWeight: FontWeight.w500,
-                        //     ),
-                        //   ),
-                        //   const SizedBox(
-                        //     height: 16,
-                        //   ),
-                        //   Text(
-                        //     'Experience',
-                        //     style: GoogleFonts.montserrat(
-                        //       color: AppColors.darkGreyColor,
-                        //       fontSize: 14,
-                        //       fontWeight: FontWeight.w600,
-                        //     ),
-                        //   ),
-                        //   const SizedBox(height: 8),
-                        //   Obx(
-                        //         () => Container(
-                        //       height: 53,
-                        //       padding:
-                        //       const EdgeInsets.symmetric(horizontal: 16),
-                        //       decoration: BoxDecoration(
-                        //         color: AppColors.containerBackgroundColor,
-                        //         borderRadius: BorderRadius.circular(11),
-                        //         border: Border.all(
-                        //           color: AppColors.containerBorderColor,
-                        //         ),
-                        //       ),
-                        //       child: DropdownButtonHideUnderline(
-                        //         child: DropdownButton<String>(
-                        //           value: controller.experience.value.isEmpty
-                        //               ? null
-                        //               : controller.experience.value,
-                        //           hint: Text(
-                        //             'Select Experience',
-                        //             style: GoogleFonts.montserrat(
-                        //                 color: AppColors.darkGreyColor,
-                        //                 fontSize: 16,
-                        //                 fontWeight: FontWeight.w600),
-                        //           ),
-                        //           isExpanded: true,
-                        //           dropdownColor: const Color(0xFF171717),
-                        //           icon: const Icon(
-                        //             Icons.keyboard_arrow_down,
-                        //             color: Color(0xFF777777),
-                        //           ),
-                        //           style: GoogleFonts.montserrat(
-                        //             color: Color(0xFFE7E7E7),
-                        //             fontSize: 15,
-                        //           ),
-                        //           items: [
-                        //             DropdownMenuItem(
-                        //               value: '0-5',
-                        //               child: Text(
-                        //                 '0-5',
-                        //                 style: GoogleFonts.montserrat(
-                        //                     fontSize: 16,
-                        //                     fontWeight: FontWeight.w600),
-                        //               ),
-                        //             ),
-                        //             DropdownMenuItem(
-                        //               value: '5-10',
-                        //               child: Text('5-10',
-                        //                   style: GoogleFonts.montserrat(
-                        //                       fontSize: 16,
-                        //                       fontWeight: FontWeight.w600)),
-                        //             ),
-                        //             DropdownMenuItem(
-                        //               value: '10-15',
-                        //               child: Text('10-15',
-                        //                   style: GoogleFonts.montserrat(
-                        //                       fontSize: 16,
-                        //                       fontWeight: FontWeight.w600)),
-                        //             ),
-                        //             DropdownMenuItem(
-                        //               value: '15-20',
-                        //               child: Text('15-20',
-                        //                   style: GoogleFonts.montserrat(
-                        //                       fontSize: 16,
-                        //                       fontWeight: FontWeight.w600)),
-                        //             ),
-                        //           ],
-                        //           onChanged: (value) {
-                        //             if (value != null) {
-                        //               controller.experience(value);
-                        //             }
-                        //           },
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        //   const SizedBox(
-                        //     height: 16,
-                        //   ),
-                        //   Text(
-                        //     'Current Stage',
-                        //     style: GoogleFonts.montserrat(
-                        //       color: AppColors.darkGreyColor,
-                        //       fontSize: 14,
-                        //       fontWeight: FontWeight.w600,
-                        //     ),
-                        //   ),
-                        //   const SizedBox(height: 8),
-                        //   Obx(
-                        //         () => Container(
-                        //       height: 53,
-                        //       padding:
-                        //       const EdgeInsets.symmetric(horizontal: 16),
-                        //       decoration: BoxDecoration(
-                        //         color: AppColors.containerBackgroundColor,
-                        //         borderRadius: BorderRadius.circular(11),
-                        //         border: Border.all(
-                        //           color: AppColors.containerBorderColor,
-                        //         ),
-                        //       ),
-                        //       child: DropdownButtonHideUnderline(
-                        //         child: DropdownButton<String>(
-                        //           value: controller.company_stage.value.isEmpty
-                        //               ? null
-                        //               : controller.company_stage.value,
-                        //           hint: Text(
-                        //             'Select Stage',
-                        //             style: GoogleFonts.montserrat(
-                        //                 color: Color(0xFF777777),
-                        //                 fontSize: 16,
-                        //                 fontWeight: FontWeight.w600),
-                        //           ),
-                        //           isExpanded: true,
-                        //           dropdownColor: const Color(0xFF171717),
-                        //           icon: const Icon(
-                        //             Icons.keyboard_arrow_down,
-                        //             color: Color(0xFF777777),
-                        //           ),
-                        //           style: GoogleFonts.montserrat(
-                        //               color: Color(0xFFE7E7E7),
-                        //               fontSize: 15,
-                        //               fontWeight: FontWeight.w600),
-                        //           items: [
-                        //             DropdownMenuItem(
-                        //               value: 'Series A',
-                        //               child: Text('Series A',
-                        //                   style: GoogleFonts.montserrat(
-                        //                       fontSize: 16,
-                        //                       fontWeight: FontWeight.w600)),
-                        //             ),
-                        //             DropdownMenuItem(
-                        //               value: 'Series B',
-                        //               child: Text('Series B',
-                        //                   style: GoogleFonts.montserrat(
-                        //                       fontSize: 16,
-                        //                       fontWeight: FontWeight.w600)),
-                        //             ),
-                        //             DropdownMenuItem(
-                        //               value: 'Seed',
-                        //               child: Text('Seed',
-                        //                   style: GoogleFonts.montserrat(
-                        //                       fontSize: 16,
-                        //                       fontWeight: FontWeight.w600)),
-                        //             ),
-                        //           ],
-                        //           onChanged: (value) {
-                        //             if (value != null) {
-                        //               controller.companyStage(value);
-                        //             }
-                        //           },
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        //   const SizedBox(
-                        //     height: 16,
-                        //   ),
-                        //   Text(
-                        //     'Team Size',
-                        //     style: GoogleFonts.montserrat(
-                        //       color: AppColors.darkGreyColor,
-                        //       fontSize: 14,
-                        //       fontWeight: FontWeight.w600,
-                        //     ),
-                        //   ),
-                        //   const SizedBox(height: 8),
-                        //   Obx(
-                        //         () => Container(
-                        //       height: 53,
-                        //       padding:
-                        //       const EdgeInsets.symmetric(horizontal: 16),
-                        //       decoration: BoxDecoration(
-                        //         color: AppColors.containerBackgroundColor,
-                        //         borderRadius: BorderRadius.circular(11),
-                        //         border: Border.all(
-                        //           color: AppColors.containerBorderColor,
-                        //         ),
-                        //       ),
-                        //       child: DropdownButtonHideUnderline(
-                        //         child: DropdownButton<String>(
-                        //           value: controller.team_size.value.isEmpty
-                        //               ? null
-                        //               : controller.team_size.value,
-                        //           hint: Text(
-                        //             'Team Size',
-                        //             style: GoogleFonts.montserrat(
-                        //                 color: AppColors.darkGreyColor,
-                        //                 fontSize: 15,
-                        //                 fontWeight: FontWeight.w600),
-                        //           ),
-                        //           isExpanded: true,
-                        //           dropdownColor: const Color(0xFF171717),
-                        //           icon: const Icon(
-                        //             Icons.keyboard_arrow_down,
-                        //             color: Color(0xFF777777),
-                        //           ),
-                        //           style: GoogleFonts.montserrat(
-                        //               color: Color(0xFFE7E7E7),
-                        //               fontSize: 16,
-                        //               fontWeight: FontWeight.w600),
-                        //           items: [
-                        //             DropdownMenuItem(
-                        //               value: '2-5',
-                        //               child: Text('2-5',
-                        //                   style: GoogleFonts.montserrat(
-                        //                       fontSize: 16,
-                        //                       fontWeight: FontWeight.w600)),
-                        //             ),
-                        //             DropdownMenuItem(
-                        //               value: '5-10',
-                        //               child: Text('5-10',
-                        //                   style: GoogleFonts.montserrat(
-                        //                       fontSize: 16,
-                        //                       fontWeight: FontWeight.w600)),
-                        //             ),
-                        //             DropdownMenuItem(
-                        //               value: '10-15',
-                        //               child: Text('10-15',
-                        //                   style: GoogleFonts.montserrat(
-                        //                       fontSize: 16,
-                        //                       fontWeight: FontWeight.w600)),
-                        //             ),
-                        //             DropdownMenuItem(
-                        //               value: '15-20',
-                        //               child: Text('15-20',
-                        //                   style: GoogleFonts.montserrat(
-                        //                       fontSize: 16,
-                        //                       fontWeight: FontWeight.w600)),
-                        //             ),
-                        //           ],
-                        //           onChanged: (value) {
-                        //             if (value != null) {
-                        //               controller.teamSize(value);
-                        //             }
-                        //           },
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        //   const SizedBox(height: 40),
-                        //   GestureDetector(
-                        //     onTap: () {
-                        //       controller.clickEditProfile();
-                        //     },
-                        //     child: Container(
-                        //       width: MediaQuery.sizeOf(context).width,
-                        //       height: 58,
-                        //       alignment: Alignment.center,
-                        //       decoration: BoxDecoration(
-                        //         color: Colors.white,
-                        //         borderRadius: BorderRadius.circular(24),
-                        //       ),
-                        //       child: controller.isLoading.value ?
-                        //       const Center(child: CircularProgressIndicator()):Text(
-                        //         'Save Changes',
-                        //         style: GoogleFonts.montserrat(
-                        //           color: AppColors.blackColor,
-                        //           fontSize: 16,
-                        //           fontWeight: FontWeight.w600,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        //   const SizedBox(height: 20),
-                        // ],)
+                        Column(children: [
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Text(
+                            'Founder Details',
+                            style: GoogleFonts.montserrat(
+                              color: AppColors.whiteColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Text(
+                            'Experience',
+                            style: GoogleFonts.montserrat(
+                              color: AppColors.darkGreyColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Obx(
+                                () => Container(
+                              height: 53,
+                              padding:
+                              const EdgeInsets.symmetric(horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: AppColors.containerBackgroundColor,
+                                borderRadius: BorderRadius.circular(11),
+                                border: Border.all(
+                                  color: AppColors.containerBorderColor,
+                                ),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  value: controller.experience.value.isEmpty
+                                      ? null
+                                      : controller.experience.value,
+                                  hint: Text(
+                                    'Select Experience',
+                                    style: GoogleFonts.montserrat(
+                                        color: AppColors.darkGreyColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  isExpanded: true,
+                                  dropdownColor: const Color(0xFF171717),
+                                  icon: const Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: Color(0xFF777777),
+                                  ),
+                                  style: GoogleFonts.montserrat(
+                                    color: Color(0xFFE7E7E7),
+                                    fontSize: 15,
+                                  ),
+                                  items: [
+                                    DropdownMenuItem(
+                                      value: '0-5',
+                                      child: Text(
+                                        '0-5',
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: '5-10',
+                                      child: Text('5-10',
+                                          style: GoogleFonts.montserrat(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: '10-15',
+                                      child: Text('10-15',
+                                          style: GoogleFonts.montserrat(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: '15-20',
+                                      child: Text('15-20',
+                                          style: GoogleFonts.montserrat(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                  ],
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      controller.experience(value);
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Text(
+                            'Current Stage',
+                            style: GoogleFonts.montserrat(
+                              color: AppColors.darkGreyColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Obx(
+                                () => Container(
+                              height: 53,
+                              padding:
+                              const EdgeInsets.symmetric(horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: AppColors.containerBackgroundColor,
+                                borderRadius: BorderRadius.circular(11),
+                                border: Border.all(
+                                  color: AppColors.containerBorderColor,
+                                ),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  value: controller.company_stage.value.isEmpty
+                                      ? null
+                                      : controller.company_stage.value,
+                                  hint: Text(
+                                    'Select Stage',
+                                    style: GoogleFonts.montserrat(
+                                        color: Color(0xFF777777),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  isExpanded: true,
+                                  dropdownColor: const Color(0xFF171717),
+                                  icon: const Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: Color(0xFF777777),
+                                  ),
+                                  style: GoogleFonts.montserrat(
+                                      color: Color(0xFFE7E7E7),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600),
+                                  items: [
+                                    DropdownMenuItem(
+                                      value: 'Series A',
+                                      child: Text('Series A',
+                                          style: GoogleFonts.montserrat(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: 'Series B',
+                                      child: Text('Series B',
+                                          style: GoogleFonts.montserrat(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: 'Seed',
+                                      child: Text('Seed',
+                                          style: GoogleFonts.montserrat(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                  ],
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      controller.companyStage(value);
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Text(
+                            'Team Size',
+                            style: GoogleFonts.montserrat(
+                              color: AppColors.darkGreyColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Obx(
+                                () => Container(
+                              height: 53,
+                              padding:
+                              const EdgeInsets.symmetric(horizontal: 16),
+                              decoration: BoxDecoration(
+                                color: AppColors.containerBackgroundColor,
+                                borderRadius: BorderRadius.circular(11),
+                                border: Border.all(
+                                  color: AppColors.containerBorderColor,
+                                ),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  value: controller.team_size.value.isEmpty
+                                      ? null
+                                      : controller.team_size.value,
+                                  hint: Text(
+                                    'Team Size',
+                                    style: GoogleFonts.montserrat(
+                                        color: AppColors.darkGreyColor,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  isExpanded: true,
+                                  dropdownColor: const Color(0xFF171717),
+                                  icon: const Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: Color(0xFF777777),
+                                  ),
+                                  style: GoogleFonts.montserrat(
+                                      color: Color(0xFFE7E7E7),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),
+                                  items: [
+                                    DropdownMenuItem(
+                                      value: '2-5',
+                                      child: Text('2-5',
+                                          style: GoogleFonts.montserrat(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: '5-10',
+                                      child: Text('5-10',
+                                          style: GoogleFonts.montserrat(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: '10-15',
+                                      child: Text('10-15',
+                                          style: GoogleFonts.montserrat(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                    DropdownMenuItem(
+                                      value: '15-20',
+                                      child: Text('15-20',
+                                          style: GoogleFonts.montserrat(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                  ],
+                                  onChanged: (value) {
+                                    if (value != null) {
+                                      controller.teamSize(value);
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],),
+                          const SizedBox(height: 40),
+                          GestureDetector(
+                            onTap: () {
+                              controller.clickEditProfile(isFounder);
+                            },
+                            child: Container(
+                              width: MediaQuery.sizeOf(context).width,
+                              height: 58,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              child: controller.isLoading.value ?
+                              const Center(child: CircularProgressIndicator()):Text(
+                                'Save Changes',
+                                style: GoogleFonts.montserrat(
+                                  color: AppColors.blackColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),

@@ -159,7 +159,7 @@ class FounderDiscoverScreen extends StatelessWidget {
                             Row(
                              children: [
                                Text(
-                                 '${discoverFounderController.needsAttentionList.length} founders found',
+                                 '${discoverFounderController.founderList.length} founders found',
                                  style: const TextStyle(
                                    color: AppColors.darkGreyColor,
                                    fontSize: 12,
@@ -199,7 +199,7 @@ class FounderDiscoverScreen extends StatelessWidget {
                                final founder = discoverFounderController.founderList[index];
                                return GestureDetector(
                                  onTap: () {
-                                   discoverFounderController.clickFounderDetails();
+                                   discoverFounderController.clickFounderDetails(founder);
                                  },
                                  child: Container(
                                    margin: const EdgeInsets.symmetric(vertical: 10),
