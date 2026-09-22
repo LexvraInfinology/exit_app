@@ -6,6 +6,7 @@ import 'package:exit_app/controller/investor_dashboard_controller.dart';
 import 'package:exit_app/screens/dashoard_screen/founder_dashboard/founder_dashboard_screen.dart';
 import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/investor_dashboard_screen.dart';
 import 'package:exit_app/screens/dashoard_screen/startup_dashboard_screen/startup_dashboard_screen.dart';
+import 'package:exit_app/screens/new_chat_screen.dart';
 import 'package:exit_app/screens/onboarding_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

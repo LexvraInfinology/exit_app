@@ -1,5 +1,6 @@
 import 'package:exit_app/controller/investor_dashboard_controller.dart';
 import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/investor_home_screen.dart';
+import 'package:exit_app/screens/new_chat_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -145,10 +146,13 @@ class InvestorChatListScreen extends StatelessWidget{
                                     final conversation = investorDashboardController.chats[index];
                                     return GestureDetector(
                                       onTap: () {
-                                        investorDashboardController.clickChatItem();
+                                        Get.to(() => ChatScreen(
+                                            recipientId: conversation.userId,
+                                            recipientName: conversation.name,
+                                            currentUserId: null));
                                       },
                                       child: Container(
-                                        margin: EdgeInsets.symmetric(vertical: 10),
+                                        margin: const EdgeInsets.symmetric(vertical: 10),
                                         padding: EdgeInsets.symmetric(
                                           horizontal: first ? 13 : 13,
                                           vertical: first ? 15 : 15,

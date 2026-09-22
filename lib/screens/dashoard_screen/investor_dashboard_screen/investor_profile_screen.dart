@@ -82,10 +82,10 @@ class InvestorProfileScreen extends StatelessWidget {
                                     color: AppColors.darkGreyColor,
                                     width: 2,
                                   ),
-                                  image: const DecorationImage(
-                                    image: AssetImage('assets/profile.jpg'),
-                                    fit: BoxFit.cover,
-                                  ),
+                                  // image: const DecorationImage(
+                                  //   image: AssetImage('assets/profile.jpg'),
+                                  //   fit: BoxFit.cover,
+                                  // ),
                                 ),
                               ),
                               Positioned(
@@ -268,7 +268,8 @@ class InvestorProfileScreen extends StatelessWidget {
                                     height: 16,
                                   ),
                                   Text(
-                                    profileController.resultProfile.first.preferredInvestment ?? "",
+                                    profileController.resultProfile.isNotEmpty
+                                        ? profileController.resultProfile.first.preferredInvestment ?? "":"",
                                     style: GoogleFonts.montserrat(
                                         color: AppColors.whiteColor,
                                         fontWeight: FontWeight.w500,
@@ -308,7 +309,8 @@ class InvestorProfileScreen extends StatelessWidget {
                                           border: Border.all(
                                               color: Color(0xFF272727))),
                                       child: Text(
-                                        profileController.resultProfile.first.preferredStage ?? "",
+                                        profileController.resultProfile.isNotEmpty
+                                            ? profileController.resultProfile.first.preferredStage ?? "":"",
                                         style: GoogleFonts.montserrat(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400,
@@ -350,7 +352,8 @@ class InvestorProfileScreen extends StatelessWidget {
                                           border: Border.all(
                                               color: const Color(0xFF272727))),
                                       child: Text(
-                                          profileController.resultProfile.first.preferredIndustries ?? "",
+                                        profileController.resultProfile.isNotEmpty
+                                            ? profileController.resultProfile.first.preferredIndustries ?? "":"",
                                           style: GoogleFonts.montserrat(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w400,
@@ -379,7 +382,8 @@ class InvestorProfileScreen extends StatelessWidget {
                                     height: 16,
                                   ),
                                   Text(
-                                      profileController.resultProfile.first.preferredLocation ?? "",
+                                    profileController.resultProfile.isNotEmpty
+                                        ?  profileController.resultProfile.first.preferredLocation ?? "":"",
                                     style: GoogleFonts.montserrat(
                                         color: AppColors.whiteColor,
                                         fontWeight: FontWeight.w500,

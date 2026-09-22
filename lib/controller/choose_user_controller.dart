@@ -32,6 +32,7 @@ class ChooseUserController extends GetxController {
   final SharedPreferences prefs = Get.find<SharedPreferences>();
   final List<MarketplaceIndustry> industriesList = <MarketplaceIndustry>[];
   final List<MarketplaceIndustry> stagesList = <MarketplaceIndustry>[];
+  final List<MarketplaceIndustry> fundingTypeList = <MarketplaceIndustry>[];
 
   var isChecked = false.obs;
 
@@ -68,6 +69,8 @@ class ChooseUserController extends GetxController {
   Rx<TextEditingController> lastNameController = TextEditingController().obs;
   Rx<TextEditingController> emailController = TextEditingController().obs;
   Rx<TextEditingController> locationController = TextEditingController().obs;
+  Rx<TextEditingController> foundedController = TextEditingController().obs;
+  Rx<TextEditingController> fundingTypeController = TextEditingController().obs;
 
   Rx<TextEditingController> preferredInvestmentController =
       TextEditingController().obs;
@@ -82,6 +85,11 @@ class ChooseUserController extends GetxController {
 
   void onChangeStage(String value) {
     preferredStageController.value.text = value;
+    update();
+  }
+
+  void onChangeFundType(String value) {
+    fundingTypeController.value.text = value;
     update();
   }
 
@@ -574,6 +582,7 @@ class ChooseUserController extends GetxController {
     isLoading.value = true;
     await getMarketplaceStagesApi();
     await getMarketplaceIndustriesApi();
+    await getMarketplaceFundingTypes();
     Get.to(() => const SetPreferencesScreen());
     isLoading.value = false;
   }
@@ -675,6 +684,9 @@ class ChooseUserController extends GetxController {
     final lastName = lastNameController.value.text.trim();
     final email = emailController.value.text.trim();
     final location = locationController.value.text.trim();
+    final founded = foundedController.value.text.trim();
+    final fundingType = fundingTypeController.value.text.trim();
+
     if (preferredInvestment.isEmpty) {
       Get.snackbar(
         'Error',
@@ -712,6 +724,26 @@ class ChooseUserController extends GetxController {
       );
       return;
     }
+    else if (founded.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please enter Founded',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.redAccent,
+        colorText: AppColors.whiteColor,
+      );
+      return;
+    }
+    else if (fundingType.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please enter Found Type',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.redAccent,
+        colorText: AppColors.whiteColor,
+      );
+      return;
+    }
     try {
       isLoading.value = true;
       final response = await apiServices.setYourPreferencesApi(
@@ -723,6 +755,8 @@ class ChooseUserController extends GetxController {
         preferredStage,
         preferredIndustry,
         preferredLocation,
+        founded,
+          fundingType
       );
       print("Status Code: ${response?.statusCode}");
       print("Message: ${response?.message}");
@@ -790,6 +824,28 @@ class ChooseUserController extends GetxController {
 
       if (response?.statusCode == 200) {
         stagesList.assignAll(response?.data ?? []);
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      print('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
+  Future<void> getMarketplaceFundingTypes() async {
+    try {
+      isLoading.value = true;
+
+      final MarketplaceIndustriesResponse? response =
+      await apiServices.getMarketplaceFundingTypes();
+
+      if (response?.statusCode == 200) {
+        fundingTypeList.assignAll(response?.data ?? []);
       } else {
         Get.snackbar(
             'Failed', response?.message ?? 'Failed to fetch industries');

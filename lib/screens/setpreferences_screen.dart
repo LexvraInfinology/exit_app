@@ -88,7 +88,28 @@ class SetPreferencesScreen extends StatelessWidget {
                      CustomTextField(
                         controller: controller.preferredLocationController.value,
                         hint: 'Enter your Preferred Location'),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 24),
+                    const Text('Founded',
+                        style: TextStyle(color: Colors.white70, fontSize: 13)),
+                    const SizedBox(height: 8),
+                    CustomTextField(
+                        controller: controller.foundedController.value,
+                        hint: 'Founded'),
+                    const SizedBox(height: 24),
+                    const Text('Preferred industries',
+                        style: TextStyle(color: Colors.white70, fontSize: 13,fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 8),
+                    _buildDropdownField(
+                      hint: 'Select stage',
+                      value: controller.fundingTypeController.value.text.trim().isEmpty ? null : controller.fundingTypeController.value.text.trim(),
+                      items: controller.fundingTypeList,
+                      onChanged: (val) {
+                        if(val != null){
+                          controller.onChangeFundType(val);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 150),
                   ],
                 ),
               ),
@@ -102,8 +123,8 @@ class SetPreferencesScreen extends StatelessWidget {
                     width: 20,
                   ),
                   Container(
-                    width: 26,
-                    height: 26,
+                    width: 40,
+                    height: 40,
                     padding: const EdgeInsets.all(1.4),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -134,7 +155,8 @@ class SetPreferencesScreen extends StatelessWidget {
                       child: const Icon(
                         Icons.chevron_left,
                         color: Colors.white,
-                        size: 20,
+                        fontWeight: FontWeight.w600,
+                        size: 25,
                       ),
                     ),
                   ),
