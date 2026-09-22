@@ -219,7 +219,7 @@ class FounderHomeScreen extends StatelessWidget {
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
                                     onTap: () {
-                                      homeController.InvestorDetails();
+                                      homeController.InvestorDetails(homeController.investorList[index]);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(

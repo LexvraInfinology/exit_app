@@ -155,7 +155,6 @@ class SetPreferencesScreen extends StatelessWidget {
                       child: const Icon(
                         Icons.chevron_left,
                         color: Colors.white,
-                        fontWeight: FontWeight.w600,
                         size: 25,
                       ),
                     ),

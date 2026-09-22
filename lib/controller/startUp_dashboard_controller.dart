@@ -41,7 +41,7 @@ class StartUpDashBoardController extends GetxController {
   }
 
   void InvestorDetails() {
-    Get.to(() => InvestorDetailsScreen());
+    // Get.to(() => InvestorDetailsScreen());
   }
 
   void clickEditProfile() {

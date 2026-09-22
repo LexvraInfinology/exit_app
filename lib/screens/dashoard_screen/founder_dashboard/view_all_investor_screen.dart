@@ -209,7 +209,7 @@ class ViewAllInvestorScreen extends StatelessWidget {
                               final investor = controller.investorList[index];
                               return GestureDetector(
                                 onTap: () {
-                                  controller.InvestorDetails();
+                                  controller.InvestorDetails(controller.investorList[index]);
                                 },
                                 child: Container(
                                   width: double.infinity,
