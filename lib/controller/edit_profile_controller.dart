@@ -60,8 +60,6 @@ class EditProfileController extends GetxController {
     update();
   }
 
-
-
   void changeIndustry(String value) {
     experience.value = value;
   }
@@ -85,8 +83,6 @@ class EditProfileController extends GetxController {
   void clickEditProfile() {
     _updateProfileApi();
   }
-
-
 
   void showUploadOptions(BuildContext context) {
     showModalBottomSheet(
@@ -129,9 +125,6 @@ class EditProfileController extends GetxController {
       print('Image path: ${image.path}');
     }
   }
-
-
-
 
   Future<void> getMarketplaceIndustriesApi() async {
     try {

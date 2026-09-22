@@ -95,8 +95,8 @@ class FounderDashboardController extends GetxController {
 
   void onViewPlan() {}
 
-  void InvestorDetails() {
-    Get.to(() => InvestorDetailsScreen());
+  void InvestorDetails(Results result) {
+    Get.to(() => InvestorDetailsScreen(result));
   }
 
   void clickPlanDetails() {

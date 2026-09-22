@@ -111,10 +111,10 @@ class ViewAllInvestorScreen extends StatelessWidget {
                               text: 'Stage',
                               showArrow: true,
                               options: [
-                                MarketplaceIndustry(id: "1",name: "Pre-Seed"),
-                                MarketplaceIndustry(id: "2",name: "Seed"),
-                                MarketplaceIndustry(id: "3",name: "Series A"),
-                                MarketplaceIndustry(id: "4",name: "Series B")
+                                MarketplaceIndustry(id: "1", name: "Pre-Seed"),
+                                MarketplaceIndustry(id: "2", name: "Seed"),
+                                MarketplaceIndustry(id: "3", name: "Series A"),
+                                MarketplaceIndustry(id: "4", name: "Series B")
                               ],
                             ),
                             const SizedBox(width: 8),
@@ -123,10 +123,10 @@ class ViewAllInvestorScreen extends StatelessWidget {
                               text: 'Sector',
                               showArrow: true,
                               options: [
-                                MarketplaceIndustry(id: "1",name: "SaaS"),
-                                MarketplaceIndustry(id: "2",name: "FinTech"),
-                                MarketplaceIndustry(id: "3",name: "AI / ML"),
-                                MarketplaceIndustry(id: "4",name: "HealthTech")
+                                MarketplaceIndustry(id: "1", name: "SaaS"),
+                                MarketplaceIndustry(id: "2", name: "FinTech"),
+                                MarketplaceIndustry(id: "3", name: "AI / ML"),
+                                MarketplaceIndustry(id: "4", name: "HealthTech")
                               ],
                             ),
                             const SizedBox(width: 8),
@@ -135,10 +135,11 @@ class ViewAllInvestorScreen extends StatelessWidget {
                               text: 'Under ₹25L',
                               showArrow: true,
                               options: [
-                                MarketplaceIndustry(id: "1",name: "Under ₹25L"),
-                                MarketplaceIndustry(id: "2",name: "₹25L–₹50L"),
-                                MarketplaceIndustry(id: "3",name: "₹50L–₹1Cr"),
-                                MarketplaceIndustry(id: "4",name: "₹1Cr–₹5Cr")
+                                MarketplaceIndustry(
+                                    id: "1", name: "Under ₹25L"),
+                                MarketplaceIndustry(id: "2", name: "₹25L–₹50L"),
+                                MarketplaceIndustry(id: "3", name: "₹50L–₹1Cr"),
+                                MarketplaceIndustry(id: "4", name: "₹1Cr–₹5Cr")
                               ],
                             ),
                             const SizedBox(width: 8),
@@ -147,10 +148,10 @@ class ViewAllInvestorScreen extends StatelessWidget {
                               text: 'India',
                               showArrow: true,
                               options: [
-                                MarketplaceIndustry(id: "1",name: "India"),
-                                MarketplaceIndustry(id: "2",name: "Delhi NCR"),
-                                MarketplaceIndustry(id: "3",name: "Mumbai"),
-                                MarketplaceIndustry(id: "4",name: "Bengaluru")
+                                MarketplaceIndustry(id: "1", name: "India"),
+                                MarketplaceIndustry(id: "2", name: "Delhi NCR"),
+                                MarketplaceIndustry(id: "3", name: "Mumbai"),
+                                MarketplaceIndustry(id: "4", name: "Bengaluru")
                               ],
                             ),
                           ],
@@ -227,11 +228,12 @@ class ViewAllInvestorScreen extends StatelessWidget {
                                     name:
                                         '${investor.firstName ?? ''} ${investor.lastName ?? ''}'
                                             .trim(),
-                                    type: investor.role ?? '',
+                                    type: investor.preferred_industries ?? '',
                                     location: investor.currentLocation ?? '',
-                                    investment: '',
+                                    investment: investor.preferred_investment
+                                        .toString(),
                                     // replace with your API field
-                                    stage: investor.currentStage ?? '',
+                                    stage: investor.preferred_stage ?? '',
                                     logo: investor.firstName?.isNotEmpty == true
                                         ? investor.firstName![0].toUpperCase()
                                         : '',
@@ -266,11 +268,9 @@ class ViewAllInvestorScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // TOP SECTION
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Logo
             Container(
               width: 48,
               height: 48,
@@ -374,20 +374,20 @@ class ViewAllInvestorScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Range',
+                    'Typical Investment',
                     style: GoogleFonts.montserrat(
-                      color: AppColors.darkGreyColor,
-                      fontSize: 10,
-                    ),
+                        color: AppColors.darkGreyColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    investment.isEmpty ? '-' : investment,
+                    investment.isEmpty ? '-' : '₹ ${investment}/-',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.montserrat(
                       color: AppColors.whiteColor,
-                      fontSize: 11,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -425,7 +425,6 @@ class ViewAllInvestorScreen extends StatelessWidget {
 
         const SizedBox(height: 10),
 
-        // BOTTOM SECTION
         Row(
           children: [
             Expanded(
@@ -464,10 +463,9 @@ class ViewAllInvestorScreen extends StatelessWidget {
 
             const SizedBox(width: 10),
 
-            // VIEW PROFILE
             InkWell(
               onTap: () {
-                controller.InvestorDetails();
+                controller.InvestorDetails(investor);
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,

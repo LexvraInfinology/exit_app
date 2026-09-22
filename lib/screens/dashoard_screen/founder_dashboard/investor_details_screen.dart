@@ -9,8 +9,13 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../constants/app_images.dart';
+import '../../../models/get_investor_list_model.dart';
 
 class InvestorDetailsScreen extends StatelessWidget {
+  Results? result;
+
+  InvestorDetailsScreen(this.result);
+
   static const tags = ['SaaS', 'FinTech', 'B2B', 'AI / ML'];
 
   List companyList = [

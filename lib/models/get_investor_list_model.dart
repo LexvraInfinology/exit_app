@@ -69,22 +69,28 @@ class Results {
   String? experience;
   String? currentStage;
   String? teamSize;
+  String? preferred_industries;
+  String? preferred_stage;
+  String? preferred_investment;
 
   Results(
       {this.id,
-        this.firstName,
-        this.lastName,
-        this.email,
-        this.currentLocation,
-        this.role,
-        this.isVerified,
-        this.isSaved,
-        this.connectionStatus,
-        this.profilePhoto,
-        this.bio,
-        this.experience,
-        this.currentStage,
-        this.teamSize});
+      this.firstName,
+      this.lastName,
+      this.email,
+      this.currentLocation,
+      this.role,
+      this.isVerified,
+      this.isSaved,
+      this.connectionStatus,
+      this.profilePhoto,
+      this.bio,
+      this.experience,
+      this.currentStage,
+      this.teamSize,
+      this.preferred_industries,
+      this.preferred_stage,
+      this.preferred_investment});
 
   Results.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -101,6 +107,9 @@ class Results {
     experience = json['experience'];
     currentStage = json['current_stage'];
     teamSize = json['team_size'];
+    preferred_industries = json['preferred_industries'];
+    preferred_stage = json['preferred_stage'];
+    preferred_investment = json['preferred_investment'];
   }
 
   Map<String, dynamic> toJson() {
@@ -119,6 +128,9 @@ class Results {
     data['experience'] = this.experience;
     data['current_stage'] = this.currentStage;
     data['team_size'] = this.teamSize;
+    data['preferred_industries'] = this.preferred_industries;
+    data['preferred_stage'] = this.preferred_stage;
+    data['preferred_investment'] = this.preferred_investment;
     return data;
   }
 }

@@ -35,11 +35,6 @@ class ChooseUserController extends GetxController {
 
   var isChecked = false.obs;
 
-  final RxString user_role = 'Founder'.obs;
-
-  void change_user_role(String value) {
-    user_role.value = value;
-  }
 
 
   void clickCheckbox(bool? value) {
@@ -68,6 +63,7 @@ class ChooseUserController extends GetxController {
   Rx<TextEditingController> lastNameController = TextEditingController().obs;
   Rx<TextEditingController> emailController = TextEditingController().obs;
   Rx<TextEditingController> locationController = TextEditingController().obs;
+  Rx<TextEditingController> user_role = TextEditingController().obs;
 
   Rx<TextEditingController> preferredInvestmentController =
       TextEditingController().obs;

@@ -360,7 +360,10 @@ class FounderHomeScreen extends StatelessWidget {
                                                                       .w500),
                                                     ),
                                                     Text(
-                                                      '₹25L – ₹2Cr',
+                                                      homeController
+                                                          .investorList[index]
+                                                          .preferred_investment
+                                                          .toString(),
                                                       style: GoogleFonts
                                                           .montserrat(
                                                               color: AppColors
@@ -388,7 +391,10 @@ class FounderHomeScreen extends StatelessWidget {
                                                                       .w500),
                                                     ),
                                                     Text(
-                                                      'Seed – Series A',
+                                                      homeController
+                                                          .investorList[index]
+                                                          .preferred_stage
+                                                          .toString(),
                                                       style: GoogleFonts
                                                           .montserrat(
                                                               color: AppColors
@@ -403,48 +409,49 @@ class FounderHomeScreen extends StatelessWidget {
                                               ],
                                             ),
                                             const SizedBox(height: 10),
-                                            SizedBox(
-                                              height: 30,
-                                              child: ListView.builder(
-                                                  itemCount: 2,
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    return Container(
-                                                      margin: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 5),
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 6),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      decoration: BoxDecoration(
-                                                        color: AppColors
-                                                            .containerBackgroundColor,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(11),
-                                                        border: Border.all(
-                                                            color: AppColors
-                                                                .containerBorderColor,
-                                                            width: 1),
-                                                      ),
-                                                      child: Text(
-                                                        'Fintech',
-                                                        style: GoogleFonts
-                                                            .montserrat(
-                                                                color: AppColors
-                                                                    .darkGreyColor,
-                                                                fontSize: 13,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
-                                                      ),
-                                                    );
-                                                  }),
+                                            // SizedBox(
+                                            //   height: 30,
+                                            //   child: ListView.builder(
+                                            //       itemCount: 2,
+                                            //       scrollDirection:
+                                            //           Axis.horizontal,
+                                            //       itemBuilder:
+                                            //           (context, index) {
+                                            //         return ;
+                                            //       }),
+                                            // ),
+
+                                            Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8,vertical: 2),
+                                              decoration: BoxDecoration(
+                                                color: AppColors
+                                                    .containerBackgroundColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(11),
+                                                border: Border.all(
+                                                    color: AppColors
+                                                        .containerBorderColor,
+                                                    width: 1),
+                                              ),
+                                              child: Text(
+                                                homeController
+                                                    .investorList[index]
+                                                    .preferred_industries
+                                                    .toString(),
+                                                style: GoogleFonts.montserrat(
+                                                    color:
+                                                        AppColors.darkGreyColor,
+                                                    fontSize: 13,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
                                             ),
+
                                             const SizedBox(height: 10),
                                             const Divider(
                                               height: 2,
