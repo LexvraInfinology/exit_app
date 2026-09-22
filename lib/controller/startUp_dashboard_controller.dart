@@ -45,7 +45,7 @@ class StartUpDashBoardController extends GetxController {
   }
 
   void clickEditProfile() {
-    Get.to(() => EditProfileScreen());
+    Get.to(() => const EditProfileScreen(isFounder: true,));
   }
 
   void clickPostDetails() {

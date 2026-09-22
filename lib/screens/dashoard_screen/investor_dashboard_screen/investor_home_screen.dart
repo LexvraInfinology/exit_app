@@ -1,4 +1,5 @@
 import 'package:exit_app/constants/app_color.dart';
+import 'package:exit_app/controller/chat_controller.dart';
 import 'package:exit_app/controller/investor_dashboard_controller.dart';
 import 'package:exit_app/screens/new_chat_screen.dart';
 import 'package:exit_app/screens/notification_screen.dart';
@@ -207,11 +208,13 @@ class InvestorHomeScreen extends StatelessWidget {
                                                     const Spacer(),
                                                     GestureDetector(
                                                       onTap: () {
-                                                        // homeController.clickChatItem();
-                                                        Get.to(() => ChatScreen(
+                                                        if (Get.isRegistered<ChatController>()) {
+                                                          Get.delete<ChatController>();
+                                                        }                                                        Get.to(() => ChatScreen(
                                                           recipientId: item.founderId,
                                                           recipientName: item.founderName,
-                                                          currentUserId: null));
+                                                          currentUserId: null,
+                                                          conversationId: item.conversationId,));
                                                       },
                                                       child: Text(
                                                         'Open conversation ›',
@@ -556,8 +559,8 @@ class InvestorHomeScreen extends StatelessWidget {
                                               height: 41,
                                               child: ElevatedButton(
                                                 onPressed: () {
-                                                  homeController
-                                                      .clickFounderDetails();
+                                                  // homeController
+                                                  //     .clickFounderDetails();
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                   backgroundColor:

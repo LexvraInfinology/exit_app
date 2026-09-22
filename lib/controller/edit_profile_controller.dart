@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:exit_app/api_utils/api_services.dart';
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/models/marketplace_Industries_model.dart';
+import 'package:exit_app/models/profile_model.dart';
 import 'package:exit_app/models/update_profile_response.dart';
 import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/investor_dashboard_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,12 +12,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfileController extends GetxController {
+  EditProfileController({required this.profile});
 
   final ImagePicker _picker = ImagePicker();
   final Rxn<File> selectedImage = Rxn<File>();
 
   var isLoading = false.obs;
-
+  final ResultsProfile? profile;
 
   final ApiServices apiServices = ApiServices();
   final SharedPreferences prefs = Get.find<SharedPreferences>();
@@ -25,7 +27,6 @@ class EditProfileController extends GetxController {
   final List<MarketplaceIndustry> stagesList = <MarketplaceIndustry>[];
   final List<MarketplaceIndustry> rangesList = <MarketplaceIndustry>[];
   final List<MarketplaceIndustry> locationsList = <MarketplaceIndustry>[];
-
   Rx<TextEditingController> firstNameController = TextEditingController().obs;
   Rx<TextEditingController> lastNameController = TextEditingController().obs;
   Rx<TextEditingController> emailController = TextEditingController().obs;
@@ -44,6 +45,28 @@ class EditProfileController extends GetxController {
 
 
   final RxString experience = ''.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadProfilePage();
+    init();
+  }
+
+  init(){
+    if(profile != null){
+      firstNameController.value.text = profile?.firstName ?? '';
+      lastNameController.value.text = profile?.lastName ?? "";
+      emailController.value.text = profile?.email ?? "";
+      locationController.value.text = profile?.currentLocation ?? "";
+      aboutController.value.text = profile?.bio ?? "";
+      preferredInvestmentController.value.text = profile?.preferredInvestment ?? "";
+      preferredIndustryController.value.text = profile?.preferredIndustries ?? "";
+      preferredLocationController.value.text = profile?.preferredLocation ?? "";
+      final stageId = stagesList.firstWhere((item) => item.name == profile?.preferredStage,).id;
+      preferredStageController.value.text = stageId;
+    }
+  }
 
   void onChangeStage(String value) {
     preferredStageController.value.text = value;
@@ -80,8 +103,8 @@ class EditProfileController extends GetxController {
     Get.back();
   }
 
-  void clickEditProfile() {
-    _updateProfileApi();
+  void clickEditProfile(bool isFounder) {
+    _updateProfileApi(isFounder);
   }
 
   void showUploadOptions(BuildContext context) {
@@ -125,6 +148,42 @@ class EditProfileController extends GetxController {
       print('Image path: ${image.path}');
     }
   }
+  Future<void> loadProfilePage() async {
+    isLoading.value = true;
+    update();
+    try {
+      final results = await Future.wait([
+        _safeCall(getMarketplaceStagesApi),
+        _safeCall(getMarketplaceIndustriesApi),
+        _safeCall(getMarketplaceRangesApi),
+        _safeCall(getMarketplaceLocationsApi),
+      ]);
+      final allFailed = results.every((success) => success == false);
+      if (allFailed) {
+        Get.snackbar(
+          'Error',
+          'Unable to load dashboard. Please check your connection.',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+        );
+      }
+    } finally {
+      isLoading.value = false;
+      update();
+    }
+  }
+
+  Future<bool> _safeCall(Future<void> Function() apiCall) async {
+    try {
+      await apiCall();
+      return true;
+    } catch (e) {
+      debugPrint('object $e');
+      return false;
+    }
+  }
+
 
   Future<void> getMarketplaceIndustriesApi() async {
     try {
@@ -198,19 +257,28 @@ class EditProfileController extends GetxController {
     }
   }
 
-  Future<void> _updateProfileApi() async {
+  Future<void> _updateProfileApi(bool isFounder) async {
     final firstName = firstNameController.value.text.trim();
     final lastName = lastNameController.value.text.trim();
     final email = emailController.value.text.trim();
     final location = locationController.value.text.trim();
     final about = aboutController.value.text.trim();
-
+    final investment = preferredInvestmentController.value.text.trim();
+    final stage = preferredStageController.value.text.trim();
+    final industry = preferredIndustryController.value.text.trim();
+    final preferredLocation = preferredLocationController.value.text.trim();
+    debugPrint("Stage ====> $stage");
     final String? validationError = _validateProfileFields(
       firstName: firstName,
       lastName: lastName,
       email: email,
       location: location,
       about: about,
+      isFounder: isFounder,
+      investment: investment,
+      stage: stage,
+      industry: industry,
+      preferredLocation: preferredLocation,
     );
     if (validationError != null) {
       _showError(validationError);
@@ -227,17 +295,17 @@ class EditProfileController extends GetxController {
         experience: experience.value,
         currentStage: company_stage.value,
         teamSize: team_size.value,
-        preferredInvestment: "",
-        preferredStage: "",
-        preferredIndustries: "",
-        preferredLocation: "",
+        preferredInvestment: investment,
+        preferredStage: stage,
+        preferredIndustries: industry,
+        preferredLocation: preferredLocation,
         userRole: "",
         profileImagePath: selectedImage.value?.path,
       );
       debugPrint("Status Code: ${response?.statusCode}");
       debugPrint("Message: ${response?.message}");
 
-      if (response?.statusCode == 201) {
+      if (response?.statusCode == 200) {
         Get.snackbar(
           'Success',
           response?.message ?? 'Update Profile successfully',
@@ -263,15 +331,27 @@ class EditProfileController extends GetxController {
     required String email,
     required String location,
     required String about,
+    required bool isFounder,
+    required String investment,
+    required String stage,
+    required String industry,
+    required String preferredLocation,
   }) {
     if (firstName.isEmpty) return 'Please enter first name';
     if (lastName.isEmpty) return 'Please enter last name';
     if (email.isEmpty) return 'Please enter email';
     if (location.isEmpty) return 'Please enter current location';
     if (about.isEmpty) return 'Please enter bio';
-    if (experience.isEmpty) return 'Please select experience';
-    if (company_stage.isEmpty) return 'Please select current stage';
-    if (team_size.isEmpty) return 'Please enter team size';
+    if(isFounder){
+      if (experience.isEmpty) return 'Please select experience';
+      if (company_stage.isEmpty) return 'Please select current stage';
+      if (team_size.isEmpty) return 'Please enter team size';
+    }else{
+      if (firstName.isEmpty) return 'Please enter typical investment';
+      if (lastName.isEmpty) return 'Please enter preferred stage';
+      if (email.isEmpty) return 'Please enter industry';
+      if (email.isEmpty) return 'Please enter preferred location';
+    }
     return null;
   }
 

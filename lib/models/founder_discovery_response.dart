@@ -41,6 +41,7 @@ class FounderProfile {
   final String preferredStage; // e.g. "pre_seed"
   final String preferredIndustries;
   final String preferredLocation;
+  final int founderId;
 
   FounderProfile({
     required this.id,
@@ -61,6 +62,7 @@ class FounderProfile {
     required this.preferredStage,
     required this.preferredIndustries,
     required this.preferredLocation,
+    required this.founderId
   });
 
   String get fullName => '$firstName $lastName'.trim();
@@ -87,6 +89,9 @@ class FounderProfile {
       preferredStage: json['preferred_stage']?.toString() ?? '',
       preferredIndustries: json['preferred_industries']?.toString() ?? '',
       preferredLocation: json['preferred_location']?.toString() ?? '',
+      founderId: json['founder_id'] is int
+          ? json['founder_id'] as int
+          : int.tryParse(json['founder_id']?.toString() ?? '') ?? 0,
     );
   }
 
@@ -110,6 +115,7 @@ class FounderProfile {
       'preferred_stage': preferredStage,
       'preferred_industries': preferredIndustries,
       'preferred_location': preferredLocation,
+      'founder_id': founderId
     };
   }
 }

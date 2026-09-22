@@ -35,7 +35,7 @@ class UserProfile {
   final String teamSize;
   final String preferredInvestment;
   final String preferredStage;
-  final List<String> preferredIndustries; // NOTE: list in response, unlike request (string)
+  final String preferredIndustries;
   final String preferredLocation;
   final Map<String, dynamic> planDetails;
 
@@ -83,9 +83,7 @@ class UserProfile {
       teamSize: json['team_size']?.toString() ?? '',
       preferredInvestment: json['preferred_investment']?.toString() ?? '',
       preferredStage: json['preferred_stage']?.toString() ?? '',
-      preferredIndustries: (json['preferred_industries'] as List<dynamic>? ?? [])
-          .map((e) => e.toString())
-          .toList(),
+      preferredIndustries: json['preferred_industries']?.toString() ?? '',
       preferredLocation: json['preferred_location']?.toString() ?? '',
       planDetails: json['plan_details'] as Map<String, dynamic>? ?? {},
     );

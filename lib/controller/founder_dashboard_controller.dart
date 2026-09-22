@@ -104,7 +104,7 @@ class FounderDashboardController extends GetxController {
   }
 
   void clickEditProfile() {
-    Get.to(() => EditProfileScreen());
+    Get.to(() => const EditProfileScreen(isFounder: true,));
   }
 
   void clickPostDetails() {

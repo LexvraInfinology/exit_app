@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:exit_app/models/chat_model.dart';
 import 'package:exit_app/models/connection_response.dart';
 import 'package:exit_app/models/conversation_response.dart';
 import 'package:exit_app/models/create_fund_model_class.dart';
@@ -740,7 +741,7 @@ class ApiServices {
         "founder_id": founderId,
       }),
     );
-
+    debugPrint("API URL: $founderId");
     debugPrint("API URL: $url");
     debugPrint("Status Code: ${response.statusCode}");
     debugPrint("Response Body: ${response.body}");
@@ -752,6 +753,93 @@ class ApiServices {
     }
 
     return null;
+  }
+
+
+  Future<ChatHistoryResponse?> getChatHistoryApi({
+    required String conversationId,
+    required int currentUserId,
+  }) async {
+    final token = prefs.getString('token');
+
+    final Uri url = Uri.parse(
+      '${ApiUtils.chatListApi}$conversationId/messages/',
+    );
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "token $token",
+        },
+      );
+
+      debugPrint("API URL: $url");
+      debugPrint("Status Code: ${response.statusCode}");
+      debugPrint("Response Body: ${response.body}");
+
+      if (response.statusCode >= 200 &&
+          response.statusCode < 300) {
+        final Map<String, dynamic> jsonResponse =
+        jsonDecode(response.body);
+
+        return ChatHistoryResponse.fromJson(
+          jsonResponse,
+          currentUserId: currentUserId,
+        );
+      }
+
+      debugPrint(
+        "Chat History API Failed: ${response.statusCode}",
+      );
+
+      return null;
+    } catch (e, stackTrace) {
+      debugPrint("Get Chat History Error: $e");
+      debugPrintStack(stackTrace: stackTrace);
+      return null;
+    }
+  }
+
+  Future<bool> logoutApi() async {
+    final token = prefs.getString('token');
+
+    final Uri url = Uri.parse(ApiUtils.logoutApi);
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Accept": "*/*",
+          "Authorization": "token $token",
+        },
+        body: '',
+      );
+
+      debugPrint("API URL: $url");
+      debugPrint("Status Code: ${response.statusCode}");
+      debugPrint("Response Body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse =
+        jsonDecode(response.body);
+
+        debugPrint(
+          "Logout Message: ${jsonResponse['data']?['message']}",
+        );
+
+        return true;
+      }
+
+      return false;
+    } catch (e, stackTrace) {
+      debugPrint("Logout API Error: $e");
+      debugPrintStack(stackTrace: stackTrace);
+
+      return false;
+    }
   }
 }
 

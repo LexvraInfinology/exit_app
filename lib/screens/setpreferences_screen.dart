@@ -96,11 +96,11 @@ class SetPreferencesScreen extends StatelessWidget {
                         controller: controller.foundedController.value,
                         hint: 'Founded'),
                     const SizedBox(height: 24),
-                    const Text('Preferred industries',
+                    const Text('Funding Type',
                         style: TextStyle(color: Colors.white70, fontSize: 13,fontWeight: FontWeight.w600)),
                     const SizedBox(height: 8),
                     _buildDropdownField(
-                      hint: 'Select stage',
+                      hint: 'Funding Type',
                       value: controller.fundingTypeController.value.text.trim().isEmpty ? null : controller.fundingTypeController.value.text.trim(),
                       items: controller.fundingTypeList,
                       onChanged: (val) {

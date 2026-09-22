@@ -148,7 +148,7 @@ class CreateProfileScreen extends StatelessWidget {
                               _label('Role'),
                               const SizedBox(height: 12),
                               _textField(
-                                controller: controller.emailController.value,
+                                controller: controller.user_role.value,
                                 hint: 'Enter your role',
                                 keyboardType: TextInputType.emailAddress,
                                 textInputAction: TextInputAction.next,
