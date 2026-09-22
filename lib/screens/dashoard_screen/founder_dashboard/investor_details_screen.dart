@@ -14,7 +14,7 @@ import '../../../models/get_investor_list_model.dart';
 class InvestorDetailsScreen extends StatelessWidget {
   Results? result;
 
-  InvestorDetailsScreen(this.result);
+  InvestorDetailsScreen(this.result, {super.key});
 
   static const tags = ['SaaS', 'FinTech', 'B2B', 'AI / ML'];
 
@@ -61,14 +61,7 @@ class InvestorDetailsScreen extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      GestureDetector(
-                        onTap: () {},
-                        child: const Icon(
-                          Icons.bookmark_border,
-                          color: AppColors.darkGreyColor,
-                          size: 22,
-                        ),
-                      ),
+
                     ],
                   ),
                 ),
@@ -112,7 +105,7 @@ class InvestorDetailsScreen extends StatelessWidget {
                                         children: [
                                           Flexible(
                                             child: Text(
-                                              'Northstar Ventures',
+                                              '${result?.firstName.toString()} ${result?.lastName.toString()}',
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                               style: GoogleFonts.montserrat(
@@ -132,7 +125,7 @@ class InvestorDetailsScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
-                                        'VC Fund · Bengaluru, India',
+                                        '₹ ${result?.preferred_investment.toString()}/- · ${result?.currentLocation.toString()} · India',
                                         style: GoogleFonts.montserrat(
                                             color: AppColors.darkGreyColor,
                                             fontSize: 14,
@@ -140,7 +133,7 @@ class InvestorDetailsScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 10),
                                       Text(
-                                        'SaaS · FinTech · B2B',
+                                        '${result?.preferred_industries.toString()}',
                                         style: GoogleFonts.montserrat(
                                             color: AppColors.darkGreyColor,
                                             fontSize: 14,
@@ -154,16 +147,16 @@ class InvestorDetailsScreen extends StatelessWidget {
                             const SizedBox(
                               height: 20,
                             ),
-                            Text(
-                              'Early-stage investor backing ambitious technology founders.',
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.montserrat(
-                                color: AppColors.darkGreyColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                            // Text(
+                            //   'Early-stage investor backing ambitious technology founders.',
+                            //   maxLines: 3,
+                            //   overflow: TextOverflow.ellipsis,
+                            //   style: GoogleFonts.montserrat(
+                            //     color: AppColors.darkGreyColor,
+                            //     fontSize: 16,
+                            //     fontWeight: FontWeight.w500,
+                            //   ),
+                            // ),
                             const SizedBox(
                               height: 20,
                             ),
@@ -183,7 +176,7 @@ class InvestorDetailsScreen extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          '₹25L – ₹2Cr',
+                                          '₹ ${result!.preferred_investment.toString()}/-',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: GoogleFonts.montserrat(
@@ -213,7 +206,7 @@ class InvestorDetailsScreen extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'Seed – Series A',
+                                          '${result?.preferred_stage.toString()}',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: GoogleFonts.montserrat(
@@ -242,7 +235,11 @@ class InvestorDetailsScreen extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          '45+',
+                                          result?.total_investment_count == 0 ||
+                                                  result?.total_investment_count ==
+                                                      null
+                                              ? '0'
+                                              : '${result?.total_investment_count.toString()}',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: GoogleFonts.montserrat(
@@ -307,7 +304,7 @@ class InvestorDetailsScreen extends StatelessWidget {
                             Text(
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
-                              'Northstar Ventures partners with ambitious founders at the earliest stages, providing capital, mentorship and access to a strong network',
+                              result!.bio.toString(),
                               style: GoogleFonts.montserrat(
                                 color: AppColors.darkGreyColor,
                                 fontSize: 14,
@@ -315,66 +312,66 @@ class InvestorDetailsScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 12),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'Read more',
-                                  style: GoogleFonts.montserrat(
-                                      color: AppColors.darkGreyColor,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                const SizedBox(width: 5),
-                                const Icon(
-                                  Icons.keyboard_arrow_down_rounded,
-                                  color: AppColors.darkGreyColor,
-                                  size: 22,
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   mainAxisSize: MainAxisSize.min,
+                            //   children: [
+                            //     Text(
+                            //       'Read more',
+                            //       style: GoogleFonts.montserrat(
+                            //           color: AppColors.darkGreyColor,
+                            //           fontSize: 14,
+                            //           fontWeight: FontWeight.w500),
+                            //     ),
+                            //     const SizedBox(width: 5),
+                            //     const Icon(
+                            //       Icons.keyboard_arrow_down_rounded,
+                            //       color: AppColors.darkGreyColor,
+                            //       size: 22,
+                            //     ),
+                            //   ],
+                            // ),
                             const SizedBox(height: 20),
-                            Text(
-                              'Investment Focus',
-                              style: GoogleFonts.montserrat(
-                                color: Color(0xFF969696),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: .2,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 30,
-                              child: ListView.builder(
-                                  itemCount: tags.length,
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 5),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 6),
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.blackColor,
-                                        borderRadius: BorderRadius.circular(11),
-                                        border: Border.all(
-                                            color: const Color(0xFF292929),
-                                            width: 1),
-                                      ),
-                                      child: Text(
-                                        'Saas',
-                                        style: GoogleFonts.montserrat(
-                                            color: AppColors.darkGreyColor,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    );
-                                  }),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
+                            // Text(
+                            //   'Investment Focus',
+                            //   style: GoogleFonts.montserrat(
+                            //     color: Color(0xFF969696),
+                            //     fontSize: 13,
+                            //     fontWeight: FontWeight.w600,
+                            //     letterSpacing: .2,
+                            //   ),
+                            // ),
+                            // SizedBox(
+                            //   height: 30,
+                            //   child: ListView.builder(
+                            //       itemCount: tags.length,
+                            //       scrollDirection: Axis.horizontal,
+                            //       itemBuilder: (context, index) {
+                            //         return Container(
+                            //           margin: const EdgeInsets.symmetric(
+                            //               horizontal: 5),
+                            //           padding: const EdgeInsets.symmetric(
+                            //               horizontal: 6),
+                            //           alignment: Alignment.center,
+                            //           decoration: BoxDecoration(
+                            //             color: AppColors.blackColor,
+                            //             borderRadius: BorderRadius.circular(11),
+                            //             border: Border.all(
+                            //                 color: const Color(0xFF292929),
+                            //                 width: 1),
+                            //           ),
+                            //           child: Text(
+                            //             'Saas',
+                            //             style: GoogleFonts.montserrat(
+                            //                 color: AppColors.darkGreyColor,
+                            //                 fontSize: 12,
+                            //                 fontWeight: FontWeight.w500),
+                            //           ),
+                            //         );
+                            //       }),
+                            // ),
+                            // const SizedBox(
+                            //   height: 20,
+                            // ),
                             Container(
                               decoration: BoxDecoration(
                                 color: Color(0xFF1111),
@@ -400,37 +397,10 @@ class InvestorDetailsScreen extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            'VC Fund',
-                                            style: GoogleFonts.montserrat(
-                                              color: Color(0xFFE0E0E0),
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  const Divider(
-                                    color: Color(0xFF272727),
-                                  ),
-                                  SizedBox(
-                                    height: 56,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Fund Size',
-                                            style: GoogleFonts.montserrat(
-                                              color: Color(0xFF777777),
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                          Text(
-                                            '₹150 Cr',
+                                            result?.fund_type == null ||
+                                                    result?.fund_type == ''
+                                                ? '-'
+                                                : '${result?.fund_type.toString()}',
                                             style: GoogleFonts.montserrat(
                                               color: Color(0xFFE0E0E0),
                                               fontSize: 13,
@@ -460,7 +430,9 @@ class InvestorDetailsScreen extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            '2016',
+                                            result?.founded == null
+                                                ? '-'
+                                                : result!.founded.toString(),
                                             style: GoogleFonts.montserrat(
                                               color: Color(0xFFE0E0E0),
                                               fontSize: 13,

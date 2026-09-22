@@ -212,7 +212,7 @@ class ViewAllInvestorScreen extends StatelessWidget {
                                   controller.InvestorDetails(controller.investorList[index]);
                                 },
                                 child: Container(
-                                  width: double.infinity,
+                                  width: MediaQuery.sizeOf(context).width,
                                   margin:
                                       const EdgeInsets.symmetric(vertical: 10),
                                   padding: const EdgeInsets.all(24),

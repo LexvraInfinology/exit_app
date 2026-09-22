@@ -64,7 +64,7 @@ class Results {
   bool? isVerified;
   bool? isSaved;
   String? connectionStatus;
-  Null? profilePhoto;
+  String? profilePhoto;
   String? bio;
   String? experience;
   String? currentStage;
@@ -72,6 +72,9 @@ class Results {
   String? preferred_industries;
   String? preferred_stage;
   String? preferred_investment;
+  String? total_investment_count;
+  String? fund_type;
+  String? founded;
 
   Results(
       {this.id,
@@ -90,7 +93,10 @@ class Results {
       this.teamSize,
       this.preferred_industries,
       this.preferred_stage,
-      this.preferred_investment});
+      this.preferred_investment,
+      this.total_investment_count,
+      this.founded,
+      this.fund_type});
 
   Results.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -110,6 +116,9 @@ class Results {
     preferred_industries = json['preferred_industries'];
     preferred_stage = json['preferred_stage'];
     preferred_investment = json['preferred_investment'];
+    total_investment_count = json['total_investment_count'];
+    founded = json['founded'];
+    fund_type = json['fund_type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -131,6 +140,9 @@ class Results {
     data['preferred_industries'] = this.preferred_industries;
     data['preferred_stage'] = this.preferred_stage;
     data['preferred_investment'] = this.preferred_investment;
+    data['total_investment_count'] = this.total_investment_count;
+    data['founded'] = this.founded;
+    data['fund_type'] = this.fund_type;
     return data;
   }
 }

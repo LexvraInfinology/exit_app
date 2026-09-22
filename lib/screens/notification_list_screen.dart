@@ -23,7 +23,7 @@ class NotificationListScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(24.0),
+                        padding: const EdgeInsets.all(12.0),
                         child: Row(
                           children: [
                             GestureDetector(
@@ -32,8 +32,8 @@ class NotificationListScreen extends StatelessWidget {
                               },
                               child: Image.asset(
                                 AppImages.backIcon,
-                                width: 42,
-                                height: 42,
+                                width: 52,
+                                height: 52,
                               ),
                             ),
                             const SizedBox(width: 12),
