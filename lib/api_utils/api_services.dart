@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:exit_app/models/connection_response.dart';
 import 'package:exit_app/models/conversation_response.dart';
 import 'package:exit_app/models/create_fund_model_class.dart';
 import 'package:exit_app/models/create_profile_model.dart';
@@ -114,6 +115,8 @@ class ApiServices {
       String preferredStage,
       String preferredIndustries,
       String preferredLocation,
+      String founded,
+      String fundingType,
       ) async {
     final token = prefs.getString('token');
     debugPrint('object${token}');
@@ -126,9 +129,11 @@ class ApiServices {
       "preferred_investment": preferredInvestment,
       "preferred_stage": preferredStage,
       "preferred_industries": preferredIndustries,
-      "preferred_location": preferredLocation
+      "preferred_location": preferredLocation,
+      "founded": founded,
+      "fund_type": fundingType
     };
-
+    debugPrint("DATA: $data");
     final response = await http.post(
       url,
       headers: {
@@ -147,6 +152,7 @@ class ApiServices {
       getPlanApi();
       return CreateProfileModel.fromJson(jsonResponse);
     }
+    return null;
   }
 
   Future<MarketplaceIndustriesResponse?> getMarketplaceIndustriesApi() async {
@@ -171,11 +177,37 @@ class ApiServices {
 
       return MarketplaceIndustriesResponse.fromJson(jsonResponse);
     }
+    return null;
   }
 
   Future<MarketplaceIndustriesResponse?> getMarketplaceStagesApi() async {
     final token = prefs.getString('token');
     final Uri url = Uri.parse(ApiUtils.marketplaceStagesApi);
+    final response = await http.get(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      return MarketplaceIndustriesResponse.fromJson(jsonResponse);
+    }
+    return null;
+  }
+
+  Future<MarketplaceIndustriesResponse?> getMarketplaceFundingTypes() async {
+    final token = prefs.getString('token');
+
+    final Uri url = Uri.parse(ApiUtils.marketplaceFundingTypesApi);
+
     final response = await http.get(
       url,
       headers: {
@@ -519,6 +551,7 @@ class ApiServices {
         "Authorization": "token $token",
       },
     );
+    debugPrint("TOKEN : $token");
     debugPrint("API URL: $url");
     debugPrint("Status Code: ${response.statusCode}");
     debugPrint("Response Body: ${response.body}");
@@ -688,6 +721,38 @@ class ApiServices {
     }
   }
 
+
+  Future<ConnectionResponse?> createConnectionApi({
+    required int founderId,
+  }) async {
+    final token = prefs.getString('token');
+
+    final Uri url = Uri.parse(ApiUtils.connectionsCheck);
+
+    final response = await http.post(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+      body: jsonEncode({
+        "founder_id": founderId,
+      }),
+    );
+
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      return ConnectionResponse.fromJson(jsonResponse);
+    }
+
+    return null;
+  }
 }
 
 

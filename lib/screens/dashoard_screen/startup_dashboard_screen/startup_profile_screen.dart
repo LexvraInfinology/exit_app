@@ -78,10 +78,10 @@ class StartUpProfileScreen extends StatelessWidget {
                                       color: AppColors.darkGreyColor,
                                       width: 2,
                                     ),
-                                    image: const DecorationImage(
-                                      image: AssetImage('assets/profile.jpg'),
-                                      fit: BoxFit.cover,
-                                    ),
+                                    // image: const DecorationImage(
+                                    //   image: AssetImage('assets/profile.jpg'),
+                                    //   fit: BoxFit.cover,
+                                    // ),
                                   ),
                                 ),
                                 Positioned(

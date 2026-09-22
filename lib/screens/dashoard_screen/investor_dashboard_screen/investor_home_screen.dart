@@ -1,5 +1,6 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/controller/investor_dashboard_controller.dart';
+import 'package:exit_app/screens/new_chat_screen.dart';
 import 'package:exit_app/screens/notification_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -168,103 +169,9 @@ class InvestorHomeScreen extends StatelessWidget {
                                   ),
                                   child: Column(
                                     children: [
-                                      // Obx(() => ListView.builder(
-                                      //     itemCount: 2,
-                                      //     shrinkWrap: true,
-                                      //     itemBuilder: (context, index) {
-                                      //       final item = homeController
-                                      //           .needsAttentionList[index];
-                                      //       return Padding(
-                                      //         padding:
-                                      //             const EdgeInsets.fromLTRB(
-                                      //                 16, 17, 16, 18),
-                                      //         child: Column(
-                                      //           crossAxisAlignment:
-                                      //               CrossAxisAlignment.start,
-                                      //           children: [
-                                      //             Row(
-                                      //               children: [
-                                      //                 Text(
-                                      //                   item.founderName,
-                                      //                   style: GoogleFonts
-                                      //                       .montserrat(
-                                      //                     fontSize: 14,
-                                      //                     color: AppColors
-                                      //                         .whiteColor,
-                                      //                     fontWeight:
-                                      //                         FontWeight.w600,
-                                      //                   ),
-                                      //                 ),
-                                      //                 const SizedBox(width: 5),
-                                      //                 Container(
-                                      //                   width: 11,
-                                      //                   height: 11,
-                                      //                   decoration:
-                                      //                       const BoxDecoration(
-                                      //                     color:
-                                      //                         Color(0xFF4A9EFF),
-                                      //                     shape:
-                                      //                         BoxShape.circle,
-                                      //                   ),
-                                      //                   child: const Icon(
-                                      //                     Icons.check,
-                                      //                     size: 7,
-                                      //                     color: AppColors
-                                      //                         .whiteColor,
-                                      //                   ),
-                                      //                 ),
-                                      //                 const Spacer(),
-                                      //                 GestureDetector(
-                                      //                   onTap: () {
-                                      //                     homeController
-                                      //                         .clickChatItem();
-                                      //                   },
-                                      //                   child: Text(
-                                      //                     'Open conversation ›',
-                                      //                     style: GoogleFonts
-                                      //                         .montserrat(
-                                      //                       fontSize: 11,
-                                      //                       color: AppColors
-                                      //                           .whiteColor,
-                                      //                     ),
-                                      //                   ),
-                                      //                 ),
-                                      //               ],
-                                      //             ),
-                                      //             const SizedBox(height: 9),
-                                      //             Text(
-                                      //               'Founder replied · ${timeAgo(item.latestMessageTime)}',
-                                      //               style:
-                                      //                   GoogleFonts.montserrat(
-                                      //                 color: Color(0xFF777777),
-                                      //                 fontSize: 11,
-                                      //               ),
-                                      //             ),
-                                      //             const SizedBox(height: 13),
-                                      //             Text(
-                                      //               item.latestMessage,
-                                      //               style:
-                                      //                   GoogleFonts.montserrat(
-                                      //                 color: Color(0xFF858585),
-                                      //                 fontSize: 14,
-                                      //                 height: 1.55,
-                                      //                 fontStyle:
-                                      //                     FontStyle.italic,
-                                      //               ),
-                                      //             ),
-                                      //             //
-                                      //             // Container(
-                                      //             //   height: 1,
-                                      //             //   color: const Color(0xFF292929),
-                                      //             // ),
-                                      //           ],
-                                      //         ),
-                                      //       );
-                                      //     }))
-
                                       homeController.needsAttentionList.isNotEmpty ?
                                       ListView.builder(
-                                        itemCount: 2,
+                                        itemCount: homeController.needsAttentionList.length == 1 ? 1:2,
                                         shrinkWrap: true,
                                         itemBuilder: (context, index) {
                                           final item = homeController.needsAttentionList[index];
@@ -300,7 +207,11 @@ class InvestorHomeScreen extends StatelessWidget {
                                                     const Spacer(),
                                                     GestureDetector(
                                                       onTap: () {
-                                                        homeController.clickChatItem();
+                                                        // homeController.clickChatItem();
+                                                        Get.to(() => ChatScreen(
+                                                          recipientId: item.founderId,
+                                                          recipientName: item.founderName,
+                                                          currentUserId: null));
                                                       },
                                                       child: Text(
                                                         'Open conversation ›',
