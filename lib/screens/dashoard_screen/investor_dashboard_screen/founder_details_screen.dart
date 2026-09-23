@@ -1,39 +1,18 @@
+import 'package:exit_app/api_utils/app_formatters.dart';
 import 'package:exit_app/controller/chat_controller.dart';
 import 'package:exit_app/controller/investor_dashboard_controller.dart';
 import 'package:exit_app/models/founder_discovery_response.dart';
 import 'package:exit_app/screens/new_chat_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../../constants/app_color.dart';
 import '../../../constants/app_images.dart';
-import '../../chat_details_screen.dart';
 
 class FounderDetailsScreen extends StatelessWidget {
-  FounderDetailsScreen({super.key, required this.founderProfile});
+  FounderDetailsScreen({super.key, required this.fundingData});
 
-  final FounderProfile? founderProfile;
-  static const tags = ['SaaS', 'FinTech', 'B2B', 'AI / ML'];
-
-  List companyList = [
-    {
-      'company_name': 'Northstar Ventures',
-      'company_type': 'FinTech',
-      'company_logo': 'FC',
-    },
-    {
-      'company_name': 'FlowWorks',
-      'company_type': 'B2B SaaS',
-      'company_logo': 'FW',
-    },
-    {
-      'company_name': 'Kredity',
-      'company_type': 'SaaS',
-      'company_logo': 'K',
-    },
-  ];
+  final FundingRequest? fundingData;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +75,7 @@ class FounderDetailsScreen extends StatelessWidget {
                               ),
                               alignment: Alignment.center,
                               child: Text(
-                                founderProfile != null ? founderProfile!.firstName[0].toUpperCase() : '',
+                                fundingData != null ? fundingData!.companyName[0].toUpperCase() : '',
                                 style: GoogleFonts.montserrat(
                                   color: AppColors.whiteColor,
                                   fontSize: 19,
@@ -113,7 +92,7 @@ class FounderDetailsScreen extends StatelessWidget {
                                     children: [
                                       Flexible(
                                         child: Text(
-                                          founderProfile != null ?  founderProfile!.firstName:"" ,
+                                          fundingData != null ?  fundingData!.companyName:"" ,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: GoogleFonts.montserrat(
@@ -124,7 +103,7 @@ class FounderDetailsScreen extends StatelessWidget {
                                         ),
                                       ),
                                       const SizedBox(width: 6),
-                                      founderProfile != null ? founderProfile!.isVerified ?  const Icon(
+                                      fundingData != null ? fundingData!.profile.isVerified ?  const Icon(
                                         Icons.verified_rounded,
                                         color: Color(0xFF777777),
                                         size: 14,
@@ -133,18 +112,10 @@ class FounderDetailsScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    'Fintech · Bengaluru, India',
+                                      fundingData != null ?  '${fundingData!.industry} · ${fundingData!.stage.toUpperCase()} · ${fundingData!.location}':"",
                                     style: GoogleFonts.montserrat(
-                                      color: Color(0xFF858585),
+                                      color: const Color(0xFF858585),
                                       fontSize: 13,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    'SaaS     FinTech     B2B',
-                                    style: GoogleFonts.montserrat(
-                                      color: Color(0xFF969696),
-                                      fontSize: 12,
                                     ),
                                   ),
                                 ],
@@ -158,9 +129,9 @@ class FounderDetailsScreen extends StatelessWidget {
                         Container(
                           height: 80,
                           decoration: BoxDecoration(
-                            color: Color(0xFF111111),
+                            color: const Color(0xFF111111),
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Color(0xFF272727)),
+                            border: Border.all(color: const Color(0xFF272727)),
                           ),
                           child: Row(
                             children: [
@@ -169,7 +140,7 @@ class FounderDetailsScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      '₹25L',
+                                fundingData != null ? formatIndianShortCurrency(fundingData!.fundingGoal):"",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.montserrat(
@@ -197,7 +168,7 @@ class FounderDetailsScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      '1 - 3 Months',
+                                      fundingData != null ? formatFundingTimeline(fundingData!.fundingTimeline):"",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.montserrat(
@@ -219,7 +190,7 @@ class FounderDetailsScreen extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              Divider(
+                              const Divider(
                                 height: 40,
                                 color: AppColors.darkGreyColor,
                               ),
@@ -261,15 +232,17 @@ class FounderDetailsScreen extends StatelessWidget {
                           width: MediaQuery.sizeOf(context).width,
                           child: ElevatedButton(
                             onPressed: () {
-                              if(founderProfile != null){
+                              if(fundingData != null){
                                 if (Get.isRegistered<ChatController>()) {
                                   Get.delete<ChatController>();
                                 }
                                 Get.to(() => ChatScreen(
-                                  recipientId: founderProfile!.founderId,
-                                  recipientName: founderProfile!.fullName,
+                                  recipientId: fundingData!.profile.founderId,
+                                  recipientName: fundingData!.profile.fullName,
                                   currentUserId: null,
-                                  conversationId: null,));
+                                  conversationId: null,
+                                  fundingId: fundingData!.id,
+                                  ));
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -305,9 +278,9 @@ class FounderDetailsScreen extends StatelessWidget {
                           height: 10,
                         ),
                         Text(
+                            fundingData != null ? fundingData!.companyDescription:"",
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
-                          'Northstar Ventures partners with ambitious founders at the earliest stages, providing capital, mentorship and access to a strong network',
                           style: GoogleFonts.montserrat(
                             color: AppColors.darkGreyColor,
                             fontSize: 14,
@@ -333,54 +306,14 @@ class FounderDetailsScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
-                        Text(
-                          'Investment Focus',
-                          style: GoogleFonts.montserrat(
-                            color: Color(0xFF969696),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: .2,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          height: 30,
-                          child: ListView.builder(
-                              itemCount: tags.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 6),
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.blackColor,
-                                    borderRadius: BorderRadius.circular(11),
-                                    border: Border.all(
-                                        color: const Color(0xFF292929),
-                                        width: 1),
-                                  ),
-                                  child: Text(
-                                    'Saas',
-                                    style: GoogleFonts.montserrat(
-                                        color: AppColors.darkGreyColor,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                );
-                              }),
-                        ),
                         const SizedBox(
                           height: 20,
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            color: Color(0xFF1111),
+                            color: const Color(0xFF1111),
                             borderRadius: BorderRadius.circular(15),
-                            border: Border.all(color: Color(0xFF272727)),
+                            border: Border.all(color: const Color(0xFF272727)),
                           ),
                           child: Column(
                             children: [
@@ -396,12 +329,12 @@ class FounderDetailsScreen extends StatelessWidget {
                                       Text(
                                         'Funding Goal',
                                         style: GoogleFonts.montserrat(
-                                          color: Color(0xFF777777),
+                                          color: const Color(0xFF777777),
                                           fontSize: 13,
                                         ),
                                       ),
                                       Text(
-                                        '₹75L',
+                                          fundingData != null ? formatIndianShortCurrency(fundingData!.fundingGoal):"",
                                         style: GoogleFonts.montserrat(
                                           color: Color(0xFFE0E0E0),
                                           fontSize: 13,
@@ -431,7 +364,7 @@ class FounderDetailsScreen extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        'Seed',
+                                          fundingData != null ? fundingData!.stage.toUpperCase():"",
                                         style: GoogleFonts.montserrat(
                                           color: Color(0xFFE0E0E0),
                                           fontSize: 13,
@@ -590,7 +523,7 @@ class FounderDetailsScreen extends StatelessWidget {
                                             Row(
                                               children: [
                                                 Text(
-                                                  'Aarav Mehta',
+                                                  fundingData != null ? fundingData!.profile.fullName:"",
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -601,6 +534,7 @@ class FounderDetailsScreen extends StatelessWidget {
                                                   ),
                                                 ),
                                                 const SizedBox(width: 6),
+                                                 if(fundingData != null && fundingData!.profile.isVerified)
                                                 const Icon(
                                                   Icons.verified_rounded,
                                                   color: AppColors.blueColor,
@@ -610,7 +544,7 @@ class FounderDetailsScreen extends StatelessWidget {
                                             ),
                                             const SizedBox(height: 8),
                                             Text(
-                                              'Founder & CEO',
+                                                fundingData != null ? fundingData!.profile.role.toUpperCase():"",
                                               style: GoogleFonts.montserrat(
                                                 color: Color(0xFF858585),
                                                 fontSize: 13,
@@ -618,11 +552,23 @@ class FounderDetailsScreen extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 20,
                                         ),
                                         InkWell(
-                                          onTap: () {},
+                                          onTap: () {
+                                            ProfilePopupCard.show(
+                                              context,
+                                              imageUrl: 'https://...',
+                                              name: fundingData != null ? fundingData!.profile.fullName:"",
+                                              location: '${fundingData != null ? fundingData!.profile.currentLocation:""} ${fundingData != null ? fundingData!.profile.preferredLocation:""}',
+                                              quote: fundingData != null ? fundingData!.profile.bio:"",
+                                              experience: fundingData != null ? fundingData!.profile.experience:"",
+                                              industry: fundingData != null ? fundingData!.profile.preferredIndustries:"",
+                                              role: fundingData != null ? fundingData!.profile.role.toUpperCase():"",
+                                              isVerified: fundingData != null ? fundingData!.profile.isVerified:false,
+                                            );
+                                          },
                                           child: const Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
@@ -643,7 +589,7 @@ class FounderDetailsScreen extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 20,
                                         ),
                                       ],
@@ -654,7 +600,7 @@ class FounderDetailsScreen extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 28,vertical: 10),
                                 child: Text(
-                                  '“Building financial tools that make business operations simpler for SMEs.',
+                                  fundingData != null ? fundingData!.profile.bio:"",
                                   style: GoogleFonts.montserrat(
                                       fontStyle: FontStyle.italic,
                                       fontSize: 14,
@@ -675,3 +621,260 @@ class FounderDetailsScreen extends StatelessWidget {
     });
   }
 }
+
+
+class ProfilePopupCard extends StatelessWidget {
+  final String imageUrl;
+  final String name;
+  final bool isVerified;
+  final String location;
+  final String quote;
+  final String experience; // e.g. "6+ years"
+  final String industry; // e.g. "FinTech"
+  final String role; // e.g. "Founder"
+  final VoidCallback? onClose;
+
+  const ProfilePopupCard({
+    super.key,
+    required this.imageUrl,
+    required this.name,
+    required this.location,
+    required this.quote,
+    required this.experience,
+    required this.industry,
+    required this.role,
+    this.isVerified = true,
+    this.onClose,
+  });
+
+  static Future<void> show(
+      BuildContext context, {
+        required String imageUrl,
+        required String name,
+        required String location,
+        required String quote,
+        required String experience,
+        required String industry,
+        required String role,
+        bool isVerified = true,
+      }) {
+    return showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.75),
+      builder: (ctx) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+        child: ProfilePopupCard(
+          imageUrl: imageUrl,
+          name: name,
+          location: location,
+          quote: quote,
+          experience: experience,
+          industry: industry,
+          role: role,
+          isVerified: isVerified,
+          onClose: () => Navigator.of(ctx).pop(),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: const Color(0xFF111111),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFF262626)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // TOP ROW: avatar + name/location + close button
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(40),
+                child: Image.network(
+                  imageUrl,
+                  width: 64,
+                  height: 64,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    width: 64,
+                    height: 64,
+                    color: const Color(0xFF262626),
+                    child: const Icon(Icons.person, color: Colors.white54),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.montserrat(
+                              fontSize: 19,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        if (isVerified) ...[
+                          const SizedBox(width: 6),
+                          const Icon(
+                            Icons.verified_rounded,
+                            size: 18,
+                            color: Color(0xFF3B9EFF),
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.location_on_outlined,
+                          size: 15,
+                          color: Color(0xFF9A9A9A),
+                        ),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: Text(
+                            location,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.montserrat(
+                              fontSize: 13,
+                              color: const Color(0xFF9A9A9A),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: onClose,
+                child: const Icon(
+                  Icons.close_rounded,
+                  size: 20,
+                  color: Color(0xFF9A9A9A),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 22),
+
+          // QUOTE
+          Text(
+            '"$quote"',
+            style: GoogleFonts.montserrat(
+              fontSize: 14.5,
+              fontStyle: FontStyle.italic,
+              height: 1.5,
+              color: const Color(0xFFD8D8D8),
+            ),
+          ),
+
+          const SizedBox(height: 20),
+          Container(height: 1, color: const Color(0xFF262626)),
+          const SizedBox(height: 20),
+
+          // STATS ROW
+          Row(
+            children: [
+              Expanded(
+                child: _StatItem(
+                  icon: Icons.work_outline_rounded,
+                  value: experience,
+                  label: 'Experience',
+                ),
+              ),
+              Container(
+                width: 1,
+                height: 34,
+                color: const Color(0xFF262626),
+              ),
+              Expanded(
+                child: _StatItem(
+                  icon: Icons.bar_chart_rounded,
+                  value: industry,
+                  label: 'Industry',
+                ),
+              ),
+              Container(
+                width: 1,
+                height: 34,
+                color: const Color(0xFF262626),
+              ),
+              Expanded(
+                child: _StatItem(
+                  icon: Icons.person_outline_rounded,
+                  value: role,
+                  label: 'Role',
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatItem extends StatelessWidget {
+  final IconData icon;
+  final String value;
+  final String label;
+
+  const _StatItem({
+    required this.icon,
+    required this.value,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(icon, size: 18, color: Colors.white),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.montserrat(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.montserrat(
+            fontSize: 11,
+            color: const Color(0xFF858585),
+          ),
+        ),
+      ],
+    );
+  }
+}
+

@@ -25,12 +25,15 @@ enum ChatConnectionState {
 class ChatController extends GetxController {
   ChatController({
     required this.conversationId,
-    required this.recipientId});
+    required this.recipientId,
+    required this.currentUserId,
+    required this.fundingId});
 
 
   final int recipientId;
-  final String? conversationId;
-  int? currentUserId;
+   String? conversationId;
+   int? currentUserId;
+   int? fundingId;
 
 
   final ApiServices apiServices = ApiServices();
@@ -64,7 +67,7 @@ class ChatController extends GetxController {
   static const int _maxReconnectAttempts = 5;
 
   static const String _wsBaseUrl =
-      'wss://e211-2401-4900-1c2a-4731-11dd-dc04-5701-169f.ngrok-free.app';
+      'wss://2a1b-2404-7c80-5d-97dc-d1d1-2b3a-57bf-72eb.ngrok-free.app';
 
   int? _connectionId;
 
@@ -81,62 +84,63 @@ class ChatController extends GetxController {
   @override
   void onClose() {
     _manualDisconnect = true;
-
     _reconnectTimer?.cancel();
     _subscription?.cancel();
     _channel?.sink.close();
-
     messageController.dispose();
     scrollController.dispose();
-
     super.onClose();
   }
 
   Future<void> _initChat() async {
     try {
       isCreatingConnection.value = true;
-
-      final ConnectionResponse? response = await apiServices.createConnectionApi(
-        founderId: recipientId,
-      );
-
-      if (response == null) {
-        debugPrint('Connection API returned null');
-        return;
-      }else{
-        _connectionId = response.data.id;
-        currentUserId = recipientId == response.data.investorId ? response.data.founderId:response.data.investorId;
-        if(conversationId != null && currentUserId != null){
-          getChatHistory(conversationId!,currentUserId!);
+      if (currentUserId == null && fundingId != null) {
+        final ConnectionResponse? response =
+        await apiServices.createConnectionApi(
+          founderId: recipientId,
+          fundingId: fundingId!,
+        );
+        if (response == null) {
+          debugPrint('❌ Connection API returned null');
+          return;
         }
+        _connectionId = response.data.id;
+        currentUserId = recipientId == response.data.investorId
+            ? response.data.founderId
+            : response.data.investorId;
+        debugPrint('✅ Connection ID: $_connectionId');
+        debugPrint('✅ Current User ID: $currentUserId');
       }
-
-
-
-      debugPrint(
-        'Connection created/found: $_connectionId',
-      );
-
-      if (!response.data.canMessage) {
-        debugPrint('Messaging is not allowed');
+      else if (conversationId != null && currentUserId != null) {
+        await getChatHistory(
+          conversationId!,
+          currentUserId!,
+        );
+      }
+      else {
+        debugPrint(
+          '❌ Cannot initialize chat: '
+              'conversationId=$conversationId, '
+              'currentUserId=$currentUserId, '
+              'fundingId=$fundingId',
+        );
         return;
       }
+
+
+      debugPrint('🔗 Connecting with ID: $_connectionId');
 
       await connect();
     } catch (e, stackTrace) {
-      debugPrint('Init Chat Error: $e');
+      debugPrint('❌ Init Chat Error: $e');
       debugPrintStack(stackTrace: stackTrace);
     } finally {
       isCreatingConnection.value = false;
     }
   }
 
-
   Future<void> connect() async {
-    if (_connectionId == null) {
-      debugPrint('Cannot connect: connection ID is null');
-      return;
-    }
 
     if (connectionState.value == ChatConnectionState.connected) {
       debugPrint('WebSocket already connected');
@@ -395,11 +399,6 @@ class ChatController extends GetxController {
   }
 
   Future<void> getChatHistory(String conversationId,int currentUserId) async {
-    if (_connectionId == null) {
-      debugPrint('Get History: Conversation ID is null');
-      return;
-    }
-
     try {
       isLoadingHistory.value = true;
 
@@ -456,3 +455,4 @@ class ChatController extends GetxController {
     );
   }
 }
+

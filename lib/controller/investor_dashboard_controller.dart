@@ -1,15 +1,14 @@
 import 'dart:async';
-
 import 'package:exit_app/api_utils/api_services.dart';
 import 'package:exit_app/models/conversation_response.dart';
 import 'package:exit_app/models/founder_discovery_response.dart';
+import 'package:exit_app/models/last_visited_response.dart';
 import 'package:exit_app/models/marketplace_Industries_model.dart';
 import 'package:exit_app/models/need_attention_response.dart';
+import 'package:exit_app/models/portfollio_response_model.dart';
 import 'package:exit_app/models/profile_model.dart';
-import 'package:exit_app/screens/choose_user_screen.dart';
 import 'package:exit_app/screens/dashoard_screen/founder_dashboard/widgets/filtter_button_widget.dart';
 import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/founder_details_screen.dart';
-import 'package:exit_app/screens/edit_profile_screen.dart';
 import 'package:exit_app/screens/help_and_support_screen.dart';
 import 'package:exit_app/screens/notification_list_screen.dart';
 import 'package:exit_app/screens/privacy_policy_screen.dart';
@@ -36,9 +35,11 @@ class InvestorDashboardController extends GetxController {
   final SharedPreferences prefs = Get.find<SharedPreferences>();
 
   final RxList<ResultsProfile> resultProfile = <ResultsProfile>[].obs;
+  int? currentUserId;
   final List<NeedsAttentionItem> needsAttentionList =
       <NeedsAttentionItem>[];
-  final RxList<FounderProfile> founderList = <FounderProfile>[].obs;
+  final RxList<FundingRequest> founderList = <FundingRequest>[].obs;
+  final RxList<LastVisitFundingRequest> lastVisitedList = <LastVisitFundingRequest>[].obs;
   final RxList<NeedsAttentionItem> needsAttentionAllList =
       <NeedsAttentionItem>[].obs;
 
@@ -47,7 +48,12 @@ class InvestorDashboardController extends GetxController {
   final List<MarketplaceIndustry> rangesList = <MarketplaceIndustry>[];
   final List<MarketplaceIndustry> locationsList = <MarketplaceIndustry>[];
   final List<ConversationItem> chats = <ConversationItem>[];
+  Rx<PortfolioSummary> summary = PortfolioSummary(
+    totalInvestment: '0.00',
+    activeInvestment: '0.00',
+  ).obs;
 
+  RxList<Investment> investments = <Investment>[].obs;
 
 
   List<FilterListModel> filterListItems =  [
@@ -129,6 +135,8 @@ Future<void> loadHomePage() async {
         _safeCall(getMarketplaceLocationsApi),
         _safeCall(getuserProfileApi),
         _safeCall(getChatListApi),
+        _safeCall(getLastVisitListApi),
+        _safeCall(getPortfolioApi)
         // _safeCall(getNeedsAttentionAllApi),
       ]);
 
@@ -167,9 +175,9 @@ Future<void> loadHomePage() async {
     selectedIndex.value = index;
   }
 
-  void clickFounderDetails(FounderProfile? founderDetail) {
-  if(founderDetail != null){
-    Get.to(() => FounderDetailsScreen(founderProfile: founderDetail,));
+  void clickFounderDetails(FundingRequest? fundingData) {
+  if(fundingData != null){
+    Get.to(() => FounderDetailsScreen( fundingData: fundingData,));
   }
   }
 
@@ -351,6 +359,20 @@ Future<void> loadHomePage() async {
     }
   }
 
+  Future<void> getLastVisitListApi({bool viewAll = false}) async {
+    try {
+      final response = await apiServices.getLastVisitListApi();
+      if (response?.statusCode == 200) {
+        lastVisitedList.assignAll(response!.data.results);
+      } else {
+        Get.snackbar('Failed', response?.message ?? 'Something went wrong');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    }
+  }
+
   Future<void> getMarketplaceIndustriesApi() async {
     try {
 
@@ -434,6 +456,7 @@ Future<void> loadHomePage() async {
       debugPrint("Status Code: ${response?.statusCode}");
       debugPrint("Message: ${response?.message}");
       resultProfile.value = response?.data!.results ?? [];
+      currentUserId = resultProfile.first.id;
       debugPrint('click dat ${resultProfile.single.firstName}');
     } catch (e) {
       debugPrint('object $e');
@@ -458,6 +481,27 @@ Future<void> loadHomePage() async {
       } else {
         Get.snackbar(
             'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    }
+  }
+
+  Future<void> getPortfolioApi() async {
+    try {
+      isLoading.value = true;
+      final PortfolioResponse? response =
+      await apiServices.getPortfolioApi();
+
+      if (response?.statusCode == 200) {
+    if(response != null){
+      summary.value = response.data.summary;
+      investments.value = response.data.investments;
+    }
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to load portfolio');
       }
     } catch (e) {
       debugPrint('object $e');

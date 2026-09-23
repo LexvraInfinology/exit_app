@@ -7,6 +7,8 @@ import 'package:exit_app/models/create_fund_model_class.dart';
 import 'package:exit_app/models/create_profile_model.dart';
 import 'package:exit_app/models/founder_discovery_response.dart';
 import 'package:exit_app/models/get_plan_model.dart';
+import 'package:exit_app/models/last_visited_response.dart';
+import 'package:exit_app/models/portfollio_response_model.dart';
 import 'package:exit_app/models/profile_model.dart';
 import 'package:exit_app/models/marketplace_Industries_model.dart';
 import 'package:exit_app/models/need_attention_response.dart';
@@ -590,10 +592,10 @@ class ApiServices {
   }
 
 
-  Future<FounderDiscoveryResponse?> getFounderDiscoveryApi({
+  Future<FundingRequestListResponse?> getFounderDiscoveryApi({
     int? limit,
     int? page,
-    String? view, // pass 'all' for the full paginated list
+    String? view,
   }) async {
     final token = prefs.getString('token');
 
@@ -620,10 +622,47 @@ class ApiServices {
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-      return FounderDiscoveryResponse.fromJson(jsonResponse);
+      return FundingRequestListResponse.fromJson(jsonResponse);
     }
     return null;
   }
+
+
+  Future<NewSinceLastVisitResponse?> getLastVisitListApi({
+    int? limit,
+    int? page,
+    String? view,
+  }) async {
+    final token = prefs.getString('token');
+
+    final Map<String, String> queryParams = {};
+    if (limit != null) queryParams['limit'] = '$limit';
+    if (page != null) queryParams['page'] = '$page';
+    if (view != null) queryParams['view'] = view;
+
+    final Uri url = Uri.parse(ApiUtils.lastVisitedApi).replace(
+      queryParameters: queryParams.isNotEmpty ? queryParams : null,
+    );
+
+    final response = await http.get(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      return NewSinceLastVisitResponse.fromJson(jsonResponse);
+    }
+    return null;
+  }
+
 
   Future<UpdateProfileResponse?> updateProfileApi({
     required String firstName,
@@ -725,6 +764,7 @@ class ApiServices {
 
   Future<ConnectionResponse?> createConnectionApi({
     required int founderId,
+    required int fundingId,
   }) async {
     final token = prefs.getString('token');
 
@@ -739,6 +779,7 @@ class ApiServices {
       },
       body: jsonEncode({
         "founder_id": founderId,
+        "funding_request_id": fundingId
       }),
     );
     debugPrint("API URL: $founderId");
@@ -802,6 +843,42 @@ class ApiServices {
       return null;
     }
   }
+
+  Future<PortfolioResponse?> getPortfolioApi() async {
+    final token = prefs.getString('token');
+
+    final Uri url = Uri.parse(ApiUtils.portfolio);
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "token $token",
+        },
+      );
+
+      debugPrint("API URL: $url");
+      debugPrint("Status Code: ${response.statusCode}");
+      debugPrint("Response Body: ${response.body}");
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+        return PortfolioResponse.fromJson(jsonResponse);
+      }
+
+      debugPrint("Portfolio API Failed: ${response.statusCode}");
+
+      return null;
+    } catch (e, stackTrace) {
+      debugPrint("Get Portfolio Error: $e");
+      debugPrintStack(stackTrace: stackTrace);
+      return null;
+    }
+  }
+
 
   Future<bool> logoutApi() async {
     final token = prefs.getString('token');

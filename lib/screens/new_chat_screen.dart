@@ -10,6 +10,7 @@ class ChatScreen extends StatelessWidget {
   final String recipientName;
   final int? currentUserId;
   final String? conversationId;
+  final int? fundingId;
 
   const ChatScreen({
     super.key,
@@ -17,12 +18,16 @@ class ChatScreen extends StatelessWidget {
     required this.recipientId,
     required this.recipientName,
     required this.currentUserId,
+     this.fundingId
   });
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(
-      ChatController(recipientId: recipientId, conversationId: conversationId,),
+      ChatController(recipientId: recipientId,
+        conversationId: conversationId,
+        currentUserId: currentUserId,
+        fundingId: fundingId,),
     );
     return Scaffold(
       backgroundColor: AppColors.blackColor,

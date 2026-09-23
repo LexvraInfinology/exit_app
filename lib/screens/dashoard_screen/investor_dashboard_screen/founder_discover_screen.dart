@@ -1,3 +1,4 @@
+import 'package:exit_app/api_utils/app_formatters.dart';
 import 'package:exit_app/common_widgets/filter_widget.dart';
 import 'package:exit_app/models/marketplace_Industries_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -196,10 +197,10 @@ class FounderDiscoverScreen extends StatelessWidget {
                              physics: const NeverScrollableScrollPhysics(),
                              itemCount: discoverFounderController.founderList.length,
                              itemBuilder: (context, index) {
-                               final founder = discoverFounderController.founderList[index];
+                               final fundingData = discoverFounderController.founderList[index];
                                return GestureDetector(
                                  onTap: () {
-                                   discoverFounderController.clickFounderDetails(founder);
+                                   discoverFounderController.clickFounderDetails(fundingData);
                                  },
                                  child: Container(
                                    margin: const EdgeInsets.symmetric(vertical: 10),
@@ -211,13 +212,14 @@ class FounderDiscoverScreen extends StatelessWidget {
                                          color: const Color(0xFF292929), width: 1),
                                    ),
                                    child: InvestorWidget(
-                                       name: founder.firstName,
+                                       name: fundingData.companyName,
                                        type:  '',
-                                       location: founder.currentLocation,
-                                       investment: founder.preferredInvestment,
-                                       stage: founder.preferredStage,
-                                       logo:  'M',
-                                       controller: discoverFounderController,
+                                       location: fundingData.location,
+                                       investment: formatIndianShortCurrency(fundingData.fundingGoal),
+                                       stage: fundingData.stage.toUpperCase(),
+                                       logo:  fundingData.companyName[0].toUpperCase(),
+                                       timeline:  formatFundingTimeline(fundingData.fundingTimeline),
+                                       industry: fundingData.industry,
                                        context: context),
                                  ),
                                );
@@ -242,7 +244,8 @@ class FounderDiscoverScreen extends StatelessWidget {
       required String investment,
       required String stage,
       required String logo,
-      InvestorDashboardController? controller,
+     required String timeline,
+        required String industry,
       required BuildContext context}) {
     return Column(
       children: [
@@ -260,7 +263,7 @@ class FounderDiscoverScreen extends StatelessWidget {
               child: Center(
                 child: Text(
                   logo,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.whiteColor,
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -305,7 +308,7 @@ class FounderDiscoverScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    '$type · $location',
+                    '$industry · $location',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -347,7 +350,7 @@ class FounderDiscoverScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '₹25L',
+                    investment,
                     style: TextStyle(
                         color: AppColors.whiteColor,
                         fontSize: 11,
@@ -369,7 +372,7 @@ class FounderDiscoverScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '1-3 Months',
+                    timeline,
                     style: TextStyle(
                         color: AppColors.whiteColor,
                         fontSize: 11,
@@ -384,33 +387,27 @@ class FounderDiscoverScreen extends StatelessWidget {
           height: 10,
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: SizedBox(
-                height: 30,
-                child: ListView.builder(
-                    itemCount: 2,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                        padding: const EdgeInsets.symmetric(horizontal: 6),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: AppColors.blackColor,
-                          borderRadius: BorderRadius.circular(11),
-                          border: Border.all(
-                              color: const Color(0xFF292929), width: 1),
-                        ),
-                        child: const Text(
-                          'Fintech',
-                          style: TextStyle(
-                              color: AppColors.darkGreyColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      );
-                    }),
+            SizedBox(
+              height: 30,
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.blackColor,
+                  borderRadius: BorderRadius.circular(11),
+                  border: Border.all(
+                      color: const Color(0xFF292929), width: 1),
+                ),
+                child:  Text(
+                  stage,
+                  style: const TextStyle(
+                      color: AppColors.darkGreyColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500),
+                ),
               ),
             ),
             const SizedBox(width: 10),

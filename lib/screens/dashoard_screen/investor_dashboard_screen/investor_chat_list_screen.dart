@@ -1,6 +1,6 @@
+import 'package:exit_app/api_utils/app_formatters.dart';
 import 'package:exit_app/controller/chat_controller.dart';
 import 'package:exit_app/controller/investor_dashboard_controller.dart';
-import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/investor_home_screen.dart';
 import 'package:exit_app/screens/new_chat_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -153,7 +153,7 @@ class InvestorChatListScreen extends StatelessWidget{
                                         Get.to(() => ChatScreen(
                                             recipientId: conversation.userId,
                                             recipientName: conversation.name,
-                                            currentUserId: null,
+                                            currentUserId: investorDashboardController.currentUserId,
                                           conversationId: conversation.conversationId,));
                                       },
                                       child: Container(
