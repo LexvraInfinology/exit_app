@@ -4,6 +4,7 @@ import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/models/marketplace_Industries_model.dart';
 import 'package:exit_app/models/profile_model.dart';
 import 'package:exit_app/models/update_profile_response.dart';
+import 'package:exit_app/screens/dashoard_screen/founder_dashboard/founder_dashboard_screen.dart';
 import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/investor_dashboard_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -314,7 +315,11 @@ class EditProfileController extends GetxController {
           backgroundColor: AppColors.blackColor,
           colorText: AppColors.whiteColor,
         );
-        Get.to(() => InvestorDashBoardScreen());
+        if(isFounder){
+          Get.to(() => FounderDashboardScreen());
+        }else{
+          Get.to(() => InvestorDashBoardScreen());
+        }
       } else {
         _showError(response?.message ?? 'Preferences failed', title: 'Set Preferences Failed');
       }
