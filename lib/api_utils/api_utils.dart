@@ -28,6 +28,8 @@ class ApiUtils{
   static const String needsAttentionApi = '$baseUrl/investor/dashboard/needs-attention/';
   static const String needsAttentionAllApi = '$baseUrl/investor/dashboard/needs-attention/all/';
   static const String founderDiscoveryApi = '$baseUrl/profiles/founder-discovery/';
+  static const String lastVisitedApi = '$baseUrl/investor/dashboard/new-since-last-visit/all/';
   static const String chatListApi = '$baseUrl/communication/conversations/';
   static const String connectionsCheck = '$baseUrl/connections/';
+  static const String portfolio = '$baseUrl/investor/portfolio/';
 }

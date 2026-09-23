@@ -18,7 +18,7 @@ class EditProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
-        init: EditProfileController(profile: profile),
+        init: EditProfileController(profile: profile, isFounder: isFounder),
         builder: (controller) {
           return Scaffold(
             backgroundColor: AppColors.blackColor,
@@ -201,7 +201,7 @@ class EditProfileScreen extends StatelessWidget {
                             ),
                             child: TextField(
                               style: GoogleFonts.montserrat(
-                                color: Color(0xFFE7E7E7),
+                                color: const Color(0xFFE7E7E7),
                                 fontSize: 16,
                               ),
                               controller: controller.lastNameController.value,
@@ -436,7 +436,9 @@ class EditProfileScreen extends StatelessWidget {
                             ],
                           ):
                         // FOUNDER FIELDS
-                        Column(children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                           const SizedBox(
                             height: 16,
                           ),
@@ -491,7 +493,7 @@ class EditProfileScreen extends StatelessWidget {
                                     color: Color(0xFF777777),
                                   ),
                                   style: GoogleFonts.montserrat(
-                                    color: Color(0xFFE7E7E7),
+                                    color: const Color(0xFFE7E7E7),
                                     fontSize: 15,
                                   ),
                                   items: [
@@ -547,72 +549,69 @@ class EditProfileScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Obx(
-                                () => Container(
-                              height: 53,
-                              padding:
-                              const EdgeInsets.symmetric(horizontal: 16),
-                              decoration: BoxDecoration(
-                                color: AppColors.containerBackgroundColor,
-                                borderRadius: BorderRadius.circular(11),
-                                border: Border.all(
-                                  color: AppColors.containerBorderColor,
-                                ),
+                        Obx(
+                              () => Container(
+                            height: 53,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: AppColors.containerBackgroundColor,
+                              borderRadius: BorderRadius.circular(11),
+                              border: Border.all(
+                                color: AppColors.containerBorderColor,
                               ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  value: controller.company_stage.value.isEmpty
-                                      ? null
-                                      : controller.company_stage.value,
-                                  hint: Text(
-                                    'Select Stage',
-                                    style: GoogleFonts.montserrat(
-                                        color: Color(0xFF777777),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  isExpanded: true,
-                                  dropdownColor: const Color(0xFF171717),
-                                  icon: const Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: Color(0xFF777777),
-                                  ),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: controller.preferredStageController.value.text.trim().isEmpty ? null : controller.preferredStageController.value.text.trim(),
+
+                                onChanged: (val) {
+                                  if(val != null){
+                                    controller.onChangeStage(val);
+                                  }
+                                },
+
+                                hint: Text(
+                                  'Select Stage',
                                   style: GoogleFonts.montserrat(
-                                      color: Color(0xFFE7E7E7),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600),
-                                  items: [
-                                    DropdownMenuItem(
-                                      value: 'Series A',
-                                      child: Text('Series A',
-                                          style: GoogleFonts.montserrat(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600)),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: 'Series B',
-                                      child: Text('Series B',
-                                          style: GoogleFonts.montserrat(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600)),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: 'Seed',
-                                      child: Text('Seed',
-                                          style: GoogleFonts.montserrat(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600)),
-                                    ),
-                                  ],
-                                  onChanged: (value) {
-                                    if (value != null) {
-                                      controller.companyStage(value);
-                                    }
-                                  },
+                                    color: const Color(0xFF777777),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
+
+                                isExpanded: true,
+
+                                dropdownColor: const Color(0xFF171717),
+
+                                icon: const Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Color(0xFF777777),
+                                ),
+
+                                style: GoogleFonts.montserrat(
+                                  color: const Color(0xFFE7E7E7),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+
+                                items: controller.stagesList.map((item) {
+                                  return DropdownMenuItem<String>(
+                                    value: item.id,
+                                    child: Text(
+                                      item.name,
+                                      style: GoogleFonts.montserrat(
+                                        color: const Color(0xFFE7E7E7),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+
                               ),
                             ),
                           ),
+                        ),
                           const SizedBox(
                             height: 16,
                           ),
@@ -702,7 +701,7 @@ class EditProfileScreen extends StatelessWidget {
                           const SizedBox(height: 40),
                           GestureDetector(
                             onTap: () {
-                              controller.clickEditProfile(isFounder);
+                              controller.clickEditProfile();
                             },
                             child: Container(
                               width: MediaQuery.sizeOf(context).width,

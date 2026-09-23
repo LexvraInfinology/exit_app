@@ -12,13 +12,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfileController extends GetxController {
-  EditProfileController({required this.profile});
+  EditProfileController({required this.profile, required this.isFounder});
 
   final ImagePicker _picker = ImagePicker();
   final Rxn<File> selectedImage = Rxn<File>();
 
   var isLoading = false.obs;
   final ResultsProfile? profile;
+  final bool isFounder;
 
   final ApiServices apiServices = ApiServices();
   final SharedPreferences prefs = Get.find<SharedPreferences>();
@@ -33,7 +34,6 @@ class EditProfileController extends GetxController {
   Rx<TextEditingController> locationController = TextEditingController().obs;
   Rx<TextEditingController> aboutController = TextEditingController().obs;
 
-
   Rx<TextEditingController> preferredInvestmentController =
       TextEditingController().obs;
   Rx<TextEditingController> preferredLocationController =
@@ -43,14 +43,13 @@ class EditProfileController extends GetxController {
   Rx<TextEditingController> preferredIndustryController =
       TextEditingController().obs;
 
+  final RxString  experience = ''.obs;
 
-  final RxString experience = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
     loadProfilePage();
-    init();
   }
 
   init(){
@@ -60,11 +59,18 @@ class EditProfileController extends GetxController {
       emailController.value.text = profile?.email ?? "";
       locationController.value.text = profile?.currentLocation ?? "";
       aboutController.value.text = profile?.bio ?? "";
-      preferredInvestmentController.value.text = profile?.preferredInvestment ?? "";
-      preferredIndustryController.value.text = profile?.preferredIndustries ?? "";
-      preferredLocationController.value.text = profile?.preferredLocation ?? "";
-      final stageId = stagesList.firstWhere((item) => item.name == profile?.preferredStage,).id;
-      preferredStageController.value.text = stageId;
+     if(isFounder){
+       experience.value = profile?.experience ?? "";
+       team_size.value = profile?.teamSize ?? "";
+       final stageId = stagesList.firstWhere((item) => item.name.toLowerCase() == profile?.currentStage,).id;
+       preferredStageController.value.text = stageId;
+     }else{
+       preferredInvestmentController.value.text = profile?.preferredInvestment ?? "";
+       preferredIndustryController.value.text = profile?.preferredIndustries ?? "";
+       preferredLocationController.value.text = profile?.preferredLocation ?? "";
+       final stageId = stagesList.firstWhere((item) => item.name.toLowerCase() == profile?.preferredStage,).id;
+       preferredStageController.value.text = stageId;
+     }
     }
   }
 
@@ -87,12 +93,6 @@ class EditProfileController extends GetxController {
     experience.value = value;
   }
 
-  final RxString company_stage = ''.obs;
-
-  void companyStage(String value) {
-    company_stage.value = value;
-  }
-
   final RxString team_size = ''.obs;
 
   void teamSize(String value) {
@@ -103,8 +103,8 @@ class EditProfileController extends GetxController {
     Get.back();
   }
 
-  void clickEditProfile(bool isFounder) {
-    _updateProfileApi(isFounder);
+  void clickEditProfile() {
+    _updateProfileApi();
   }
 
   void showUploadOptions(BuildContext context) {
@@ -167,6 +167,8 @@ class EditProfileController extends GetxController {
           backgroundColor: Colors.black,
           colorText: Colors.white,
         );
+      }else{
+        init();
       }
     } finally {
       isLoading.value = false;
@@ -257,7 +259,7 @@ class EditProfileController extends GetxController {
     }
   }
 
-  Future<void> _updateProfileApi(bool isFounder) async {
+  Future<void> _updateProfileApi() async {
     final firstName = firstNameController.value.text.trim();
     final lastName = lastNameController.value.text.trim();
     final email = emailController.value.text.trim();
@@ -274,7 +276,6 @@ class EditProfileController extends GetxController {
       email: email,
       location: location,
       about: about,
-      isFounder: isFounder,
       investment: investment,
       stage: stage,
       industry: industry,
@@ -293,10 +294,10 @@ class EditProfileController extends GetxController {
         currentLocation: location,
         bio: about,
         experience: experience.value,
-        currentStage: company_stage.value,
+        currentStage: isFounder ? stage :"",
         teamSize: team_size.value,
         preferredInvestment: investment,
-        preferredStage: stage,
+        preferredStage: isFounder ? "" : stage,
         preferredIndustries: industry,
         preferredLocation: preferredLocation,
         userRole: "",
@@ -331,7 +332,6 @@ class EditProfileController extends GetxController {
     required String email,
     required String location,
     required String about,
-    required bool isFounder,
     required String investment,
     required String stage,
     required String industry,
@@ -344,13 +344,13 @@ class EditProfileController extends GetxController {
     if (about.isEmpty) return 'Please enter bio';
     if(isFounder){
       if (experience.isEmpty) return 'Please select experience';
-      if (company_stage.isEmpty) return 'Please select current stage';
+      if (stage.isEmpty) return 'Please enter current stage';
       if (team_size.isEmpty) return 'Please enter team size';
     }else{
-      if (firstName.isEmpty) return 'Please enter typical investment';
-      if (lastName.isEmpty) return 'Please enter preferred stage';
-      if (email.isEmpty) return 'Please enter industry';
-      if (email.isEmpty) return 'Please enter preferred location';
+      if (investment.isEmpty) return 'Please enter typical investment';
+      if (stage.isEmpty) return 'Please enter preferred stage';
+      if (industry.isEmpty) return 'Please enter industry';
+      if (preferredLocation.isEmpty) return 'Please enter preferred location';
     }
     return null;
   }
