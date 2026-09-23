@@ -15,7 +15,6 @@ class CreateFundsRequestScreen extends StatelessWidget {
   int selectedPurpose = 1;
   int selectedInvestor = 1;
 
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
@@ -321,10 +320,9 @@ class CreateFundsRequestScreen extends StatelessWidget {
               Text(
                 'Tell us how much capital you are looking to raise.',
                 style: GoogleFonts.montserrat(
-                  color: Color(0xFF777777),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500
-                ),
+                    color: Color(0xFF777777),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 12),
               Container(
@@ -453,17 +451,17 @@ class CreateFundsRequestScreen extends StatelessWidget {
               ),
               const SizedBox(height: 11),
               Obx(
-                    () => Wrap(
+                () => Wrap(
                   spacing: 8,
                   runSpacing: 8,
                   children: List.generate(
                     controller.stageList.length,
-                        (index) {
+                    (index) {
                       final selected =
-                          controller.selectedPurpose.value == index;
+                          controller.selectedStage.value == index;
                       return GestureDetector(
                         onTap: () {
-                          controller.selectedPurpose.value = index;
+                          controller.selectedStage.value = index;
                         },
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 150),
@@ -490,9 +488,8 @@ class CreateFundsRequestScreen extends StatelessWidget {
                                   ? AppColors.whiteColor
                                   : const Color(0xFF777777),
                               fontSize: 10,
-                              fontWeight: selected
-                                  ? FontWeight.w600
-                                  : FontWeight.w400,
+                              fontWeight:
+                                  selected ? FontWeight.w600 : FontWeight.w400,
                             ),
                           ),
                         ),
@@ -533,7 +530,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                     itemCount: controller.purposeList.length,
                     itemBuilder: (context, index) {
                       final isSelected =
-                          controller.selectedInvestor.value == index;
+                          controller.selectedPurpose.value == index;
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 9),
                         child: _buildInvestorCard(
@@ -587,13 +584,13 @@ class CreateFundsRequestScreen extends StatelessWidget {
   Widget _buildCompany(
       BuildContext context, RaiseFundsRequestController controller) {
     final TextEditingController companyNameController =
-        TextEditingController(text: 'NovaNest');
+        TextEditingController(text: 'Lexvra');
 
     final TextEditingController locationController =
-        TextEditingController(text: 'Bengaluru, India');
+        TextEditingController(text: 'Mohali, India');
 
     final TextEditingController websiteController =
-        TextEditingController(text: 'www.novanest.com');
+        TextEditingController(text: 'www.lexvra.com');
 
     final TextEditingController descriptionController = TextEditingController();
     String industry = 'FinTech';
@@ -810,6 +807,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
               ),
             ],
           ),
+
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -852,7 +850,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                   ),
                 ),
                 child: TextField(
-                  controller: companyNameController,
+                  controller: controller.companyNameController,
                   style: const TextStyle(
                     color: Color(0xFFE7E7E7),
                     fontSize: 15,
@@ -1141,7 +1139,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                   ),
                 ),
                 child: TextField(
-                  style: const TextStyle(
+                  style:  GoogleFonts.montserrat(
                     color: Color(0xFFE7E7E7),
                     fontSize: 15,
                   ),
@@ -1172,7 +1170,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                   ),
                 ),
                 child: TextField(
-                  style: const TextStyle(
+                  style:  GoogleFonts.montserrat(
                     color: Color(0xFFE7E7E7),
                     fontSize: 15,
                   ),
@@ -1212,12 +1210,12 @@ class CreateFundsRequestScreen extends StatelessWidget {
                   ),
                 ),
                 child: TextField(
-                  controller: locationController,
+                  controller: controller.locationController,
                   style: const TextStyle(
                     color: Color(0xFFE1E1E1),
                     fontSize: 15,
                   ),
-                  cursorColor: Colors.white,
+                  cursorColor: AppColors.whiteColor,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     prefixIcon: Icon(
@@ -1263,7 +1261,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                   ),
                 ),
                 child: TextField(
-                  controller: websiteController,
+                  controller: controller.companyWebsiteController,
                   style: const TextStyle(
                     color: Color(0xFFE1E1E1),
                     fontSize: 15,
@@ -1304,7 +1302,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                 child: Stack(
                   children: [
                     TextField(
-                      controller: descriptionController,
+                      controller: controller.companyDescriptionController,
                       maxLength: 250,
                       maxLines: 5,
                       style: GoogleFonts.montserrat(
@@ -1312,7 +1310,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                         fontSize: 14,
                         height: 1.5,
                       ),
-                      cursorColor: Colors.white,
+                      cursorColor: AppColors.whiteColor,
                       decoration: InputDecoration(
                         hintText:
                             'Tell investors what your company does in a\nfew sentences...',
@@ -1605,6 +1603,9 @@ class CreateFundsRequestScreen extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(
+              height: 20,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -2128,6 +2129,10 @@ class CreateFundsRequestScreen extends StatelessWidget {
                 ),
               ],
             ),
+
+            const SizedBox(
+              height: 20,
+            ),
             Text(
               'Review your request',
               style: GoogleFonts.montserrat(
@@ -2175,7 +2180,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  'NovaNest',
+                                  controller.companyNameController.text.toString(),
                                   style: GoogleFonts.montserrat(
                                     color: Colors.white,
                                     fontSize: 19,
@@ -2192,7 +2197,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 7),
                             Text(
-                              'FinTech ·',
+                              controller.industry.value,
                               style: GoogleFonts.montserrat(
                                 color: const Color(0xFF858585),
                                 fontSize: 13,
@@ -2200,7 +2205,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 3),
                             Text(
-                              'Bengaluru',
+                             controller.locationController.text.toString(),
                               style: GoogleFonts.montserrat(
                                 color: const Color(0xFF858585),
                                 fontSize: 13,
@@ -2246,7 +2251,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                   const SizedBox(height: 3),
 
                   Text(
-                    '₹75L',
+                  controller.amountController.text.toString(),
                     style: GoogleFonts.montserrat(
                       color: Colors.white,
                       fontSize: 30,
@@ -2257,7 +2262,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                   const SizedBox(height: 2),
 
                   Text(
-                    'Seed · Market Expansion',
+                    controller.selectedStage.value.toString(),
                     style: GoogleFonts.montserrat(
                       color: AppColors.whiteColor,
                       fontSize: 13,
@@ -2269,7 +2274,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
 
                   // Description
                   Text(
-                    '“Expanding into new markets while growing our product and sales team.”',
+                    '"${controller.companyDescriptionController.text.toString()}"',
                     style: GoogleFonts.montserrat(
                       color: const Color(0xFF858585),
                       fontSize: 13,
@@ -2302,7 +2307,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 7),
                             Text(
-                              '₹75L',
+                              '₹ ${controller.amountController.toString()}/-',
                               style: GoogleFonts.montserrat(
                                 color: Colors.white,
                                 fontSize: 11,
@@ -2312,29 +2317,29 @@ class CreateFundsRequestScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Timeline',
-                              style: GoogleFonts.montserrat(
-                                color: const Color(0xFF686868),
-                                fontSize: 9,
-                              ),
-                            ),
-                            const SizedBox(height: 7),
-                            Text(
-                              '1-3MO',
-                              style: GoogleFonts.montserrat(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Expanded(
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Text(
+                      //         'Timeline',
+                      //         style: GoogleFonts.montserrat(
+                      //           color: const Color(0xFF686868),
+                      //           fontSize: 9,
+                      //         ),
+                      //       ),
+                      //       const SizedBox(height: 7),
+                      //       Text(
+                      //         '1-3MO',
+                      //         style: GoogleFonts.montserrat(
+                      //           color: Colors.white,
+                      //           fontSize: 11,
+                      //           fontWeight: FontWeight.w500,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2343,15 +2348,15 @@ class CreateFundsRequestScreen extends StatelessWidget {
                               'Stage',
                               style: GoogleFonts.montserrat(
                                 color: const Color(0xFF686868),
-                                fontSize: 9,
+                                fontSize: 11,
                               ),
                             ),
                             const SizedBox(height: 7),
                             Text(
-                              'Seed',
+                              controller.selectedStage.value.toString(),
                               style: GoogleFonts.montserrat(
-                                color: Colors.white,
-                                fontSize: 11,
+                                color: AppColors.whiteColor,
+                                fontSize: 13,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -2412,10 +2417,10 @@ class CreateFundsRequestScreen extends StatelessWidget {
             Container(
               width: MediaQuery.sizeOf(context).width,
               decoration: BoxDecoration(
-                color: const Color(0xFF101010),
+                color: AppColors.containerBackgroundColor,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                  color: const Color(0xFF242424),
+                  color: AppColors.containerBorderColor,
                 ),
               ),
               child: Column(
@@ -2438,11 +2443,11 @@ class CreateFundsRequestScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '₹75L',
+                            '${controller.amountController.text}',
                             textAlign: TextAlign.right,
                             style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                              fontSize: 11,
+                              color: AppColors.whiteColor,
+                              fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -2472,11 +2477,11 @@ class CreateFundsRequestScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            'Seed',
+                           controller.selectedStage.value.toString(),
                             textAlign: TextAlign.right,
                             style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                              fontSize: 11,
+                              color: AppColors.whiteColor,
+                              fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -2503,7 +2508,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            'Market Expansion',
+                            '${controller.selectedPurpose.value.toString()}',
                             textAlign: TextAlign.right,
                             style: GoogleFonts.montserrat(
                               color: Colors.white,
@@ -2516,38 +2521,38 @@ class CreateFundsRequestScreen extends StatelessWidget {
                     ),
                   ),
 
-                  const Divider(),
+                  // const Divider(),
 
-                  SizedBox(
-                    height: 56,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Timeline',
-                              style: GoogleFonts.montserrat(
-                                color: const Color(0xFF777777),
-                                fontSize: 11,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            '1–3 Months',
-                            textAlign: TextAlign.right,
-                            style: GoogleFonts.montserrat(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
+                  // SizedBox(
+                  //   height: 56,
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.symmetric(
+                  //       horizontal: 16,
+                  //     ),
+                  //     child: Row(
+                  //       children: [
+                  //         Expanded(
+                  //           child: Text(
+                  //             'Timeline',
+                  //             style: GoogleFonts.montserrat(
+                  //               color: const Color(0xFF777777),
+                  //               fontSize: 11,
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         Text(
+                  //           '1–3 Months',
+                  //           textAlign: TextAlign.right,
+                  //           style: GoogleFonts.montserrat(
+                  //             color: Colors.white,
+                  //             fontSize: 11,
+                  //             fontWeight: FontWeight.w500,
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // )
                 ],
               ),
             ),
@@ -2579,7 +2584,9 @@ class CreateFundsRequestScreen extends StatelessWidget {
                 ),
               ],
             ),
+
             const SizedBox(height: 12),
+
             Container(
               width: MediaQuery.sizeOf(context).width,
               height: 74,
@@ -2663,6 +2670,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                 ],
               ),
             ),
+
             const SizedBox(height: 24),
             const SizedBox(height: 20),
             Container(
@@ -2730,7 +2738,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
   ) {
     return GestureDetector(
       onTap: () {
-        controller.selectInvestor(index);
+        controller.selectPurpose(index);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),

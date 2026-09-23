@@ -39,9 +39,16 @@ class RaiseFundsRequestController extends GetxController {
   }
 
   final RxInt selectedPurpose = 0.obs;
+  final RxInt selectedStage = 0.obs;
 
   void selectPurpose(int index) {
     selectedPurpose.value = index;
+    print('object value ${selectedPurpose.value}');
+    update();
+  }
+
+  void selectStage(int index) {
+    selectedStage.value = index+1;
     update();
   }
 
@@ -212,12 +219,13 @@ class RaiseFundsRequestController extends GetxController {
   }
 
   Future<void> createFundsRaiseApi() async {
-    final amount = amountController.value.text.trim();
+    final funding_goal = amountController.value.text.trim();
     final companyName = companyNameController.value.text.trim();
     final location = locationController.value.text.trim();
     final companyWebsite = companyWebsiteController.value.text.trim();
     final companyDescription = companyDescriptionController.value.text.trim();
     final raiseDescription = raiseDescriptionController.value.text.trim();
+    print('object===${companyNameController.value.text.trim()}');
 
     // if (amount.isEmpty) {
     //   Get.snackbar(
@@ -262,20 +270,20 @@ class RaiseFundsRequestController extends GetxController {
     try {
       isLoading.value = true;
 
-
       final response = await apiServices.createFundsRaiseApi(
-          amount,
-          "",
-          "",
-          "",
+          funding_goal.replaceAll(',', ''),
+          "INR",
+          "pre_seed",
+          (selectedPurpose.value+1).toString(),
           companyName,
-          "",
+          selectedImage.value!.path,
           location,
           companyWebsite,
           companyDescription,
           "",
           "",
-          raiseDescription);
+          raiseDescription,
+          "");
       print("Status Code: ${response?.statusCode}");
       print("Message: ${response?.message}");
       if (response?.statusCode == 201) {

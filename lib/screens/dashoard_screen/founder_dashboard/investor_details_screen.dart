@@ -47,7 +47,7 @@ class InvestorDetailsScreen extends StatelessWidget {
                 child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: const EdgeInsets.only(left: 24.0,right: 24.0,bottom: 10.0),
                   child: Row(
                     children: [
                       GestureDetector(

@@ -219,7 +219,8 @@ class FounderHomeScreen extends StatelessWidget {
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
                                     onTap: () {
-                                      homeController.InvestorDetails(homeController.investorList[index]);
+                                      homeController.InvestorDetails(
+                                          homeController.investorList[index]);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(
@@ -331,7 +332,7 @@ class FounderHomeScreen extends StatelessWidget {
                                             ),
                                             const SizedBox(height: 5),
                                             Text(
-                                              'VC Fund',
+                                              '${homeController.investorList[index].fund_type.toString()}',
                                               style: GoogleFonts.montserrat(
                                                   color:
                                                       AppColors.darkGreyColor,
@@ -360,10 +361,7 @@ class FounderHomeScreen extends StatelessWidget {
                                                                       .w500),
                                                     ),
                                                     Text(
-                                                      homeController
-                                                          .investorList[index]
-                                                          .preferred_investment
-                                                          .toString(),
+                                                      '₹ ${homeController.investorList[index].preferred_investment.toString()}/-',
                                                       style: GoogleFonts
                                                           .montserrat(
                                                               color: AppColors
@@ -427,7 +425,8 @@ class FounderHomeScreen extends StatelessWidget {
                                                       horizontal: 5),
                                               padding:
                                                   const EdgeInsets.symmetric(
-                                                      horizontal: 8,vertical: 2),
+                                                      horizontal: 8,
+                                                      vertical: 2),
                                               decoration: BoxDecoration(
                                                 color: AppColors
                                                     .containerBackgroundColor,

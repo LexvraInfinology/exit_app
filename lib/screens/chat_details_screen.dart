@@ -105,21 +105,14 @@ class ChatDetailsScreen extends StatelessWidget {
                     ),
                   ),
 
-                  // Phone
-                  const Icon(
-                    Icons.phone,
-                    size: 19,
-                    color: Colors.white,
-                  ),
-
                   const SizedBox(width: 23),
 
-                  // More
-                  const Icon(
-                    Icons.more_horiz,
-                    size: 21,
-                    color: Colors.white,
-                  ),
+                  // // More
+                  // const Icon(
+                  //   Icons.more_horiz,
+                  //   size: 21,
+                  //   color: Colors.white,
+                  // ),
                 ],
               ),
             ),
