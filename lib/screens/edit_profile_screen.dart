@@ -699,29 +699,29 @@ class EditProfileScreen extends StatelessWidget {
                           ),
                         ],),
                           const SizedBox(height: 40),
-                          GestureDetector(
-                            onTap: () {
-                              controller.clickEditProfile();
-                            },
-                            child: Container(
-                              width: MediaQuery.sizeOf(context).width,
-                              height: 58,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              child: controller.isLoading.value ?
-                              const Center(child: CircularProgressIndicator()):Text(
-                                'Save Changes',
-                                style: GoogleFonts.montserrat(
-                                  color: AppColors.blackColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                        Obx(()=>   GestureDetector(
+                          onTap: () {
+                            controller.clickEditProfile();
+                          },
+                          child: Container(
+                            width: MediaQuery.sizeOf(context).width,
+                            height: 58,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: controller.isLoading.value ?
+                            const Center(child: CircularProgressIndicator()):Text(
+                              'Save Changes',
+                              style: GoogleFonts.montserrat(
+                                color: AppColors.blackColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
+                        ),),
                           const SizedBox(height: 20),
                         ],
                       ),

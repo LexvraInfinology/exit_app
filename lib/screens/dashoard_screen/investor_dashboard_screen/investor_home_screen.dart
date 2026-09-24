@@ -280,344 +280,360 @@ class InvestorHomeScreen extends StatelessWidget {
                                 SizedBox(
                                   height: homeController.needsAttentionList.isNotEmpty ? 20:0,
                                 ),
-                              homeController.founderList.isNotEmpty ? Column(
+                              Obx(()=> homeController.founderList.isNotEmpty ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                 children: [
-                                   Row(
-                                     children: [
-                                       Expanded(
-                                         child: Text(
-                                           'Matched to your thesis',
-                                           style: GoogleFonts.montserrat(
-                                             fontSize: 14,
-                                             color: AppColors.whiteColor,
-                                             fontWeight: FontWeight.w600,
-                                             letterSpacing: -0.2,
-                                           ),
-                                         ),
-                                       ),
-                                       GestureDetector(
-                                         onTap: () {
-                                           homeController.selectedIndex.value = 1;
-                                         },
-                                         child: Text(
-                                           'View all →',
-                                           style: GoogleFonts.montserrat(
-                                             color: Color(0xFF858585),
-                                             fontSize: 12,
-                                           ),
-                                         ),
-                                       ),
-                                     ],
-                                   ),
-                                   const SizedBox(height: 5),
-                                   const Text(
-                                     'Opportunities that match your preferences.',
-                                     style: TextStyle(
-                                       color: AppColors.darkGreyColor,
-                                       fontSize: 13,
-                                     ),
-                                   ),
-                                   const SizedBox(
-                                     height: 20,
-                                   ),
-                                   ListView.builder(
-                                       itemCount: homeController.founderList.length == 1 ? 1:2,
-                                       shrinkWrap: true,
-                                       physics: const NeverScrollableScrollPhysics(),
-                                       itemBuilder: (context, index) {
-                                      final  fundingData = homeController.founderList[index];
-                                         return Container(
-                                           margin: const EdgeInsets.symmetric(
-                                               vertical: 10),
-                                           padding: const EdgeInsets.fromLTRB(
-                                               20, 20, 20, 19),
-                                           decoration: BoxDecoration(
-                                             color: const Color(0xFF111111),
-                                             borderRadius:
-                                             BorderRadius.circular(17),
-                                             border: Border.all(
-                                               color: const Color(0xFF292929),
-                                             ),
-                                           ),
-                                           child: Column(
-                                             crossAxisAlignment:
-                                             CrossAxisAlignment.start,
-                                             children: [
-                                               Row(
-                                                 crossAxisAlignment:
-                                                 CrossAxisAlignment.center,
-                                                 children: [
-                                                   Container(
-                                                     width: 48,
-                                                     height: 48,
-                                                     decoration: BoxDecoration(
-                                                       color:
-                                                       const Color(0xFF1B1B1B),
-                                                       borderRadius:
-                                                       BorderRadius.circular(
-                                                           7),
-                                                       border: Border.all(
-                                                         color: const Color(
-                                                             0xFF303030),
-                                                       ),
-                                                     ),
-                                                     child: const Icon(
-                                                       Icons.spa_rounded,
-                                                       color: Color(0xFF8B5CF6),
-                                                       size: 25,
-                                                     ),
-                                                   ),
-                                                   const SizedBox(width: 12),
-                                                   Expanded(
-                                                     child: Column(
-                                                       crossAxisAlignment:
-                                                       CrossAxisAlignment
-                                                           .start,
-                                                       children: [
-                                                         Row(
-                                                           children: [
-                                                             Text(
-                                                               fundingData.companyName,
-                                                               style: GoogleFonts
-                                                                   .montserrat(
-                                                                 fontSize: 17,
-                                                                 color: AppColors
-                                                                     .whiteColor,
-                                                                 fontWeight:
-                                                                 FontWeight
-                                                                     .w600,
-                                                               ),
-                                                             ),
-                                                             const SizedBox(
-                                                                 width: 6),
-                                                             Container(
-                                                               width: 11,
-                                                               height: 11,
-                                                               decoration:
-                                                               const BoxDecoration(
-                                                                 color: Color(
-                                                                     0xFF4A9EFF),
-                                                                 shape: BoxShape
-                                                                     .circle,
-                                                               ),
-                                                               child: const Icon(
-                                                                 Icons.check,
-                                                                 size: 7,
-                                                                 color:
-                                                                 Colors.white,
-                                                               ),
-                                                             ),
-                                                           ],
-                                                         ),
-                                                         const SizedBox(height: 4),
-                                                         Text(
-                                                           '${fundingData.industry} · ${fundingData.stage.toUpperCase()} · ${fundingData.location}',
-                                                           style: GoogleFonts
-                                                               .montserrat(
-                                                             color:
-                                                             const Color(0xFF858585),
-                                                             fontSize: 12,
-                                                           ),
-                                                         ),
-                                                       ],
-                                                     ),
-                                                   ),
-                                                   const Icon(
-                                                     Icons.bookmark_border_rounded,
-                                                     size: 22,
-                                                     color: Color(0xFF858585),
-                                                   ),
-                                                 ],
-                                               ),
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          'Matched to your thesis',
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 14,
+                                            color: AppColors.whiteColor,
+                                            fontWeight: FontWeight.w600,
+                                            letterSpacing: -0.2,
+                                          ),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          homeController.selectedIndex.value = 1;
+                                        },
+                                        child: Text(
+                                          'View all →',
+                                          style: GoogleFonts.montserrat(
+                                            color: Color(0xFF858585),
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 5),
+                                  const Text(
+                                    'Opportunities that match your preferences.',
+                                    style: TextStyle(
+                                      color: AppColors.darkGreyColor,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  ListView.builder(
+                                      itemCount: homeController.founderList.length == 1 ? 1:2,
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) {
+                                        final  fundingData = homeController.founderList[index];
+                                        return Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          padding: const EdgeInsets.fromLTRB(
+                                              20, 20, 20, 19),
+                                          decoration: BoxDecoration(
+                                            color: const Color(0xFF111111),
+                                            borderRadius:
+                                            BorderRadius.circular(17),
+                                            border: Border.all(
+                                              color: const Color(0xFF292929),
+                                            ),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    width: 48,
+                                                    height: 48,
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                      const Color(0xFF1B1B1B),
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          7),
+                                                      border: Border.all(
+                                                        color: const Color(
+                                                            0xFF303030),
+                                                      ),
+                                                    ),
+                                                    child: const Icon(
+                                                      Icons.spa_rounded,
+                                                      color: Color(0xFF8B5CF6),
+                                                      size: 25,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 12),
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              fundingData.companyName,
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                fontSize: 17,
+                                                                color: AppColors
+                                                                    .whiteColor,
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .w600,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                width: 6),
+                                                            Container(
+                                                              width: 11,
+                                                              height: 11,
+                                                              decoration:
+                                                              const BoxDecoration(
+                                                                color: Color(
+                                                                    0xFF4A9EFF),
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                              ),
+                                                              child: const Icon(
+                                                                Icons.check,
+                                                                size: 7,
+                                                                color:
+                                                                Colors.white,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(height: 4),
+                                                        Text(
+                                                          '${fundingData.industry} · ${fundingData.stage.toUpperCase()} · ${fundingData.location}',
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                            color:
+                                                            const Color(0xFF858585),
+                                                            fontSize: 12,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: fundingData.isLoading
+                                                        ? null
+                                                        : () => homeController.toggleSavedFounder(fundingData),
+                                                    child: fundingData.isLoading
+                                                        ? const SizedBox(
+                                                      width: 15,
+                                                      height: 15,
+                                                      child: CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                        valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF777777)),
+                                                      ),
+                                                    )
+                                                        : Icon(
+                                                      fundingData.isSaved
+                                                          ? Icons.bookmark_rounded
+                                                          : Icons.bookmark_border_rounded,
+                                                      size: 21,
+                                                      color: fundingData.isSaved ? Colors.white : const Color(0xFF777777),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
 
-                                               const SizedBox(height: 23),
+                                              const SizedBox(height: 23),
 
-                                               // Description + raising
-                                               Row(
-                                                 crossAxisAlignment:
-                                                 CrossAxisAlignment.start,
-                                                 children: [
-                                                   Expanded(
-                                                     child: Text(
-                                                       fundingData.raiseDescription,
-                                                       style:
-                                                       GoogleFonts.montserrat(
-                                                         color: Color(0xFF858585),
-                                                         fontSize: 14,
-                                                         height: 1.45,
-                                                       ),
-                                                     ),
-                                                   ),
-                                                   const SizedBox(width: 20),
-                                                   Column(
-                                                     crossAxisAlignment:
-                                                     CrossAxisAlignment.end,
-                                                     children: [
-                                                       Text(
-                                                         'Raising',
-                                                         style: GoogleFonts
-                                                             .montserrat(
-                                                           color:
-                                                           const Color(0xFF858585),
-                                                           fontSize: 11,
-                                                         ),
-                                                       ),
-                                                       const SizedBox(height: 4),
-                                                       Text(
-                                                         formatIndianShortCurrency(fundingData.fundingGoal),
-                                                         style: GoogleFonts
-                                                             .montserrat(
-                                                           color: Colors.white,
-                                                           fontSize: 17,
-                                                           fontWeight:
-                                                           FontWeight.w600,
-                                                         ),
-                                                       ),
-                                                     ],
-                                                   ),
-                                                 ],
-                                               ),
+                                              // Description + raising
+                                              Row(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      fundingData.raiseDescription,
+                                                      style:
+                                                      GoogleFonts.montserrat(
+                                                        color: Color(0xFF858585),
+                                                        fontSize: 14,
+                                                        height: 1.45,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 20),
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                    children: [
+                                                      Text(
+                                                        'Raising',
+                                                        style: GoogleFonts
+                                                            .montserrat(
+                                                          color:
+                                                          const Color(0xFF858585),
+                                                          fontSize: 11,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(height: 4),
+                                                      Text(
+                                                        formatIndianShortCurrency(fundingData.fundingGoal),
+                                                        style: GoogleFonts
+                                                            .montserrat(
+                                                          color: Colors.white,
+                                                          fontSize: 17,
+                                                          fontWeight:
+                                                          FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
 
-                                               const SizedBox(height: 23),
+                                              const SizedBox(height: 23),
 
-                                               // Phase box
-                                               Container(
-                                                 height: 70,
-                                                 decoration: BoxDecoration(
-                                                   borderRadius:
-                                                   BorderRadius.circular(12),
-                                                   border: Border.all(
-                                                     color:
-                                                     const Color(0xFF242424),
-                                                   ),
-                                                 ),
-                                                 child: Row(
-                                                   children: [
-                                                     Expanded(
-                                                       child: Padding(
-                                                         padding: const EdgeInsets
-                                                             .symmetric(
-                                                           horizontal: 16,
-                                                         ),
-                                                         child: Column(
-                                                           mainAxisAlignment:
-                                                           MainAxisAlignment
-                                                               .center,
-                                                           crossAxisAlignment:
-                                                           CrossAxisAlignment
-                                                               .start,
-                                                           children: [
-                                                             Text(
-                                                               'Phase',
-                                                               style: GoogleFonts
-                                                                   .montserrat(
-                                                                 color: const Color(
-                                                                     0xFF777777),
-                                                                 fontSize: 10,
-                                                               ),
-                                                             ),
-                                                             const SizedBox(
-                                                                 height: 7),
-                                                             Text(
-                                                               fundingData.stage.toUpperCase(),
-                                                               style: GoogleFonts
-                                                                   .montserrat(
-                                                                   fontSize:
-                                                                   12,
-                                                                   color: AppColors
-                                                                       .whiteColor),
-                                                             ),
-                                                           ],
-                                                         ),
-                                                       ),
-                                                     ),
-                                                     Container(
-                                                       width: 1,
-                                                       height: 35,
-                                                       color:
-                                                       const Color(0xFF252525),
-                                                     ),
-                                                     Expanded(
-                                                       child: Padding(
-                                                         padding: const EdgeInsets
-                                                             .symmetric(
-                                                           horizontal: 16,
-                                                         ),
-                                                         child: Column(
-                                                           mainAxisAlignment:
-                                                           MainAxisAlignment
-                                                               .center,
-                                                           crossAxisAlignment:
-                                                           CrossAxisAlignment
-                                                               .start,
-                                                           children: [
-                                                             Text(
-                                                               'Closes in',
-                                                               style: GoogleFonts
-                                                                   .montserrat(
-                                                                 color: const Color(
-                                                                     0xFF777777),
-                                                                 fontSize: 10,
-                                                               ),
-                                                             ),
-                                                             const SizedBox(
-                                                                 height: 7),
-                                                             Text(
-                                                               formatFundingTimeline(fundingData.fundingTimeline),
-                                                               style: GoogleFonts
-                                                                   .montserrat(
-                                                                   fontSize:
-                                                                   12,
-                                                                   color: AppColors
-                                                                       .whiteColor),
-                                                             ),
-                                                           ],
-                                                         ),
-                                                       ),
-                                                     ),
-                                                   ],
-                                                 ),
-                                               ),
+                                              // Phase box
+                                              Container(
+                                                height: 70,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(12),
+                                                  border: Border.all(
+                                                    color:
+                                                    const Color(0xFF242424),
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding: const EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 16,
+                                                        ),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                          children: [
+                                                            Text(
+                                                              'Phase',
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                color: const Color(
+                                                                    0xFF777777),
+                                                                fontSize: 10,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 7),
+                                                            Text(
+                                                              fundingData.stage.toUpperCase(),
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                  fontSize:
+                                                                  12,
+                                                                  color: AppColors
+                                                                      .whiteColor),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      width: 1,
+                                                      height: 35,
+                                                      color:
+                                                      const Color(0xFF252525),
+                                                    ),
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding: const EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 16,
+                                                        ),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                          crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                          children: [
+                                                            Text(
+                                                              'Closes in',
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                color: const Color(
+                                                                    0xFF777777),
+                                                                fontSize: 10,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 7),
+                                                            Text(
+                                                              formatFundingTimeline(fundingData.fundingTimeline),
+                                                              style: GoogleFonts
+                                                                  .montserrat(
+                                                                  fontSize:
+                                                                  12,
+                                                                  color: AppColors
+                                                                      .whiteColor),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
 
-                                               const SizedBox(height: 23),
+                                              const SizedBox(height: 23),
 
-                                               // Button
-                                               SizedBox(
-                                                 width: MediaQuery.sizeOf(context)
-                                                     .width,
-                                                 height: 41,
-                                                 child: ElevatedButton(
-                                                   onPressed: () {
-                                                     homeController.clickFounderDetails(fundingData);
-                                                   },
-                                                   style: ElevatedButton.styleFrom(
-                                                     backgroundColor:
-                                                     AppColors.whiteColor,
-                                                     foregroundColor:
-                                                     AppColors.blackColor,
-                                                     elevation: 0,
-                                                     shape: RoundedRectangleBorder(
-                                                       borderRadius:
-                                                       BorderRadius.circular(
-                                                           22),
-                                                     ),
-                                                   ),
-                                                   child: Text(
-                                                     'View Opportunity',
-                                                     style: GoogleFonts.montserrat(
-                                                       fontSize: 13,
-                                                       fontWeight: FontWeight.w600,
-                                                     ),
-                                                   ),
-                                                 ),
-                                               ),
-                                             ],
-                                           ),
-                                         );
-                                       }),
-                                 ],
-                               ):const SizedBox(),
+                                              // Button
+                                              SizedBox(
+                                                width: MediaQuery.sizeOf(context)
+                                                    .width,
+                                                height: 41,
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    homeController.clickFounderDetails(fundingData);
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                    AppColors.whiteColor,
+                                                    foregroundColor:
+                                                    AppColors.blackColor,
+                                                    elevation: 0,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius.circular(
+                                                          22),
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                    'View Opportunity',
+                                                    style: GoogleFonts.montserrat(
+                                                      fontSize: 13,
+                                                      fontWeight: FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }),
+                                ],
+                              ):const SizedBox(),),
                              homeController.lastVisitedList.isNotEmpty ?
                                  Column(
                                    crossAxisAlignment: CrossAxisAlignment.start,

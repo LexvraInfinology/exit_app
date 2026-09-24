@@ -980,6 +980,79 @@ class ApiServices {
   }
 
 
+  Future<bool> saveFounderApi({
+    required int founderId,
+  }) async {
+    final token = prefs.getString('token');
+
+    final Uri url = Uri.parse(ApiUtils.saveFounderApi);
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          "Accept": "*/*",
+          "Content-Type": "application/json",
+          "Authorization": "token $token",
+        },
+        body: jsonEncode({
+          "founder_id": founderId,
+        }),
+      );
+
+      debugPrint("API URL: $url");
+      debugPrint("Status Code: ${response.statusCode}");
+      debugPrint("Response Body: ${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      }
+
+      return false;
+    } catch (e, stackTrace) {
+      debugPrint("Save Founder API Error: $e");
+      debugPrintStack(stackTrace: stackTrace);
+
+      return false;
+    }
+  }
+
+  Future<bool> deleteSavedFounderApi({
+    required int founderId,
+  }) async {
+    final token = prefs.getString('token');
+
+    final Uri url = Uri.parse(
+      '${ApiUtils.saveFounderApi}$founderId/',
+    );
+
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          "Accept": "*/*",
+          "Content-Type": "application/json",
+          "Authorization": "token $token",
+        },
+      );
+
+      debugPrint("API URL: $url");
+      debugPrint("Status Code: ${response.statusCode}");
+      debugPrint("Response Body: ${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      }
+
+      return false;
+    } catch (e, stackTrace) {
+      debugPrint("Delete Saved Founder API Error: $e");
+      debugPrintStack(stackTrace: stackTrace);
+
+      return false;
+    }
+  }
+
   Future<bool> logoutApi() async {
     final token = prefs.getString('token');
 

@@ -488,6 +488,35 @@ Future<void> loadHomePage() async {
     }
   }
 
+
+
+  Future<void> toggleSavedFounder(FundingRequest item) async {
+    if (item.isLoading) return;
+
+    final index = founderList.indexWhere((e) => e.id == item.id);
+    if (index == -1) return;
+
+    founderList[index].isLoading = true;
+    founderList.refresh();
+
+    final wasSaved = founderList[index].isSaved;
+
+    final success = wasSaved
+        ? await apiServices.deleteSavedFounderApi(founderId: item.id)
+        : await apiServices.saveFounderApi(founderId: item.id);
+
+    final currentIndex = founderList.indexWhere((e) => e.id == item.id);
+    if (currentIndex == -1) return;
+
+    if (success) {
+      founderList[currentIndex].isSaved = !wasSaved;
+    }
+
+    founderList[currentIndex].isLoading = false;
+    founderList.refresh();
+  }
+
+
   Future<void> getPortfolioApi() async {
     try {
       isLoading.value = true;

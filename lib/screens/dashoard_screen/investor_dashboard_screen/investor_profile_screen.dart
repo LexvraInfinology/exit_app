@@ -317,8 +317,18 @@ class InvestorProfileScreen extends StatelessWidget {
                                           border: Border.all(
                                               color: Color(0xFF272727))),
                                       child: Text(
-                                        profileController.resultProfile.isNotEmpty
-                                            ? profileController.resultProfile.first.preferredStage ?? "":"",
+                                        profileController.resultProfile.isNotEmpty &&
+                                            profileController.resultProfile.first.preferredStage != null
+                                            ? profileController.stagesList
+                                            .where(
+                                              (item) =>
+                                          item.id ==
+                                              profileController.resultProfile.first.preferredStage,
+                                        )
+                                            .map((item) => item.name)
+                                            .firstOrNull ??
+                                            ""
+                                            : "",
                                         style: GoogleFonts.montserrat(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400,

@@ -83,6 +83,8 @@ class FundingRequest {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final FounderProfile profile;
+   bool isSaved;
+  bool isLoading;
   final String connectionStatus; // top-level (also duplicated inside profile)
 
   FundingRequest({
@@ -107,6 +109,8 @@ class FundingRequest {
     this.updatedAt,
     required this.profile,
     required this.connectionStatus,
+    required this.isSaved,
+    this.isLoading = false
   });
 
   /// Parsed numeric funding goal, e.g. 15000000.00
@@ -144,6 +148,7 @@ class FundingRequest {
         json['profile'] as Map<String, dynamic>? ?? {},
       ),
       connectionStatus: json['connection_status']?.toString() ?? '',
+      isSaved: json['isSaved'] ?? false,
     );
   }
 
@@ -170,6 +175,7 @@ class FundingRequest {
       'updated_at': updatedAt?.toIso8601String(),
       'profile': profile.toJson(),
       'connection_status': connectionStatus,
+      "isSaved": isSaved,
     };
   }
 }

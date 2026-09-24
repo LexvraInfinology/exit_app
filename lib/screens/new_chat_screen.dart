@@ -113,16 +113,7 @@ class ChatScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-
-                  // Phone
-                  const Icon(
-                    Icons.phone,
-                    size: 19,
-                    color: Colors.white,
-                  ),
-
                   const SizedBox(width: 23),
-
                   // More
                   const Icon(
                     Icons.more_horiz,
