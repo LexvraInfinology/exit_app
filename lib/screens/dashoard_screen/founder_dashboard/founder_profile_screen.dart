@@ -186,7 +186,7 @@ class FounderProfileScreen extends StatelessWidget {
                         padding: const EdgeInsets.fromLTRB(0, 20, 0, 10),
                         child: GestureDetector(
                           onTap: () {
-                            profileController.clickEditProfile();
+                            profileController.clickEditProfile(profileController.resultProfile.first);
                           },
                           child: Container(
                             width: MediaQuery.sizeOf(context).width,

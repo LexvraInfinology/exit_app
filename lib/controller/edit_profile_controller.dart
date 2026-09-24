@@ -60,9 +60,9 @@ class EditProfileController extends GetxController {
       locationController.value.text = profile?.currentLocation ?? "";
       aboutController.value.text = profile?.bio ?? "";
      if(isFounder){
-       experience.value = profile?.experience ?? "";
-       team_size.value = profile?.teamSize ?? "";
-       preferredStageController.value.text = profile?.preferredStage ?? "";
+       // experience.value = profile?.experience ?? "";
+       // team_size.value = profile?.teamSize ?? "";
+       // preferredStageController.value.text = profile?.preferredStage ?? "";
      }else{
        preferredInvestmentController.value.text = profile?.preferredInvestment ?? "";
        preferredIndustryController.value.text = profile?.preferredIndustries ?? "";

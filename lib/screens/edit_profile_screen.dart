@@ -435,6 +435,7 @@ class EditProfileScreen extends StatelessWidget {
                               ),
                             ],
                           ):
+
                         // FOUNDER FIELDS
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

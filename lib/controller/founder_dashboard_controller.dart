@@ -103,8 +103,8 @@ class FounderDashboardController extends GetxController {
     Get.to(() => PlanDetailsScreen());
   }
 
-  void clickEditProfile() {
-    Get.to(() =>  EditProfileScreen(isFounder: true, profile: resultsProfile));
+  void clickEditProfile(ResultsProfile result) {
+    Get.to(() =>  EditProfileScreen(isFounder: true, profile: result));
   }
 
   void clickPostDetails() {
