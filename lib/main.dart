@@ -37,7 +37,7 @@ Future<void> main() async {
               child: child!,
             );
           },
-          home: SplashScreen())
+          home: const SplashScreen())
 
       // GetMaterialApp(
       //   debugShowCheckedModeBanner: false,

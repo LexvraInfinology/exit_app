@@ -197,32 +197,41 @@ class FounderDiscoverScreen extends StatelessWidget {
                              physics: const NeverScrollableScrollPhysics(),
                              itemCount: discoverFounderController.founderList.length,
                              itemBuilder: (context, index) {
-                               final fundingData = discoverFounderController.founderList[index];
-                               return GestureDetector(
-                                 onTap: () {
-                                   discoverFounderController.clickFounderDetails(fundingData);
-                                 },
-                                 child: Container(
-                                   margin: const EdgeInsets.symmetric(vertical: 10),
-                                   padding: const EdgeInsets.all(24),
-                                   decoration: BoxDecoration(
-                                     color: AppColors.blackColor,
-                                     borderRadius: BorderRadius.circular(11),
-                                     border: Border.all(
-                                         color: const Color(0xFF292929), width: 1),
-                                   ),
-                                   child: InvestorWidget(
+                               return Obx(() {
+                                 final fundingData = discoverFounderController.founderList[index];
+                                 return GestureDetector(
+                                   onTap: () {
+                                     discoverFounderController.clickFounderDetails(fundingData);
+                                   },
+                                   child: Container(
+                                     margin: const EdgeInsets.symmetric(vertical: 10),
+                                     padding: const EdgeInsets.all(24),
+                                     decoration: BoxDecoration(
+                                       color: AppColors.blackColor,
+                                       borderRadius: BorderRadius.circular(11),
+                                       border: Border.all(color: const Color(0xFF292929), width: 1),
+                                     ),
+                                     child: InvestorWidget(
                                        name: fundingData.companyName,
-                                       type:  '',
+                                       type: '',
                                        location: fundingData.location,
                                        investment: formatIndianShortCurrency(fundingData.fundingGoal),
                                        stage: fundingData.stage.toUpperCase(),
-                                       logo:  fundingData.companyName[0].toUpperCase(),
-                                       timeline:  formatFundingTimeline(fundingData.fundingTimeline),
+                                       logo: fundingData.companyName[0].toUpperCase(),
+                                       timeline: formatFundingTimeline(fundingData.fundingTimeline),
                                        industry: fundingData.industry,
-                                       context: context),
-                                 ),
-                               );
+                                       context: context,
+                                       isLoading: fundingData.isLoading,
+                                       isSaved: fundingData.isSaved,
+                                       onBookmarkTap: () {
+                                         if (!fundingData.isLoading) {
+                                           discoverFounderController.toggleSavedFounder(fundingData);
+                                         }
+                                       },
+                                     ),
+                                   ),
+                                 );
+                               });
                              },
                            )
                          ],),
@@ -246,6 +255,9 @@ class FounderDiscoverScreen extends StatelessWidget {
       required String logo,
      required String timeline,
         required String industry,
+        required bool isLoading,
+        required bool isSaved,
+        required GestureTapCallback onBookmarkTap,
       required BuildContext context}) {
     return Column(
       children: [
@@ -325,11 +337,22 @@ class FounderDiscoverScreen extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             GestureDetector(
-              onTap: () {},
-              child: const Icon(
-                Icons.bookmark_border,
-                color: Color(0xFF8A8A8A),
-                size: 22,
+              onTap: onBookmarkTap,
+              child: isLoading
+                  ? const SizedBox(
+                width: 15,
+                height: 15,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF777777)),
+                ),
+              )
+                  : Icon(
+                isSaved
+                    ? Icons.bookmark_rounded
+                    : Icons.bookmark_border_rounded,
+                size: 21,
+                color: isSaved ? Colors.white : const Color(0xFF777777),
               ),
             ),
           ],

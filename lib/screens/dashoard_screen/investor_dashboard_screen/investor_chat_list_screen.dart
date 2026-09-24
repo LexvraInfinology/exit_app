@@ -43,7 +43,7 @@ class InvestorChatListScreen extends StatelessWidget{
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Message',
+                    'Messages',
                     style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
@@ -89,54 +89,6 @@ class InvestorChatListScreen extends StatelessWidget{
                           const SizedBox(
                             height: 20,
                           ),
-                          SizedBox(
-                            height: 51,
-                            child: ListView.separated(
-                              padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
-                              scrollDirection: Axis.horizontal,
-                              itemCount: filters.length,
-                              separatorBuilder: (_, __) =>
-                              const SizedBox(width: 12),
-                              itemBuilder: (context, index) {
-                                final selected = investorDashboardController.selectedFilter == index;
-
-                                return GestureDetector(
-                                  onTap: () {
-                                    investorDashboardController.selectedFilter = index;
-                                  },
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 180),
-                                    padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                    decoration: BoxDecoration(
-                                      color: selected
-                                          ? const Color(0xFF18131F)
-                                          : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(22),
-                                      border: Border.all(
-                                        color: selected
-                                            ? AppColors.whiteColor
-                                            : const Color(0xFF292929),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      filters[index],
-                                      style: TextStyle(
-                                        fontSize: 12.5,
-                                        color: selected
-                                            ? Colors.white
-                                            : const Color(0xFF77777D),
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 20),
                           Column(
                             children: [
                               ListView.builder(
@@ -244,7 +196,7 @@ class InvestorChatListScreen extends StatelessWidget{
                                                     fontSize: 10.5,
                                                   ),
                                                 ),
-                                                if (true) ...[
+                                                if (conversation.unreadCount > 0) ...[
                                                   const SizedBox(height: 7),
                                                   Container(
                                                     width: 20,

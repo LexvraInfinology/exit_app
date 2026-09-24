@@ -32,4 +32,5 @@ class ApiUtils{
   static const String chatListApi = '$baseUrl/communication/conversations/';
   static const String connectionsCheck = '$baseUrl/connections/';
   static const String portfolio = '$baseUrl/investor/portfolio/';
+  static const String saveFounderApi = '$baseUrl/profiles/saved-founders/';
 }

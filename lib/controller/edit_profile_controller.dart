@@ -24,7 +24,6 @@ class EditProfileController extends GetxController {
 
   final ApiServices apiServices = ApiServices();
   final SharedPreferences prefs = Get.find<SharedPreferences>();
-
   final List<MarketplaceIndustry> industriesList = <MarketplaceIndustry>[];
   final List<MarketplaceIndustry> stagesList = <MarketplaceIndustry>[];
   final List<MarketplaceIndustry> rangesList = <MarketplaceIndustry>[];
@@ -63,14 +62,12 @@ class EditProfileController extends GetxController {
      if(isFounder){
        experience.value = profile?.experience ?? "";
        team_size.value = profile?.teamSize ?? "";
-       final stageId = stagesList.firstWhere((item) => item.name.toLowerCase() == profile?.currentStage,).id;
-       preferredStageController.value.text = stageId;
+       preferredStageController.value.text = profile?.preferredStage ?? "";
      }else{
        preferredInvestmentController.value.text = profile?.preferredInvestment ?? "";
        preferredIndustryController.value.text = profile?.preferredIndustries ?? "";
        preferredLocationController.value.text = profile?.preferredLocation ?? "";
-       final stageId = stagesList.firstWhere((item) => item.name.toLowerCase() == profile?.preferredStage,).id;
-       preferredStageController.value.text = stageId;
+       preferredStageController.value.text = profile?.preferredStage ?? "";
      }
     }
   }
@@ -315,10 +312,10 @@ class EditProfileController extends GetxController {
           backgroundColor: AppColors.blackColor,
           colorText: AppColors.whiteColor,
         );
-        if(isFounder){
-          Get.to(() => FounderDashboardScreen());
-        }else{
-          Get.to(() => InvestorDashBoardScreen());
+        if (isFounder) {
+          Get.offAll(() => FounderDashboardScreen());
+        } else {
+          Get.offAll(() => InvestorDashBoardScreen());
         }
       } else {
         _showError(response?.message ?? 'Preferences failed', title: 'Set Preferences Failed');

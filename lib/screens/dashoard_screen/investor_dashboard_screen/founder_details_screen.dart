@@ -10,7 +10,7 @@ import '../../../constants/app_color.dart';
 import '../../../constants/app_images.dart';
 
 class FounderDetailsScreen extends StatelessWidget {
-  FounderDetailsScreen({super.key, required this.fundingData});
+  const FounderDetailsScreen({super.key, required this.fundingData});
 
   final FundingRequest? fundingData;
 
@@ -42,13 +42,14 @@ class FounderDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  GestureDetector(
-                    onTap: () {},
-                    child: const Icon(
-                      Icons.bookmark_border,
-                      color: Color(0xFF8A8A8A),
-                      size: 22,
-                    ),
+                   Icon(
+                    fundingData != null ?
+                    fundingData!.isSaved ? Icons.bookmark:
+                    Icons.bookmark_border:Icons.bookmark_border,
+                    color: fundingData != null ? fundingData!.isSaved ?
+                    Colors.white: const Color(0xFF8A8A8A):
+                    const Color(0xFF8A8A8A),
+                    size: 22,
                   ),
                 ],
               ),
@@ -367,6 +368,36 @@ class FounderDetailsScreen extends StatelessWidget {
                                           fundingData != null ? fundingData!.stage.toUpperCase():"",
                                         style: GoogleFonts.montserrat(
                                           color: Color(0xFFE0E0E0),
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const Divider(
+                                color: Color(0xFF272727),
+                              ),
+                              SizedBox(
+                                height: 56,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Funding Purpose',
+                                        style: GoogleFonts.montserrat(
+                                          color: const Color(0xFF777777),
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                      Text(
+                                        fundingData != null ? fundingData!.purpose.toUpperCase():"",
+                                        style: GoogleFonts.montserrat(
+                                          color: const Color(0xFFE0E0E0),
                                           fontSize: 13,
                                         ),
                                       ),
