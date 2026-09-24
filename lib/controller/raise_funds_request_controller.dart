@@ -40,15 +40,20 @@ class RaiseFundsRequestController extends GetxController {
 
   final RxInt selectedPurpose = 0.obs;
   final RxInt selectedStage = 0.obs;
+  final RxString selectedStageStringValue = ''.obs;
+  final RxString selectedPurposeStringValue = ''.obs;
 
-  void selectPurpose(int index) {
+  void selectPurpose(int index,String value) {
     selectedPurpose.value = index;
-    print('object value ${selectedPurpose.value}');
+    selectedPurposeStringValue.value = value;
+    print('select purpose ${ value}');
     update();
   }
 
-  void selectStage(int index) {
-    selectedStage.value = index+1;
+  void selectStage(int index,String value) {
+    selectedStage.value = index + 1;
+    selectedStageStringValue.value = value;
+    print('object ${value}');
     update();
   }
 
@@ -226,63 +231,21 @@ class RaiseFundsRequestController extends GetxController {
     final companyDescription = companyDescriptionController.value.text.trim();
     final raiseDescription = raiseDescriptionController.value.text.trim();
     print('object===${companyNameController.value.text.trim()}');
-
-    // if (amount.isEmpty) {
-    //   Get.snackbar(
-    //     'Error',
-    //     'Please enter preferred investment',
-    //     snackPosition: SnackPosition.TOP,
-    //     backgroundColor: Colors.redAccent,
-    //     colorText: AppColors.whiteColor,
-    //   );
-    //   return;
-    // }
-    // else if (preferredStage.isEmpty) {
-    //   Get.snackbar(
-    //     'Error',
-    //     'Please enter preferred stage',
-    //     snackPosition: SnackPosition.TOP,
-    //     backgroundColor: Colors.redAccent,
-    //     colorText: AppColors.whiteColor,
-    //   );
-    //   return;
-    // }
-    // else if (preferredIndustry.isEmpty) {
-    //   Get.snackbar(
-    //     'Error',
-    //     'Please enter preferred industries',
-    //     snackPosition: SnackPosition.TOP,
-    //     backgroundColor: Colors.redAccent,
-    //     colorText: AppColors.whiteColor,
-    //   );
-    //   return;
-    // }
-    // else if (preferredLocation.isEmpty) {
-    //   Get.snackbar(
-    //     'Error',
-    //     'Please enter preferred location',
-    //     snackPosition: SnackPosition.TOP,
-    //     backgroundColor: Colors.redAccent,
-    //     colorText: AppColors.whiteColor,
-    //   );
-    //   return;
-    // }
     try {
       isLoading.value = true;
-
       final response = await apiServices.createFundsRaiseApi(
           funding_goal.replaceAll(',', ''),
           "INR",
-          "pre_seed",
-          (selectedPurpose.value+1).toString(),
+          (selectedStage.value + 1).toString(),
+          (selectedPurpose.value + 1).toString(),
           companyName,
           selectedImage.value!.path,
+          industry.value,
           location,
           companyWebsite,
           companyDescription,
-          "",
-          "",
           raiseDescription,
+          "",
           "");
       print("Status Code: ${response?.statusCode}");
       print("Message: ${response?.message}");
