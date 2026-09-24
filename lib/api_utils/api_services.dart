@@ -779,7 +779,8 @@ class ApiServices {
     required String preferredStage,
     required String preferredIndustries,
     required String preferredLocation,
-  }) async {
+  })
+  async {
     try {
       final token = prefs.getString('token');
 
@@ -865,7 +866,8 @@ class ApiServices {
   Future<ConnectionResponse?> createConnectionApi({
     required int founderId,
     required int fundingId,
-  }) async {
+  })
+  async {
     final token = prefs.getString('token');
 
     final Uri url = Uri.parse(ApiUtils.connectionsCheck);
@@ -900,7 +902,8 @@ class ApiServices {
   Future<ChatHistoryResponse?> getChatHistoryApi({
     required String conversationId,
     required int currentUserId,
-  }) async {
+  })
+  async {
     final token = prefs.getString('token');
 
     final Uri url = Uri.parse(
@@ -982,7 +985,8 @@ class ApiServices {
 
   Future<bool> saveFounderApi({
     required int founderId,
-  }) async {
+  })
+  async {
     final token = prefs.getString('token');
 
     final Uri url = Uri.parse(ApiUtils.saveFounderApi);

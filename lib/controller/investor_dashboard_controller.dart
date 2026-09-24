@@ -100,7 +100,6 @@ MarketplaceIndustry? selectedFor(String title) {
         return null;
     }
   }
-
   void onFilterSelected(String title, MarketplaceIndustry? value) {
     debugPrint("Checking ===> ${value?.name}");
     switch (title) {

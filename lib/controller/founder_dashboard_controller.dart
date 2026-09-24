@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../api_utils/api_services.dart';
 import '../constants/app_color.dart';
 import '../constants/app_images.dart';
+import '../models/conversation_response.dart';
 import '../models/profile_model.dart';
 import '../screens/choose_user_screen.dart';
 import '../screens/help_and_support_screen.dart';
@@ -34,6 +35,8 @@ class FounderDashboardController extends GetxController {
   int selectedBottomNav = 1;
   RxInt selectedPostIndex = (-1).obs;
   var isLoading = false.obs;
+  int? currentUserId;
+
   final ApiServices apiServices = ApiServices();
   final SharedPreferences prefs = Get.find<SharedPreferences>();
 
@@ -42,12 +45,23 @@ class FounderDashboardController extends GetxController {
   ResultsProfile resultsProfile = new ResultsProfile();
   final RxList<Results> investorList = <Results>[].obs;
   final RxList<ResultsProfile> resultProfile = <ResultsProfile>[].obs;
+  final RxList<ConversationItem> chats = <ConversationItem>[].obs;
 
   @override
   void onInit() {
     super.onInit();
-    getInvestorListApi();
-    getuserProfileApi(prefs.getString('id').toString());
+
+    loadHomePage();
+  }
+
+  Future<void> loadHomePage() async {
+    isLoading.value = true;
+    update();
+    await getChatListApi();
+    await getInvestorListApi();
+    await getuserProfileApi(prefs.getString('id').toString());
+    isLoading.value = false;
+    update();
   }
 
   void onItemSelected(int index) {
@@ -104,7 +118,7 @@ class FounderDashboardController extends GetxController {
   }
 
   void clickEditProfile(ResultsProfile result) {
-    Get.to(() =>  EditProfileScreen(isFounder: true, profile: result));
+    Get.to(() => EditProfileScreen(isFounder: true, profile: result));
   }
 
   void clickPostDetails() {
@@ -431,10 +445,20 @@ class FounderDashboardController extends GetxController {
                             backgroundColor: AppColors.whiteColor,
                             foregroundColor: AppColors.blackColor,
                           ),
-                          onPressed: () {
-                            prefs.clear();
-                            Get.offAll(() =>  OnboardingScreen(),);
-                            
+                          onPressed: () async {
+                            final success = await apiServices.logoutApi();
+
+                            if (success) {
+                              await prefs.clear();
+                              Get.offAll(
+                                () => const OnboardingScreen(),
+                              );
+                            } else {
+                              Get.snackbar(
+                                'Logout Failed',
+                                'Unable to logout. Please try again.',
+                              );
+                            }
                           },
                           child: Text(
                             "Log Out",
@@ -688,6 +712,7 @@ class FounderDashboardController extends GetxController {
       }
 
       resultProfile.value = response?.data!.results ?? [];
+      currentUserId = resultProfile.first.id;
       print('click dat ${resultProfile.single.firstName}');
     } catch (e) {
       print('object ${e}');
@@ -701,6 +726,23 @@ class FounderDashboardController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> getChatListApi() async {
+    try {
+      isLoading.value = true;
+      final ConversationResponse? response = await apiServices.getChatListApi();
+
+      if (response?.statusCode == 200) {
+        chats.value.assignAll(response?.data ?? []);
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
     }
   }
 }
