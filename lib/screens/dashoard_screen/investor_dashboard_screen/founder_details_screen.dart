@@ -237,13 +237,22 @@ class FounderDetailsScreen extends StatelessWidget {
                                 if (Get.isRegistered<ChatController>()) {
                                   Get.delete<ChatController>();
                                 }
-                                Get.to(() => ChatScreen(
-                                  recipientId: fundingData!.profile.founderId,
-                                  recipientName: fundingData!.profile.fullName,
-                                  currentUserId: null,
-                                  conversationId: null,
-                                  fundingId: fundingData!.id,
+                                if(fundingData!.conversationId.isNotEmpty){
+                                  Get.to(() => ChatScreen(
+                                    recipientId: fundingData!.profile.founderId,
+                                    recipientName: fundingData!.profile.fullName,
+                                    currentUserId: founderDetailsController.currentUserId,
+                                    conversationId: fundingData!.conversationId,
                                   ));
+                                }else{
+                                  Get.to(() => ChatScreen(
+                                    recipientId: fundingData!.profile.founderId,
+                                    recipientName: fundingData!.profile.fullName,
+                                    currentUserId: null,
+                                    conversationId: null,
+                                    fundingId: fundingData!.id,
+                                  ));
+                                }
                               }
                             },
                             style: ElevatedButton.styleFrom(

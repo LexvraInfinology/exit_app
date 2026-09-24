@@ -27,27 +27,20 @@ class ChatController extends GetxController {
     required this.conversationId,
     required this.recipientId,
     required this.currentUserId,
-    required this.fundingId});
-
+    required this.fundingId,
+  });
 
   final int recipientId;
-   String? conversationId;
-   int? currentUserId;
-   int? fundingId;
-
+  String? conversationId;
+  int? currentUserId;
+  int? fundingId;
 
   final ApiServices apiServices = ApiServices();
 
-
-  final TextEditingController messageController =
-  TextEditingController();
-
-  final ScrollController scrollController =
-  ScrollController();
-
+  final TextEditingController messageController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
 
   final RxList<ChatMessage> messages = <ChatMessage>[].obs;
-
   final Rx<ChatConnectionState> connectionState =
       ChatConnectionState.disconnected.obs;
 
@@ -56,28 +49,27 @@ class ChatController extends GetxController {
   final RxBool isSending = false.obs;
   final RxBool isTyping = false.obs;
 
-
   WebSocketChannel? _channel;
   StreamSubscription? _subscription;
-
   Timer? _reconnectTimer;
-
   int _reconnectAttempts = 0;
-
   static const int _maxReconnectAttempts = 5;
-
   static const String _wsBaseUrl =
       'wss://02dc-2404-7c80-5d-97dc-6470-c536-4c82-9610.ngrok-free.app';
-
   int? _connectionId;
-
-
   bool _manualDisconnect = false;
-
 
   @override
   void onInit() {
     super.onInit();
+    everAll([isCreatingConnection, connectionState], (_) {
+      final listIsVisible = !isCreatingConnection.value &&
+          connectionState.value != ChatConnectionState.connecting;
+      if (listIsVisible && messages.isNotEmpty) {
+        _jumpToBottomInstant();
+      }
+    });
+
     _initChat();
   }
 
@@ -93,32 +85,34 @@ class ChatController extends GetxController {
   }
 
   Future<void> _initChat() async {
+    debugPrint('✅ CurrentUser ID: $currentUserId');
+    debugPrint('✅ conversation ID: $conversationId');
+
     try {
       isCreatingConnection.value = true;
+
       if (currentUserId == null && fundingId != null) {
         final ConnectionResponse? response =
         await apiServices.createConnectionApi(
           founderId: recipientId,
           fundingId: fundingId!,
         );
+
         if (response == null) {
           debugPrint('❌ Connection API returned null');
           return;
         }
+
         _connectionId = response.data.id;
         currentUserId = recipientId == response.data.investorId
             ? response.data.founderId
             : response.data.investorId;
+
         debugPrint('✅ Connection ID: $_connectionId');
         debugPrint('✅ Current User ID: $currentUserId');
-      }
-      else if (conversationId != null && currentUserId != null) {
-        await getChatHistory(
-          conversationId!,
-          currentUserId!,
-        );
-      }
-      else {
+      } else if (conversationId != null && currentUserId != null) {
+        await getChatHistory(conversationId!, currentUserId!);
+      } else {
         debugPrint(
           '❌ Cannot initialize chat: '
               'conversationId=$conversationId, '
@@ -128,9 +122,7 @@ class ChatController extends GetxController {
         return;
       }
 
-
       debugPrint('🔗 Connecting with ID: $_connectionId');
-
       await connect();
     } catch (e, stackTrace) {
       debugPrint('❌ Init Chat Error: $e');
@@ -141,7 +133,6 @@ class ChatController extends GetxController {
   }
 
   Future<void> connect() async {
-
     if (connectionState.value == ChatConnectionState.connected) {
       debugPrint('WebSocket already connected');
       return;
@@ -149,11 +140,8 @@ class ChatController extends GetxController {
 
     try {
       _manualDisconnect = false;
-
       _reconnectTimer?.cancel();
-
-      connectionState.value =
-          ChatConnectionState.connecting;
+      connectionState.value = ChatConnectionState.connecting;
 
       final token = Get.find<SharedPreferences>().getString('token');
 
@@ -162,8 +150,7 @@ class ChatController extends GetxController {
       }
 
       final uri = Uri.parse(
-        '$_wsBaseUrl/ws/messages/$recipientId/'
-            '?token=$token',
+        '$_wsBaseUrl/ws/messages/$recipientId/?token=$token',
       );
 
       debugPrint('WebSocket URL: $uri');
@@ -184,14 +171,10 @@ class ChatController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('WebSocket Connect Error: $e');
       debugPrintStack(stackTrace: stackTrace);
-
-      connectionState.value =
-          ChatConnectionState.error;
-
+      connectionState.value = ChatConnectionState.error;
       _scheduleReconnect();
     }
   }
-
 
   void _onSocketData(dynamic rawMessage) {
     try {
@@ -215,16 +198,12 @@ class ChatController extends GetxController {
         case 'ready':
           _handleReady(decoded);
           break;
-
         case 'message':
         case 'chat_message':
           _handleIncomingMessage(decoded);
           break;
-
         default:
-          debugPrint(
-            'Unhandled socket event: $decoded',
-          );
+          debugPrint('Unhandled socket event: $decoded');
       }
     } catch (e, stackTrace) {
       debugPrint('Socket Data Error: $e');
@@ -232,46 +211,31 @@ class ChatController extends GetxController {
     }
   }
 
-
   void _handleReady(Map<String, dynamic> data) {
-    connectionState.value =
-        ChatConnectionState.connected;
-
+    connectionState.value = ChatConnectionState.connected;
     _reconnectAttempts = 0;
-
-    debugPrint(
-      'Chat ready: ${data['recipient_id']}',
-    );
+    debugPrint('Chat ready: ${data['recipient_id']}');
   }
 
-
-  void _handleIncomingMessage(
-      Map<String, dynamic> data,
-      ) {
+  void _handleIncomingMessage(Map<String, dynamic> data) {
     try {
       final message = ChatMessage.fromJson(
         data,
-        currentUserId: currentUserId??1,
+        currentUserId: currentUserId ?? 1,
       );
 
       messages.add(message);
-
-      _scrollToBottom();
+      _scrollToBottomAnimated(); // new message -> smooth animated scroll
     } catch (e) {
-      debugPrint(
-        'Message Parse Error: $e',
-      );
+      debugPrint('Message Parse Error: $e');
     }
   }
 
-
   Future<void> sendMessage() async {
     final text = messageController.text.trim();
-
     if (text.isEmpty) return;
 
-    if (connectionState.value !=
-        ChatConnectionState.connected ||
+    if (connectionState.value != ChatConnectionState.connected ||
         _channel == null) {
       _showMessageError('Not connected to chat');
       return;
@@ -280,108 +244,60 @@ class ChatController extends GetxController {
     try {
       isSending.value = true;
 
-      final message = {
-        'body': text,
-      };
-
-      _channel!.sink.add(
-        jsonEncode(message),
-      );
+      final message = {'body': text};
+      _channel!.sink.add(jsonEncode(message));
 
       messageController.clear();
+      _scrollToBottomAnimated(); // user sent -> smooth animated scroll
 
-      _scrollToBottom();
-
-      debugPrint(
-        'Message Sent: $message',
-      );
+      debugPrint('Message Sent: $message');
     } catch (e, stackTrace) {
-      debugPrint(
-        'Send Message Error: $e',
-      );
-
-      debugPrintStack(
-        stackTrace: stackTrace,
-      );
-
-      _showMessageError(
-        'Could not send message. Tap to retry.',
-      );
+      debugPrint('Send Message Error: $e');
+      debugPrintStack(stackTrace: stackTrace);
+      _showMessageError('Could not send message. Tap to retry.');
     } finally {
       isSending.value = false;
     }
   }
 
-
   void _onError(dynamic error) {
-    debugPrint(
-      'WebSocket Error: $error',
-    );
-
-    connectionState.value =
-        ChatConnectionState.error;
-
+    debugPrint('WebSocket Error: $error');
+    connectionState.value = ChatConnectionState.error;
     _scheduleReconnect();
   }
 
-
   void _onDisconnected() {
-    debugPrint(
-      'WebSocket Disconnected',
-    );
+    debugPrint('WebSocket Disconnected');
 
     if (_manualDisconnect) {
-      connectionState.value =
-          ChatConnectionState.disconnected;
-
+      connectionState.value = ChatConnectionState.disconnected;
       return;
     }
 
-    connectionState.value =
-        ChatConnectionState.disconnected;
-
+    connectionState.value = ChatConnectionState.disconnected;
     _scheduleReconnect();
   }
-
 
   void _scheduleReconnect() {
     if (_manualDisconnect) return;
 
-    if (_reconnectAttempts >=
-        _maxReconnectAttempts) {
-      debugPrint(
-        'Maximum reconnect attempts reached',
-      );
-
-      connectionState.value =
-          ChatConnectionState.error;
-
+    if (_reconnectAttempts >= _maxReconnectAttempts) {
+      debugPrint('Maximum reconnect attempts reached');
+      connectionState.value = ChatConnectionState.error;
       return;
     }
 
-    if (_reconnectTimer?.isActive ?? false) {
-      return;
-    }
+    if (_reconnectTimer?.isActive ?? false) return;
 
     _reconnectAttempts++;
+    final seconds = 2 * _reconnectAttempts;
+    debugPrint('Reconnecting in $seconds seconds...');
 
-    final seconds =
-        2 * _reconnectAttempts;
-
-    debugPrint(
-      'Reconnecting in $seconds seconds...',
-    );
-
-    _reconnectTimer = Timer(
-      Duration(seconds: seconds),
-      connect,
-    );
+    _reconnectTimer = Timer(Duration(seconds: seconds), connect);
   }
-
 
   Future<void> disconnect() async {
     _manualDisconnect = true;
-
     _reconnectTimer?.cancel();
 
     await _subscription?.cancel();
@@ -390,15 +306,11 @@ class ChatController extends GetxController {
     await _channel?.sink.close();
     _channel = null;
 
-    connectionState.value =
-        ChatConnectionState.disconnected;
-
-    debugPrint(
-      'WebSocket manually disconnected',
-    );
+    connectionState.value = ChatConnectionState.disconnected;
+    debugPrint('WebSocket manually disconnected');
   }
 
-  Future<void> getChatHistory(String conversationId,int currentUserId) async {
+  Future<void> getChatHistory(String conversationId, int currentUserId) async {
     try {
       isLoadingHistory.value = true;
 
@@ -411,11 +323,10 @@ class ChatController extends GetxController {
         debugPrint('Get History: API response is null');
         return;
       }
+
       messages.assignAll(response.data.results);
-      debugPrint(
-        'Chat History Loaded: ${messages.length} messages',
-      );
-      _scrollToBottom();
+      debugPrint('Chat History Loaded: ${messages.length} messages');
+      _jumpToBottomInstant();
     } catch (e, stackTrace) {
       debugPrint('Get Chat History Error: $e');
       debugPrintStack(stackTrace: stackTrace);
@@ -424,26 +335,39 @@ class ChatController extends GetxController {
     }
   }
 
+  void _jumpToBottomInstant({int retriesLeft = 15}) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await WidgetsBinding.instance.endOfFrame;
 
-  void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!scrollController.hasClients) {
+        if (retriesLeft > 0) {
+          _jumpToBottomInstant(retriesLeft: retriesLeft - 1);
+        }
         return;
       }
 
-      final position =
-          scrollController.position;
+      final maxExtent = scrollController.position.maxScrollExtent;
+
+      if (maxExtent == 0 && retriesLeft > 0) {
+        _jumpToBottomInstant(retriesLeft: retriesLeft - 1);
+        return;
+      }
+
+      scrollController.jumpTo(maxExtent);
+    });
+  }
+
+  void _scrollToBottomAnimated() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!scrollController.hasClients) return;
 
       scrollController.animateTo(
-        position.maxScrollExtent,
-        duration: const Duration(
-          milliseconds: 250,
-        ),
+        scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
       );
     });
   }
-
 
   void _showMessageError(String message) {
     Get.snackbar(
