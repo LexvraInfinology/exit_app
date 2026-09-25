@@ -11,6 +11,7 @@ class ChatScreen extends StatelessWidget {
   final int? currentUserId;
   final String? conversationId;
   final int? fundingId;
+  final bool isFounder;
 
   const ChatScreen({
     super.key,
@@ -18,7 +19,8 @@ class ChatScreen extends StatelessWidget {
     required this.recipientId,
     required this.recipientName,
     required this.currentUserId,
-     this.fundingId
+     this.fundingId,
+     this.isFounder=false
   });
 
   @override
@@ -27,7 +29,9 @@ class ChatScreen extends StatelessWidget {
       ChatController(recipientId: recipientId,
         conversationId: conversationId,
         currentUserId: currentUserId,
-        fundingId: fundingId,),
+        fundingId: fundingId,
+        isFounder: isFounder
+      ),
     );
     return Scaffold(
       backgroundColor: AppColors.blackColor,

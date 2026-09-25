@@ -3,7 +3,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiUtils{
-  static const String baseUrl = 'https://02dc-2404-7c80-5d-97dc-6470-c536-4c82-9610.ngrok-free.app/api';
+  static const String baseUrl = 'https://865e-2404-7c80-5d-97dc-d57a-10cd-7010-305.ngrok-free.app/api';
 
   static const String sendOTPApi = '$baseUrl/accounts/send-otp/';
   static const String verifyOTPApi = '$baseUrl/accounts/verify-otp/';
@@ -33,4 +33,5 @@ class ApiUtils{
   static const String connectionsCheck = '$baseUrl/connections/';
   static const String portfolio = '$baseUrl/investor/portfolio/';
   static const String saveFounderApi = '$baseUrl/profiles/saved-founders/';
+  static const String fundsRaiseListApi = '$baseUrl/marketplace/funding-requests/';
 }

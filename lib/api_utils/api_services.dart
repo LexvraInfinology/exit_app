@@ -897,6 +897,40 @@ class ApiServices {
 
     return null;
   }
+  Future<ConnectionResponse?> createConnectionWithInvestorApi({
+    required int investorId,
+
+  })
+  async {
+    final token = prefs.getString('token');
+
+    final Uri url = Uri.parse(ApiUtils.connectionsCheck);
+
+    final response = await http.post(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+      body: jsonEncode({
+        "investor_id": investorId,
+
+      }),
+    );
+    debugPrint("API URL: $investorId");
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      return ConnectionResponse.fromJson(jsonResponse);
+    }
+
+    return null;
+  }
 
 
   Future<ChatHistoryResponse?> getChatHistoryApi({
@@ -1095,6 +1129,43 @@ class ApiServices {
       return false;
     }
   }
+
+
+  Future<CreateFundRaiseModel?> getCreateFundsRaiseApi() async {
+    final token = prefs.getString('token');
+
+    final Uri url = Uri.parse(ApiUtils.createFundsRaiseApi);
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": "token $token",
+        },
+      );
+
+      debugPrint("API URL: $url");
+      debugPrint("Status Code: ${response.statusCode}");
+      debugPrint("Response Body: ${response.body}");
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+        return CreateFundRaiseModel.fromJson(jsonResponse);
+      }
+
+      debugPrint("Portfolio API Failed: ${response.statusCode}");
+
+      return null;
+    } catch (e, stackTrace) {
+      debugPrint("Get Portfolio Error: $e");
+      debugPrintStack(stackTrace: stackTrace);
+      return null;
+    }
+  }
+
 }
 
 

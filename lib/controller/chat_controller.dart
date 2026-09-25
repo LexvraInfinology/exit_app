@@ -28,12 +28,14 @@ class ChatController extends GetxController {
     required this.recipientId,
     required this.currentUserId,
     required this.fundingId,
+    required this.isFounder,
   });
 
   final int recipientId;
   String? conversationId;
   int? currentUserId;
   int? fundingId;
+  bool isFounder;
 
   final ApiServices apiServices = ApiServices();
 
@@ -55,7 +57,7 @@ class ChatController extends GetxController {
   int _reconnectAttempts = 0;
   static const int _maxReconnectAttempts = 5;
   static const String _wsBaseUrl =
-      'wss://02dc-2404-7c80-5d-97dc-6470-c536-4c82-9610.ngrok-free.app';
+      'wss://865e-2404-7c80-5d-97dc-d57a-10cd-7010-305.ngrok-free.app';
   int? _connectionId;
   bool _manualDisconnect = false;
 
@@ -89,41 +91,78 @@ class ChatController extends GetxController {
     debugPrint('✅ conversation ID: $conversationId');
 
     try {
-      isCreatingConnection.value = true;
+      if(isFounder){
+        isCreatingConnection.value = true;
+        if (conversationId == null ) {
+          final ConnectionResponse? response =
+          await apiServices.createConnectionWithInvestorApi(
+            investorId: recipientId,
+          );
 
-      if (currentUserId == null && fundingId != null) {
-        final ConnectionResponse? response =
-        await apiServices.createConnectionApi(
-          founderId: recipientId,
-          fundingId: fundingId!,
-        );
+          if (response == null) {
+            debugPrint('❌ Connection API returned null');
+            return;
+          }
 
-        if (response == null) {
-          debugPrint('❌ Connection API returned null');
+          _connectionId = response.data.id;
+          currentUserId = recipientId == response.data.investorId
+              ? response.data.founderId
+              : response.data.investorId;
+
+          debugPrint('✅ Connection ID: $_connectionId');
+          debugPrint('✅ Current User ID: $currentUserId');
+        } else if (conversationId != null && currentUserId != null) {
+          await getChatHistory(conversationId!, currentUserId!);
+        } else {
+          debugPrint(
+            '❌ Cannot initialize chat: '
+                'conversationId=$conversationId, '
+                'currentUserId=$currentUserId, '
+                'fundingId=$fundingId',
+          );
           return;
         }
 
-        _connectionId = response.data.id;
-        currentUserId = recipientId == response.data.investorId
-            ? response.data.founderId
-            : response.data.investorId;
+        debugPrint('🔗 Connecting with ID: $_connectionId');
+        await connect();
+      }else{
+        isCreatingConnection.value = true;
 
-        debugPrint('✅ Connection ID: $_connectionId');
-        debugPrint('✅ Current User ID: $currentUserId');
-      } else if (conversationId != null && currentUserId != null) {
-        await getChatHistory(conversationId!, currentUserId!);
-      } else {
-        debugPrint(
-          '❌ Cannot initialize chat: '
-              'conversationId=$conversationId, '
-              'currentUserId=$currentUserId, '
-              'fundingId=$fundingId',
-        );
-        return;
+        if (currentUserId == null && fundingId != null) {
+          final ConnectionResponse? response =
+          await apiServices.createConnectionApi(
+            founderId: recipientId,
+            fundingId: fundingId!,
+          );
+
+          if (response == null) {
+            debugPrint('❌ Connection API returned null');
+            return;
+          }
+
+          _connectionId = response.data.id;
+          currentUserId = recipientId == response.data.investorId
+              ? response.data.founderId
+              : response.data.investorId;
+
+          debugPrint('✅ Connection ID: $_connectionId');
+          debugPrint('✅ Current User ID: $currentUserId');
+        } else if (conversationId != null && currentUserId != null) {
+          await getChatHistory(conversationId!, currentUserId!);
+        } else {
+          debugPrint(
+            '❌ Cannot initialize chat: '
+                'conversationId=$conversationId, '
+                'currentUserId=$currentUserId, '
+                'fundingId=$fundingId',
+          );
+          return;
+        }
+
+        debugPrint('🔗 Connecting with ID: $_connectionId');
+        await connect();
       }
 
-      debugPrint('🔗 Connecting with ID: $_connectionId');
-      await connect();
     } catch (e, stackTrace) {
       debugPrint('❌ Init Chat Error: $e');
       debugPrintStack(stackTrace: stackTrace);

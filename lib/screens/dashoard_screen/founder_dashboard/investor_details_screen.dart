@@ -3,6 +3,7 @@ import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/controller/founder_dashboard_controller.dart';
 import 'package:exit_app/controller/investor_details_controller.dart';
 import 'package:exit_app/screens/chat_details_screen.dart';
+import 'package:exit_app/screens/new_chat_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +15,9 @@ import '../../../models/get_investor_list_model.dart';
 class InvestorDetailsScreen extends StatelessWidget {
   Results? result;
 
-  InvestorDetailsScreen(this.result, {super.key});
+  int? currentUserId;
+
+  InvestorDetailsScreen(this.result, this.currentUserId, {super.key});
 
   static const tags = ['SaaS', 'FinTech', 'B2B', 'AI / ML'];
 
@@ -47,7 +50,8 @@ class InvestorDetailsScreen extends StatelessWidget {
                 child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 24.0,right: 24.0,bottom: 10.0),
+                  padding: const EdgeInsets.only(
+                      left: 24.0, right: 24.0, bottom: 10.0),
                   child: Row(
                     children: [
                       GestureDetector(
@@ -61,7 +65,6 @@ class InvestorDetailsScreen extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-
                     ],
                   ),
                 ),
@@ -272,7 +275,17 @@ class InvestorDetailsScreen extends StatelessWidget {
                               width: MediaQuery.sizeOf(context).width,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Get.to(() => ChatDetailsScreen());
+                                  if (result != null) {
+                                    if (result!.id != null) {
+                                      Get.to(() => ChatScreen(
+                                          conversationId: null,
+                                          recipientId: result!.id!,
+                                          recipientName:
+                                              '${result!.firstName.toString()} ${result!.lastName.toString()}',
+                                          currentUserId: currentUserId,
+                                          isFounder: true));
+                                    }
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(

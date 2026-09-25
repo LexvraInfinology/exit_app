@@ -1,3 +1,4 @@
+import 'package:exit_app/models/create_fund_model_class.dart';
 import 'package:exit_app/models/get_investor_list_model.dart';
 import 'package:exit_app/screens/boost_profile_screen.dart';
 import 'package:exit_app/screens/chat_details_screen.dart';
@@ -46,6 +47,7 @@ class FounderDashboardController extends GetxController {
   final RxList<Results> investorList = <Results>[].obs;
   final RxList<ResultsProfile> resultProfile = <ResultsProfile>[].obs;
   final RxList<ConversationItem> chats = <ConversationItem>[].obs;
+  final RxList<CreateFundsRaiseData> createFundsList = <CreateFundsRaiseData>[].obs;
 
   @override
   void onInit() {
@@ -60,6 +62,7 @@ class FounderDashboardController extends GetxController {
     await getChatListApi();
     await getInvestorListApi();
     await getuserProfileApi(prefs.getString('id').toString());
+    await getCreateFundsRaiseListApi();
     isLoading.value = false;
     update();
   }
@@ -110,7 +113,9 @@ class FounderDashboardController extends GetxController {
   void onViewPlan() {}
 
   void InvestorDetails(Results result) {
-    Get.to(() => InvestorDetailsScreen(result));
+    if (currentUserId != null) {
+      Get.to(() => InvestorDetailsScreen(result, currentUserId));
+    }
   }
 
   void clickPlanDetails() {
@@ -736,6 +741,25 @@ class FounderDashboardController extends GetxController {
 
       if (response?.statusCode == 200) {
         chats.value.assignAll(response?.data ?? []);
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    }
+  }
+  Future<void> getCreateFundsRaiseListApi() async {
+    try {
+      isLoading.value = true;
+      final CreateFundRaiseModel? response = await apiServices.getCreateFundsRaiseApi();
+
+      if (response?.statusCode == 200) {
+        if(response?.data!=null){
+          // createFundsList.value.assignAll(response);
+
+        }
       } else {
         Get.snackbar(
             'Failed', response?.message ?? 'Failed to fetch industries');

@@ -1,14 +1,14 @@
 class CreateFundRaiseModel {
   int? statusCode;
   String? message;
-  Data? data;
+  CreateFundsRaiseData? data;
 
   CreateFundRaiseModel({this.statusCode, this.message, this.data});
 
   CreateFundRaiseModel.fromJson(Map<String, dynamic> json) {
     statusCode = json['status_code'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new CreateFundsRaiseData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -22,7 +22,7 @@ class CreateFundRaiseModel {
   }
 }
 
-class Data {
+class CreateFundsRaiseData {
   int? id;
   String? owner;
   String? fundingGoal;
@@ -43,7 +43,7 @@ class Data {
   String? createdAt;
   String? updatedAt;
 
-  Data(
+  CreateFundsRaiseData(
       {this.id,
         this.owner,
         this.fundingGoal,
@@ -64,7 +64,7 @@ class Data {
         this.createdAt,
         this.updatedAt});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  CreateFundsRaiseData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     owner = json['owner'];
     fundingGoal = json['funding_goal'];
