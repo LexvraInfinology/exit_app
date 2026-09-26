@@ -757,7 +757,7 @@ class FounderDashboardController extends GetxController {
 
       if (response?.statusCode == 200) {
         if(response?.data!=null){
-          // createFundsList.value.assgitignAll(response);
+          createFundsList.value=response?.data?.results??[];
 
         }
       } else {
