@@ -1,6 +1,4 @@
-import 'package:exit_app/common_widgets/founder_dashboard_header_widget.dart';
 import 'package:exit_app/constants/app_color.dart';
-import 'package:exit_app/controller/founder_dashboard_controller.dart';
 import 'package:exit_app/controller/investor_details_controller.dart';
 import 'package:exit_app/screens/chat_details_screen.dart';
 import 'package:flutter/cupertino.dart';

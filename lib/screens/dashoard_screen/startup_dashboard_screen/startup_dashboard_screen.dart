@@ -18,10 +18,10 @@ import '../founder_dashboard/funding_request_list_screen.dart';
 class StartupDashboardScreen extends StatelessWidget{
 
   final List<Widget> pages = [
-    StartUpHomeScreen(),
+    const StartUpHomeScreen(),
     StartUpAllInvestorScreen(),
-    StartUpRequestListScreen(),
-    StartUpChatListScreen(),
+    const StartUpRequestListScreen(),
+    const StartUpChatListScreen(),
     StartUpProfileScreen(),
   ];
 

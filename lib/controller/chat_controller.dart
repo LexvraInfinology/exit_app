@@ -87,7 +87,6 @@ class ChatController extends GetxController {
   Future<void> _initChat() async {
     debugPrint('✅ CurrentUser ID: $currentUserId');
     debugPrint('✅ conversation ID: $conversationId');
-
     try {
       isCreatingConnection.value = true;
 
