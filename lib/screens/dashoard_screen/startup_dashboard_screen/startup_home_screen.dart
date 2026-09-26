@@ -207,7 +207,7 @@ class StartUpHomeScreen extends StatelessWidget {
                                   children: [
                                     CreatePostWidget(
                                         icon: Icons.trending_up_rounded,
-                                        title: 'Raise Capital',
+                                        title: 'Raise Capital for Equity',
                                         description:
                                         'Connect with the right investors and raise funding.',
                                         buttonText: 'Raise now',
@@ -218,7 +218,7 @@ class StartUpHomeScreen extends StatelessWidget {
                                     const SizedBox(width: 14),
                                     CreatePostWidget(
                                         icon: Icons.business_center_outlined,
-                                        title: 'List Your Business',
+                                        title: 'Sell your Startup',
                                         description:
                                         'List your business and connect with serious buyers and acquirers.',
                                         buttonText: 'List Now',
