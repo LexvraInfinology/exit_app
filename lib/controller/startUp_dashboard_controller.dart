@@ -3,9 +3,11 @@ import 'dart:ui';
 import 'package:exit_app/api_utils/api_services.dart';
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/constants/app_images.dart';
+import 'package:exit_app/controller/add_credits_controller.dart';
 import 'package:exit_app/models/conversation_response.dart';
 import 'package:exit_app/models/get_investor_list_model.dart';
 import 'package:exit_app/models/profile_model.dart';
+import 'package:exit_app/screens/add_credits_screen.dart';
 import 'package:exit_app/screens/edit_profile_screen.dart';
 import 'package:exit_app/screens/onboarding_screen.dart';
 import 'package:exit_app/screens/plan_details_screen.dart';
@@ -144,7 +146,8 @@ class StartUpDashBoardController extends GetxController {
   }
 
   void clickManagePlan() {
-    // Get.to(() => ());
+    Get.put(AddCreditsController());
+    Get.to(() => const AddCreditsScreen());
   }
 
   void clickPrivacyPolicy() {
