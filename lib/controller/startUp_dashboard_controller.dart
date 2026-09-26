@@ -110,7 +110,9 @@ class StartUpDashBoardController extends GetxController {
   void onViewPlan() {}
 
   void InvestorDetails(Results result) {
-    Get.to(() => InvestorDetailsScreen(result));
+ if(currentUserId != null){
+   Get.to(() => InvestorDetailsScreen(result,currentUserId));
+ }
   }
 
   void clickPlanDetails() {
