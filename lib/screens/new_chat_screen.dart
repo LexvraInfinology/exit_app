@@ -20,7 +20,7 @@ class ChatScreen extends StatelessWidget {
     required this.recipientName,
     required this.currentUserId,
      this.fundingId,
-     this.isFounder=false
+    this.isFounder = false
   });
 
   @override
@@ -30,8 +30,7 @@ class ChatScreen extends StatelessWidget {
         conversationId: conversationId,
         currentUserId: currentUserId,
         fundingId: fundingId,
-        isFounder: isFounder
-      ),
+        isFounder: isFounder,),
     );
     return Scaffold(
       backgroundColor: AppColors.blackColor,

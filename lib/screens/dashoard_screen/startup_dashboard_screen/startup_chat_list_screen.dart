@@ -1,4 +1,7 @@
+import 'package:exit_app/api_utils/app_formatters.dart';
+import 'package:exit_app/controller/chat_controller.dart';
 import 'package:exit_app/controller/startUp_dashboard_controller.dart';
+import 'package:exit_app/screens/new_chat_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,72 +12,11 @@ import '../../../constants/app_color.dart';
 class StartUpChatListScreen extends StatelessWidget{
   final bool first;
 
-  StartUpChatListScreen({
+  const StartUpChatListScreen({
     super.key,
     this.first = false,
   });
-  final filters = [
-    'All',
-    'Investors',
-    'Founders',
-    'Team',
-  ];
-  final conversations = [
-    {
-      'name': 'Northstar Ventures',
-      'preview1': 'Thanks for sharing the deck.',
-      'preview2': 'Let’s schedule a call this week.',
-      'time': '9:30 AM',
-      'unread': "2",
-      'verified': true,
-      'subtitle': 'Angel',
-    },
-    {
-      'name': 'Accel',
-      'preview1': 'We’d love to learn more about',
-      'preview2': 'NovaNest. Can you share more...',
-      'time': 'Yesterday',
-      'unread': "1",
-      'verified': true,
-      'subtitle': 'Angel',
-    },
-    {
-      'name': 'Sequoia Capital India',
-      'preview1': 'Great traction, NovaNest looks',
-      'preview2': 'promising!',
-      'time': 'Yesterday',
-      'unread': "0",
-      'verified': true,
-      'subtitle': 'Angel',
-    },
-    {
-      'name': 'Arjun Mehta',
-      'preview1': 'Interesting! Let’s connect next week.',
-      'preview2': '',
-      'time': '1w ago',
-      'unread': "0",
-      'verified': false,
-      'subtitle': 'Angel',
-    },
-    {
-      'name': 'Northstar Ventures',
-      'preview1': 'Thanks for sharing the deck.',
-      'preview2': 'Let’s schedule a call this week.',
-      'time': '9:30 AM',
-      'unread': "2",
-      'verified': true,
-      'subtitle': 'Angel',
-    },
-    {
-      'name': 'Accel',
-      'preview1': 'We’d love to learn more about',
-      'preview2': 'NovaNest. Can you share more...',
-      'time': 'Yesterday',
-      'unread': "1",
-      'verified': true,
-      'subtitle': 'Angel',
-    },
-  ];
+
   @override
   Widget build(BuildContext context) {
   return GetBuilder<StartUpDashBoardController>(builder: (controller){
@@ -96,105 +38,115 @@ class StartUpChatListScreen extends StatelessWidget{
                 const SizedBox(
                   height: 20,
                 ),
+
+                Container(
+                  height: 59,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF111111),
+                    borderRadius: BorderRadius.circular(17),
+                    border: Border.all(
+                      color: const Color(0xFF292929),
+                      width: 1,
+                    ),
+                  ),
+                  child: const Row(
+                    children: [
+                      SizedBox(width: 20),
+                      Icon(
+                        Icons.search,
+                        color: Colors.white,
+                        size: 21,
+                      ),
+                      SizedBox(width: 15),
+                      Text(
+                        'Search Conversations',
+                        style: TextStyle(
+                          color: Color(0xFFC5C5C5),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Container(
-                          height: 59,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF111111),
-                            borderRadius: BorderRadius.circular(17),
-                            border: Border.all(
-                              color: const Color(0xFF292929),
-                              width: 1,
-                            ),
-                          ),
-                          child: const Row(
-                            children: [
-                              SizedBox(width: 20),
-                              Icon(
-                                Icons.search,
-                                color: Colors.white,
-                                size: 21,
-                              ),
-                              SizedBox(width: 15),
-                              Text(
-                                'Search Conversations',
-                                style: TextStyle(
-                                  color: Color(0xFFC5C5C5),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+
                         const SizedBox(
                           height: 20,
                         ),
-                        SizedBox(
-                          height: 51,
-                          child: ListView.separated(
-                            padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
-                            scrollDirection: Axis.horizontal,
-                            itemCount: filters.length,
-                            separatorBuilder: (_, __) =>
-                            const SizedBox(width: 12),
-                            itemBuilder: (context, index) {
-                              final selected = controller.selectedFilter == index;
-
-                              return GestureDetector(
-                                onTap: () {
-                                  controller.selectedFilter = index;
-                                },
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 180),
-                                  padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                                  decoration: BoxDecoration(
-                                    color: selected
-                                        ? const Color(0xFF18131F)
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(22),
-                                    border: Border.all(
-                                      color: selected
-                                          ? AppColors.whiteColor
-                                          : const Color(0xFF292929),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    filters[index],
-                                    style: TextStyle(
-                                      fontSize: 12.5,
-                                      color: selected
-                                          ? Colors.white
-                                          : const Color(0xFF77777D),
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                        // SizedBox(
+                        //   height: 51,
+                        //   child: ListView.separated(
+                        //     padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+                        //     scrollDirection: Axis.horizontal,
+                        //     itemCount: filters.length,
+                        //     separatorBuilder: (_, __) =>
+                        //         const SizedBox(width: 12),
+                        //     itemBuilder: (context, index) {
+                        //       final selected = controller.selectedFilter == index;
+                        //
+                        //       return GestureDetector(
+                        //         onTap: () {
+                        //           controller.selectedFilter = index;
+                        //         },
+                        //         child: AnimatedContainer(
+                        //           duration: const Duration(milliseconds: 180),
+                        //           padding:
+                        //               const EdgeInsets.symmetric(horizontal: 20),
+                        //           decoration: BoxDecoration(
+                        //             color: selected
+                        //                 ? const Color(0xFF18131F)
+                        //                 : Colors.transparent,
+                        //             borderRadius: BorderRadius.circular(22),
+                        //             border: Border.all(
+                        //               color: selected
+                        //                   ? AppColors.whiteColor
+                        //                   : const Color(0xFF292929),
+                        //               width: 1,
+                        //             ),
+                        //           ),
+                        //           alignment: Alignment.center,
+                        //           child: Text(
+                        //             filters[index],
+                        //             style: TextStyle(
+                        //               fontSize: 12.5,
+                        //               color: selected
+                        //                   ? Colors.white
+                        //                   : const Color(0xFF77777D),
+                        //               fontWeight: FontWeight.w400,
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
                         const SizedBox(height: 20),
                         Column(
                           children: [
-                            ListView.builder(
-                                itemCount: conversations.length,
+                            Obx(()=> ListView.builder(
+                                itemCount: controller.chats.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  final conversation = conversations[index];
+                                  final conversation = controller.chats[index];
                                   return GestureDetector(
                                     onTap: () {
-                                      controller.clickChatItem();
+                                      if (Get.isRegistered<ChatController>()) {
+                                        Get.delete<ChatController>();
+                                      }
+                                      Get.to(() => ChatScreen(
+                                        recipientId: conversation.userId,
+                                        recipientName: conversation.name,
+                                        currentUserId: controller.currentUserId,
+                                        conversationId: conversation.conversationId,));
                                     },
                                     child: Container(
-                                      margin: EdgeInsets.symmetric(vertical: 10),
+                                      margin: const EdgeInsets.symmetric(vertical: 10),
                                       padding: EdgeInsets.symmetric(
                                         horizontal: first ? 13 : 13,
                                         vertical: first ? 15 : 15,
@@ -227,8 +179,7 @@ class StartUpChatListScreen extends StatelessWidget{
                                                   children: [
                                                     Flexible(
                                                       child: Text(
-                                                        conversation['name']
-                                                            .toString(),
+                                                        conversation.name,
                                                         maxLines: 1,
                                                         overflow:
                                                         TextOverflow.ellipsis,
@@ -241,9 +192,7 @@ class StartUpChatListScreen extends StatelessWidget{
                                                         ),
                                                       ),
                                                     ),
-                                                    if (conversation['verified']
-                                                        .toString() !=
-                                                        true) ...[
+                                                    if (true) ...[
                                                       const SizedBox(width: 3),
                                                       const Icon(
                                                         Icons.verified,
@@ -253,26 +202,10 @@ class StartUpChatListScreen extends StatelessWidget{
                                                     ],
                                                   ],
                                                 ),
-                                                if (conversation['subtitle'] !=
-                                                    null)
-                                                  Padding(
-                                                    padding:
-                                                    const EdgeInsets.only(
-                                                        top: 0),
-                                                    child: Text(
-                                                      conversation['subtitle']
-                                                          .toString()!,
-                                                      style: const TextStyle(
-                                                        color: Color(0xFF707076),
-                                                        fontSize: 10,
-                                                      ),
-                                                    ),
-                                                  ),
                                                 const SizedBox(height: 5),
                                                 Text(
-                                                  conversation['preview1']
-                                                      .toString(),
-                                                  maxLines: 1,
+                                                  conversation.latestMessage,
+                                                  maxLines: 3,
                                                   overflow: TextOverflow.ellipsis,
                                                   style: const TextStyle(
                                                     color: Color(0xFF707076),
@@ -280,23 +213,7 @@ class StartUpChatListScreen extends StatelessWidget{
                                                     height: 1.2,
                                                   ),
                                                 ),
-                                                if (conversation['preview2']
-                                                    .toString()
-                                                    .isNotEmpty) ...[
-                                                  const SizedBox(height: 4),
-                                                  Text(
-                                                    conversation['preview2']
-                                                        .toString(),
-                                                    maxLines: 1,
-                                                    overflow:
-                                                    TextOverflow.ellipsis,
-                                                    style: const TextStyle(
-                                                      color: Color(0xFF707076),
-                                                      fontSize: 14,
-                                                      height: 1.2,
-                                                    ),
-                                                  ),
-                                                ],
+
                                               ],
                                             ),
                                           ),
@@ -308,19 +225,15 @@ class StartUpChatListScreen extends StatelessWidget{
                                             MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                conversation['time'].toString(),
+                                                conversation.unreadCount != 0 ? timeAgo(conversation.latestMessageTime):"",
                                                 style: TextStyle(
-                                                  color: conversation['unread']
-                                                      .toString() !=
-                                                      '0'
+                                                  color: conversation.unreadCount != 0
                                                       ? AppColors.whiteColor
                                                       : const Color(0xFF6D6D73),
                                                   fontSize: 10.5,
                                                 ),
                                               ),
-                                              if (conversation['unread']
-                                                  .toString() !=
-                                                  0) ...[
+                                              if (conversation.unreadCount > 0) ...[
                                                 const SizedBox(height: 7),
                                                 Container(
                                                   width: 20,
@@ -331,7 +244,7 @@ class StartUpChatListScreen extends StatelessWidget{
                                                   ),
                                                   alignment: Alignment.center,
                                                   child: Text(
-                                                    '${conversation['unread'].toString()}',
+                                                    conversation.unreadCount.toString(),
                                                     style: const TextStyle(
                                                       color:AppColors.blackColor,
                                                       fontSize: 11,
@@ -346,7 +259,7 @@ class StartUpChatListScreen extends StatelessWidget{
                                       ),
                                     ),
                                   );
-                                }),
+                                })),
                           ],
                         )
                       ],

@@ -113,8 +113,8 @@ class FounderDashboardController extends GetxController {
   void onViewPlan() {}
 
   void InvestorDetails(Results result) {
-    if (currentUserId != null) {
-      Get.to(() => InvestorDetailsScreen(result, currentUserId));
+    if(currentUserId != null){
+      Get.to(() => InvestorDetailsScreen(result,currentUserId));
     }
   }
 

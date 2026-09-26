@@ -234,7 +234,9 @@ class ChooseUserController extends GetxController {
       otpControllers.clear();
       createProfileApi();
     } else {
-      Get.to(() => const ChoosePlanScreen());
+      phoneNumberController.text = '';
+      otpControllers.clear();
+      createProfileApi();
     }
   }
 
@@ -919,7 +921,12 @@ class ChooseUserController extends GetxController {
         );
         prefs.setString('plan_credit', '');
         prefs.setString('plan_name', '');
-        Get.to(() => FounderDashboardScreen());
+
+        if (selectedIndex.value == 1) {
+          Get.to(() => FounderDashboardScreen());
+        } else if(selectedIndex.value == 2){
+          Get.to(() => StartupDashboardScreen());
+        }
       } else {
         isLoading.value = false;
         Get.snackbar(

@@ -7,9 +7,11 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../constants/app_color.dart';
 
 class StartUpRequestListScreen extends StatelessWidget{
+  const StartUpRequestListScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<StartUpDashBoardController>(builder: (controller){
+    return GetBuilder<StartUpDashBoardController>(builder: (fundingController){
       return Scaffold(
         backgroundColor: AppColors.blackColor,
         body: SafeArea(
@@ -22,14 +24,14 @@ class StartUpRequestListScreen extends StatelessWidget{
                     'Funding Requests',
                     style: GoogleFonts.montserrat(
                       color: AppColors.whiteColor,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 30),
                   GestureDetector(
                     onTap: () {
-                      controller.clickFundingRequestButton(context);
+                      fundingController.clickFundingRequestButton(context);
                     },
                     child: Container(
                       width: MediaQuery.sizeOf(context).width,
@@ -59,22 +61,23 @@ class StartUpRequestListScreen extends StatelessWidget{
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Create Funding\nRequest',
+                                  'Create Funding Request',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.montserrat(
                                     color: AppColors.blackColor,
-                                    fontSize: 19,
-                                    height: 1.05,
-                                    fontWeight: FontWeight.w600,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                                SizedBox(height: 5),
+                                const SizedBox(height: 5),
                                 Text(
-                                  'Start a new raise and connect with\ninvestors.',
+                                  'Start a new raise and connect with investors.',
                                   style: GoogleFonts.montserrat(
-                                    color: Color(0xFF888888),
-                                    fontSize: 12,
-                                    height: 1.3,
-                                  ),
+                                      color: AppColors.darkGreyColor,
+                                      fontSize: 14,
+                                      height: 1.3,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ],
                             ),
@@ -100,15 +103,15 @@ class StartUpRequestListScreen extends StatelessWidget{
                           Text(
                             'All Requests',
                             style: GoogleFonts.montserrat(
-                              color: Color(0xFF8A8A8A),
-                              fontSize: 12,
-                            ),
+                                color: AppColors.darkGreyColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
                           ),
                           const SizedBox(width: 5),
                           const Icon(
                             Icons.keyboard_arrow_down,
                             color: Color(0xFF8A8A8A),
-                            size: 18,
+                            size: 22,
                           ),
                         ],
                       ),
@@ -123,19 +126,20 @@ class StartUpRequestListScreen extends StatelessWidget{
                   itemCount: 5,
                   itemBuilder: (context, index) {
                     return Container(
-                      margin: EdgeInsets.symmetric(vertical: 10,horizontal: 16),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 16),
                       width: MediaQuery.sizeOf(context).width,
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF111111),
+                        color: AppColors.containerBackgroundColor,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: const Color(0xFF292929),
+                          color: AppColors.containerBorderColor,
                           width: 1,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.25),
+                            color: AppColors.blackColor.withOpacity(0.25),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -147,24 +151,23 @@ class StartUpRequestListScreen extends StatelessWidget{
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Logo
                               Container(
-                                width: 32,
-                                height: 32,
+                                width: 36,
+                                height: 36,
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFDCE9ED),
                                   borderRadius: BorderRadius.circular(9),
                                 ),
-                                child: const Center(
+                                child: Center(
                                   child: Icon(
                                     Icons.business_center_outlined,
-                                    size: 17,
-                                    color: Color(0xFF87999E),
+                                    size: 22,
+                                    color: AppColors.darkGreyColor,
                                   ),
                                 ),
                               ),
 
-                              const SizedBox(width: 9),
+                              const SizedBox(width: 10),
 
                               // Company info
                               Expanded(
@@ -173,32 +176,31 @@ class StartUpRequestListScreen extends StatelessWidget{
                                   children: [
                                     Row(
                                       children: [
-                                        const Text(
+                                        Text(
                                           'NovaNest',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
+                                          style: GoogleFonts.montserrat(
+                                            color: AppColors.whiteColor,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                        const SizedBox(width: 6),
-
-                                        // Published badge
+                                        const SizedBox(width: 10),
                                         Container(
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 7,
                                             vertical: 3,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: const Color(0xFF063D27),
+                                            color: AppColors.greenColor
+                                                .withOpacity(0.30),
                                             borderRadius:
                                             BorderRadius.circular(5),
                                           ),
-                                          child: const Text(
+                                          child: Text(
                                             'Published',
-                                            style: TextStyle(
-                                              color: Color(0xFF32D583),
-                                              fontSize: 7,
+                                            style: GoogleFonts.montserrat(
+                                              color: AppColors.greenColor,
+                                              fontSize: 14,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -206,11 +208,13 @@ class StartUpRequestListScreen extends StatelessWidget{
                                       ],
                                     ),
                                     const SizedBox(height: 3),
-                                    const Text(
+                                    Text(
                                       'FinTech • Seed • Bengaluru',
-                                      style: TextStyle(
-                                        color: Color(0xFF777777),
-                                        fontSize: 8,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.montserrat(
+                                        color: AppColors.darkGreyColor,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
@@ -218,17 +222,69 @@ class StartUpRequestListScreen extends StatelessWidget{
                                 ),
                               ),
 
-                              // More button
-                              const Icon(
-                                Icons.more_vert,
-                                color: Color(0xFF777777),
-                                size: 17,
+                              PopupMenuButton<String>(
+                                icon: const Icon(
+                                  Icons.more_vert,
+                                  color: AppColors.darkGreyColor,
+                                  size: 24,
+                                ),
+                                color: AppColors.containerBackgroundColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                onSelected: (value) {
+                                  if (value == 'edit') {
+                                    fundingController.editPostOrDeletePost(index,'FundRaise','edit');
+                                  } else if (value == 'delete') {
+                                    fundingController.editPostOrDeletePost(index,'SellCompany','delete');
+                                  }
+                                },
+                                itemBuilder: (context) => [
+                                  PopupMenuItem<String>(
+                                    value: 'edit',
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.edit_outlined,
+                                          size: 24,
+                                          color: AppColors.whiteColor,
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          'Edit',
+                                          style: GoogleFonts.montserrat(
+                                              color: AppColors.whiteColor,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem<String>(
+                                    value: 'delete',
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.delete_outline,
+                                          size: 24,
+                                          color: AppColors.whiteColor,
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          'Delete',
+                                          style: GoogleFonts.montserrat(
+                                              color: AppColors.whiteColor,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-
                           const SizedBox(height: 16),
-
                           Row(children: [
                             Expanded(
                                 child: Column(
@@ -236,19 +292,20 @@ class StartUpRequestListScreen extends StatelessWidget{
                                   children: [
                                     Text(
                                       '₹75L',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 13,
+                                      style: GoogleFonts.montserrat(
+                                        color: AppColors.whiteColor,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
-                                    const SizedBox(height: 5),
                                     Text(
                                       'Funding Goal',
-                                      style: const TextStyle(
-                                        color: Color(0xFF777777),
-                                        fontSize: 8,
-                                        fontWeight: FontWeight.w400,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.montserrat(
+                                        color: AppColors.darkGreyColor,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ],
@@ -259,19 +316,20 @@ class StartUpRequestListScreen extends StatelessWidget{
                                 children: [
                                   Text(
                                     '1–3 Mo',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
+                                    style: GoogleFonts.montserrat(
+                                      color: AppColors.whiteColor,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  const SizedBox(height: 5),
                                   Text(
                                     'Timeline',
-                                    style: const TextStyle(
-                                      color: Color(0xFF777777),
-                                      fontSize: 8,
-                                      fontWeight: FontWeight.w400,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.montserrat(
+                                      color: AppColors.darkGreyColor,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ],
@@ -283,116 +341,102 @@ class StartUpRequestListScreen extends StatelessWidget{
                                 children: [
                                   Text(
                                     'Seed',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
+                                    style: GoogleFonts.montserrat(
+                                      color: AppColors.whiteColor,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  const SizedBox(height: 5),
                                   Text(
                                     'Stage',
-                                    style: const TextStyle(
-                                      color: Color(0xFF777777),
-                                      fontSize: 8,
-                                      fontWeight: FontWeight.w400,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.montserrat(
+                                      color: AppColors.darkGreyColor,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                 ],
                               ),
                             )
                           ]),
-
-                          const SizedBox(height: 14),
-
-                          // Divider
+                          const SizedBox(height: 16),
                           Container(
-                            height: 1,
-                            color: const Color(0xFF242424),
+                            height: 1.5,
+                            color: AppColors.containerBorderColor,
                           ),
-
                           const SizedBox(height: 11),
-
                           Row(
                             children: [
-                              // Views
                               const Icon(
                                 Icons.visibility_outlined,
-                                size: 12,
-                                color: Color(0xFF888888),
+                                size: 22,
+                                color: AppColors.darkGreyColor,
                               ),
-
-                              const SizedBox(width: 4),
-
-                              const Text(
+                              const SizedBox(width: 6),
+                              Text(
                                 '32',
-                                style: TextStyle(
-                                  color: Color(0xFFBBBBBB),
-                                  fontSize: 8,
-                                ),
+                                style: GoogleFonts.montserrat(
+                                    color: AppColors.whiteColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600),
                               ),
-
-                              const SizedBox(width: 3),
-
-                              const Text(
+                              const SizedBox(width: 4),
+                              Text(
                                 'Views',
-                                style: TextStyle(
-                                  color: Color(0xFF666666),
-                                  fontSize: 8,
-                                ),
+                                style: GoogleFonts.montserrat(
+                                    color: AppColors.darkGreyColor,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500),
                               ),
-
                               const SizedBox(width: 12),
-
-                              // Interested
                               const Icon(
                                 Icons.person_outline,
-                                size: 12,
-                                color: Color(0xFF888888),
+                                size: 24,
+                                color: AppColors.darkGreyColor,
                               ),
-
-                              const SizedBox(width: 4),
-
-                              const Text(
+                              const SizedBox(width: 5),
+                              Text(
                                 '4',
-                                style: TextStyle(
-                                  color: Color(0xFFBBBBBB),
-                                  fontSize: 8,
-                                ),
+                                style: GoogleFonts.montserrat(
+                                    color: AppColors.whiteColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600),
                               ),
-
                               const SizedBox(width: 3),
-
-                              const Text(
+                              Text(
                                 'Interested',
-                                style: TextStyle(
-                                  color: Color(0xFF666666),
-                                  fontSize: 8,
-                                ),
+                                style: GoogleFonts.montserrat(
+                                    color: AppColors.darkGreyColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500),
                               ),
-
                               const Spacer(),
                               GestureDetector(
-                                onTap: (){
-                                  controller.clickPostDetails();
+                                onTap: () {
+                                  fundingController.clickPostDetails();
                                 },
-                                child: Row(
-                                  children: const [
-                                    Text(
-                                      'View Request',
-                                      style: TextStyle(
-                                        color: Color(0xFFE6E6E6),
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.w500,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'View Request',
+                                        style: GoogleFonts.montserrat(
+                                          color: AppColors.whiteColor,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(width: 4),
-                                    Icon(
-                                      Icons.arrow_forward,
-                                      size: 12,
-                                      color: Color(0xFFE6E6E6),
-                                    ),
-                                  ],
+                                      const SizedBox(width: 6),
+                                      const Icon(
+                                        Icons.arrow_forward,
+                                        size: 22,
+                                        color: AppColors.whiteColor,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],

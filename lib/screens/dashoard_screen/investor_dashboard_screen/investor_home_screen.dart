@@ -840,15 +840,13 @@ class InvestorHomeScreen extends StatelessWidget {
                                                              ],
                                                            ),
                                                          ),
-
                                                          const SizedBox(width: 10),
-
-                                                         const Icon(
-                                                           Icons
-                                                               .bookmark_border_rounded,
-                                                           size: 21,
-                                                           color: Color(0xFF777777),
-                                                         ),
+                                                         // const Icon(
+                                                         //   Icons
+                                                         //       .bookmark_border_rounded,
+                                                         //   size: 21,
+                                                         //   color: Color(0xFF777777),
+                                                         // ),
                                                        ],
                                                      ),
                                                    ),
