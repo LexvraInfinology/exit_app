@@ -286,6 +286,10 @@ class InvestorProfileScreen extends StatelessWidget {
                                   const SizedBox(
                                     height: 16,
                                   ),
+
+                                  // Preferred Stage
+
+
                                   Container(
                                     width: MediaQuery.sizeOf(context).width,
                                     height: 1,
