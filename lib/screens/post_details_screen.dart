@@ -1,5 +1,6 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/controller/founder_dashboard_controller.dart';
+import 'package:exit_app/models/create_fund_model_class.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_images.dart';
 
 class PostDetailsScreen extends StatelessWidget {
+  CreateFundsRaiseData? createFundsRaiseData;
+
+  PostDetailsScreen(this.createFundsRaiseData, {super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<FounderDashboardController>(builder: (controller) {
@@ -52,10 +57,10 @@ class PostDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Expanded(
+                    const Expanded(
                       child: Text(
                         'Funding Details',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: 17,
                           fontWeight: FontWeight.w600,
@@ -87,7 +92,10 @@ class PostDetailsScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'NovaNest',
+                                createFundsRaiseData?.companyName != null
+                                    ? createFundsRaiseData!.companyName
+                                        .toString()
+                                    : 'Lexvra',
                                 style: GoogleFonts.montserrat(
                                     color: AppColors.whiteColor,
                                     fontSize: 20,
@@ -126,7 +134,7 @@ class PostDetailsScreen extends StatelessWidget {
                           const SizedBox(height: 10),
                           Center(
                             child: Text(
-                              'FinTech · Seed · Bengaluru',
+                              '${createFundsRaiseData?.stage} · ${createFundsRaiseData?.location}',
                               style: GoogleFonts.montserrat(
                                   color: AppColors.darkGreyColor,
                                   fontWeight: FontWeight.w400,
@@ -135,7 +143,7 @@ class PostDetailsScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           Container(
-                            width: double.infinity,
+                            width: MediaQuery.sizeOf(context).width,
                             padding: const EdgeInsets.fromLTRB(16, 16, 16, 18),
                             decoration: cardDecoration,
                             child: Column(
@@ -180,7 +188,7 @@ class PostDetailsScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Published on 24 Aug 2026',
+                                  'Published on ${createFundsRaiseData?.createdAt.toString()}',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: labelStyle,
@@ -191,7 +199,9 @@ class PostDetailsScreen extends StatelessWidget {
                                     Expanded(
                                       child: Column(
                                         children: [
-                                          Text('32', style: valueStyle),
+                                          Text(
+                                              '${createFundsRaiseData?.viewsCount.toString()}',
+                                              style: valueStyle),
                                           const SizedBox(height: 4),
                                           Text('Views', style: labelStyle),
                                         ],
@@ -205,7 +215,9 @@ class PostDetailsScreen extends StatelessWidget {
                                     Expanded(
                                       child: Column(
                                         children: [
-                                          Text('4', style: valueStyle),
+                                          Text(
+                                              '${createFundsRaiseData?.interestedCount.toString()}',
+                                              style: valueStyle),
                                           const SizedBox(height: 4),
                                           Text('Interested', style: labelStyle),
                                         ],
@@ -219,7 +231,9 @@ class PostDetailsScreen extends StatelessWidget {
                                     Expanded(
                                       child: Column(
                                         children: [
-                                          Text('2', style: valueStyle),
+                                          Text(
+                                              '${createFundsRaiseData?.connectionsCount.toString()}',
+                                              style: valueStyle),
                                           const SizedBox(height: 4),
                                           Text('Connections',
                                               style: labelStyle),
@@ -253,24 +267,26 @@ class PostDetailsScreen extends StatelessWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text('₹75L', style: valueStyle),
+                                          Text(
+                                              '₹ ${createFundsRaiseData?.fundingGoal.toString()}',
+                                              style: valueStyle),
                                           const SizedBox(height: 6),
                                           Text('Funding Goal',
                                               style: labelStyle),
                                         ],
                                       ),
                                     ),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text('1–3 Mo', style: valueStyle),
-                                          const SizedBox(height: 6),
-                                          Text('Timeline', style: labelStyle),
-                                        ],
-                                      ),
-                                    )
+                                    // Expanded(
+                                    //   child: Column(
+                                    //     crossAxisAlignment:
+                                    //         CrossAxisAlignment.start,
+                                    //     children: [
+                                    //       Text('1–3 Mo', style: valueStyle),
+                                    //       const SizedBox(height: 6),
+                                    //       Text('Timeline', style: labelStyle),
+                                    //     ],
+                                    //   ),
+                                    // )
                                   ],
                                 ),
                                 const SizedBox(height: 22),
@@ -281,7 +297,9 @@ class PostDetailsScreen extends StatelessWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text('Seed', style: valueStyle),
+                                          Text(
+                                              '${createFundsRaiseData?.stage.toString()}',
+                                              style: valueStyle),
                                           const SizedBox(height: 6),
                                           Text('Stage', style: labelStyle),
                                         ],
@@ -292,7 +310,7 @@ class PostDetailsScreen extends StatelessWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text('Equity', style: valueStyle),
+                                          Text('${createFundsRaiseData?.useOfFunds.toString()}', style: valueStyle),
                                           const SizedBox(height: 6),
                                           Text('Funding Type',
                                               style: labelStyle),

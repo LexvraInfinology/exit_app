@@ -14,7 +14,6 @@ import '../../constants/app_images.dart';
 class CreateFundsRequestScreen extends StatelessWidget {
   int selectedPurpose = 1;
   int selectedInvestor = 1;
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
@@ -42,10 +41,10 @@ class CreateFundsRequestScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           'Create Funding Request',
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
                             fontSize: 17,
                             fontWeight: FontWeight.w600,

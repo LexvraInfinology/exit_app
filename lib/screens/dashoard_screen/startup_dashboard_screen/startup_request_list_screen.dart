@@ -123,7 +123,8 @@ class StartUpRequestListScreen extends StatelessWidget{
             const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
-                  itemCount: 5,
+                  itemCount: fundingController.createFundsList.length,
+                  shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return Container(
                       margin: const EdgeInsets.symmetric(
@@ -158,7 +159,7 @@ class StartUpRequestListScreen extends StatelessWidget{
                                   color: const Color(0xFFDCE9ED),
                                   borderRadius: BorderRadius.circular(9),
                                 ),
-                                child: Center(
+                                child: const Center(
                                   child: Icon(
                                     Icons.business_center_outlined,
                                     size: 22,
@@ -176,12 +177,17 @@ class StartUpRequestListScreen extends StatelessWidget{
                                   children: [
                                     Row(
                                       children: [
-                                        Text(
-                                          'NovaNest',
-                                          style: GoogleFonts.montserrat(
-                                            color: AppColors.whiteColor,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
+                                        Expanded(
+                                          child: Text(
+                                            fundingController
+                                                .createFundsList[index]
+                                                .companyName
+                                                .toString(),
+                                            style: GoogleFonts.montserrat(
+                                              color: AppColors.whiteColor,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                           ),
                                         ),
                                         const SizedBox(width: 10),
@@ -209,7 +215,7 @@ class StartUpRequestListScreen extends StatelessWidget{
                                     ),
                                     const SizedBox(height: 3),
                                     Text(
-                                      'FinTech • Seed • Bengaluru',
+                                      '${fundingController.createFundsList[index].stage} . ${fundingController.createFundsList[index].location}',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.montserrat(
@@ -234,9 +240,11 @@ class StartUpRequestListScreen extends StatelessWidget{
                                 ),
                                 onSelected: (value) {
                                   if (value == 'edit') {
-                                    fundingController.editPostOrDeletePost(index,'FundRaise','edit');
+                                    fundingController.editPostOrDeletePost(
+                                        index, 'FundRaise', 'edit');
                                   } else if (value == 'delete') {
-                                    fundingController.editPostOrDeletePost(index,'SellCompany','delete');
+                                    fundingController.editPostOrDeletePost(
+                                        index, 'SellCompany', 'delete');
                                   }
                                 },
                                 itemBuilder: (context) => [
@@ -291,7 +299,7 @@ class StartUpRequestListScreen extends StatelessWidget{
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '₹75L',
+                                      '₹${fundingController.createFundsList[index].fundingGoal}',
                                       style: GoogleFonts.montserrat(
                                         color: AppColors.whiteColor,
                                         fontSize: 16,
@@ -310,37 +318,13 @@ class StartUpRequestListScreen extends StatelessWidget{
                                     ),
                                   ],
                                 )),
+
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '1–3 Mo',
-                                    style: GoogleFonts.montserrat(
-                                      color: AppColors.whiteColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Timeline',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.montserrat(
-                                      color: AppColors.darkGreyColor,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Seed',
+                                    fundingController.createFundsList[index].stage.toString(),
                                     style: GoogleFonts.montserrat(
                                       color: AppColors.whiteColor,
                                       fontSize: 16,
@@ -376,7 +360,7 @@ class StartUpRequestListScreen extends StatelessWidget{
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                '32',
+                                fundingController.createFundsList[index].viewsCount.toString(),
                                 style: GoogleFonts.montserrat(
                                     color: AppColors.whiteColor,
                                     fontSize: 12,
@@ -398,7 +382,7 @@ class StartUpRequestListScreen extends StatelessWidget{
                               ),
                               const SizedBox(width: 5),
                               Text(
-                                '4',
+                                fundingController.createFundsList[index].interestedCount.toString(),
                                 style: GoogleFonts.montserrat(
                                     color: AppColors.whiteColor,
                                     fontSize: 12,

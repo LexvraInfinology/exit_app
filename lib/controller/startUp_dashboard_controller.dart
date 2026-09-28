@@ -17,6 +17,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/create_fund_model_class.dart';
 import '../screens/boost_profile_screen.dart';
 import '../screens/chat_details_screen.dart';
 import '../screens/dashoard_screen/founder_dashboard/investor_details_screen.dart';
@@ -48,6 +49,10 @@ class StartUpDashBoardController extends GetxController {
   final RxList<Results> investorList = <Results>[].obs;
   final RxList<ResultsProfile> resultProfile = <ResultsProfile>[].obs;
   final RxList<ConversationItem> chats = <ConversationItem>[].obs;
+  final RxList<CreateFundsRaiseData> createFundsList =
+      <CreateFundsRaiseData>[].obs;
+  CreateFundsRaiseData createFundsRaiseData = new CreateFundsRaiseData();
+
 
   @override
   void onInit() {
@@ -62,6 +67,7 @@ class StartUpDashBoardController extends GetxController {
     await getChatListApi();
     await getInvestorListApi();
     await getuserProfileApi(prefs.getString('id').toString());
+    await getCreateFundsRaiseListApi();
     isLoading.value = false;
     update();
   }
@@ -126,7 +132,7 @@ class StartUpDashBoardController extends GetxController {
   }
 
   void clickPostDetails() {
-    Get.to(() => PostDetailsScreen());
+    Get.to(() => PostDetailsScreen(createFundsRaiseData));
   }
 
   void clickChatItem() {
@@ -750,4 +756,25 @@ class StartUpDashBoardController extends GetxController {
       Get.snackbar('Error', 'Something went wrong. Please try again.');
     }
   }
+
+  Future<void> getCreateFundsRaiseListApi() async {
+    try {
+      isLoading.value = true;
+      final CreateFundRaiseModel? response =
+      await apiServices.getCreateFundsRaiseApi();
+
+      if (response?.statusCode == 200) {
+        if (response?.data != null) {
+          createFundsList.value = response?.data?.results ?? [];
+        }
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    }
+  }
+
 }

@@ -176,15 +176,17 @@ class FundingRequestListScreen extends StatelessWidget {
                                   children: [
                                     Row(
                                       children: [
-                                        Text(
-                                          fundingController
-                                              .createFundsList[index]
-                                              .companyName
-                                              .toString(),
-                                          style: GoogleFonts.montserrat(
-                                            color: AppColors.whiteColor,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
+                                        Expanded(
+                                          child: Text(
+                                            fundingController
+                                                .createFundsList[index]
+                                                .companyName
+                                                .toString(),
+                                            style: GoogleFonts.montserrat(
+                                              color: AppColors.whiteColor,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                           ),
                                         ),
                                         const SizedBox(width: 10),
@@ -396,7 +398,7 @@ class FundingRequestListScreen extends StatelessWidget {
                               const Spacer(),
                               GestureDetector(
                                 onTap: () {
-                                  fundingController.clickPostDetails();
+                                  fundingController.clickPostDetails(fundingController.createFundsList[index]);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),

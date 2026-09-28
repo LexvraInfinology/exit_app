@@ -47,12 +47,12 @@ class FounderDashboardController extends GetxController {
   final RxList<Results> investorList = <Results>[].obs;
   final RxList<ResultsProfile> resultProfile = <ResultsProfile>[].obs;
   final RxList<ConversationItem> chats = <ConversationItem>[].obs;
-  final RxList<CreateFundsRaiseData> createFundsList = <CreateFundsRaiseData>[].obs;
+  final RxList<CreateFundsRaiseData> createFundsList =
+      <CreateFundsRaiseData>[].obs;
 
   @override
   void onInit() {
     super.onInit();
-
     loadHomePage();
   }
 
@@ -113,8 +113,8 @@ class FounderDashboardController extends GetxController {
   void onViewPlan() {}
 
   void InvestorDetails(Results result) {
-    if(currentUserId != null){
-      Get.to(() => InvestorDetailsScreen(result,currentUserId));
+    if (currentUserId != null) {
+      Get.to(() => InvestorDetailsScreen(result, currentUserId));
     }
   }
 
@@ -126,8 +126,9 @@ class FounderDashboardController extends GetxController {
     Get.to(() => EditProfileScreen(isFounder: true, profile: result));
   }
 
-  void clickPostDetails() {
-    Get.to(() => PostDetailsScreen());
+  void clickPostDetails(CreateFundsRaiseData createFundsData) {
+    Get.to(() => PostDetailsScreen(createFundsData));
+    update();
   }
 
   void clickChatItem() {
@@ -750,15 +751,16 @@ class FounderDashboardController extends GetxController {
       Get.snackbar('Error', 'Something went wrong. Please try again.');
     }
   }
+
   Future<void> getCreateFundsRaiseListApi() async {
     try {
       isLoading.value = true;
-      final CreateFundRaiseModel? response = await apiServices.getCreateFundsRaiseApi();
+      final CreateFundRaiseModel? response =
+          await apiServices.getCreateFundsRaiseApi();
 
       if (response?.statusCode == 200) {
-        if(response?.data!=null){
-          createFundsList.value=response?.data?.results??[];
-
+        if (response?.data != null) {
+          createFundsList.value = response?.data?.results ?? [];
         }
       } else {
         Get.snackbar(
