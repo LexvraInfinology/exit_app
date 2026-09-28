@@ -34,4 +34,5 @@ class ApiUtils{
   static const String portfolio = '$baseUrl/investor/portfolio/';
   static const String saveFounderApi = '$baseUrl/profiles/saved-founders/';
   static const String fundsRaiseListApi = '$baseUrl/marketplace/funding-requests/';
+  static const String panVerificationApi = '${baseUrl}/profiles/pan-verification/';
 }

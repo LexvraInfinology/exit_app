@@ -1,4 +1,11 @@
+import 'dart:io';
+
+import 'package:exit_app/api_utils/api_services.dart';
+import 'package:exit_app/models/kyc_response_model.dart';
 import 'package:exit_app/screens/card_details_enter_screen.dart';
+import 'package:exit_app/screens/dashoard_screen/founder_dashboard/founder_dashboard_screen.dart';
+import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/investor_dashboard_screen.dart';
+import 'package:exit_app/screens/dashoard_screen/startup_dashboard_screen/startup_dashboard_screen.dart';
 import 'package:exit_app/screens/kyc_screens/choose_card_pattern_type_screen.dart';
 import 'package:exit_app/screens/kyc_screens/identity_verification_screen.dart';
 import 'package:exit_app/screens/kyc_screens/kyc_identity_screen.dart';
@@ -7,6 +14,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/app_color.dart';
 import '../constants/app_images.dart';
@@ -14,6 +23,200 @@ import '../constants/app_images.dart';
 RxInt currentStep = 0.obs;
 
 class KYCController extends GetxController {
+
+  final ApiServices apiServices = ApiServices();
+  final SharedPreferences prefs = Get.find<SharedPreferences>();
+  final ImagePicker _picker = ImagePicker();
+
+  // ---- Form fields ----
+  final TextEditingController panNumberController = TextEditingController();
+  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController dobController = TextEditingController();
+
+  File? panImage;
+  DateTime? selectedDob;
+  bool isLoading = false;
+  bool isVerified = false;
+  String? errorMessage;
+
+  @override
+  void onClose() {
+    panNumberController.dispose();
+    fullNameController.dispose();
+    dobController.dispose();
+    super.onClose();
+  }
+
+  Future<void> pickImage({
+    required bool fromCamera,
+  }) async {
+    try {
+      final XFile? picked = await _picker.pickImage(
+        source: fromCamera
+            ? ImageSource.camera
+            : ImageSource.gallery,
+        imageQuality: 80,
+      );
+
+      if (picked == null) return;
+
+      panImage = File(picked.path);
+      errorMessage = null;
+
+      update();
+    } catch (e, stackTrace) {
+      debugPrint('Pick PAN image error: $e');
+      debugPrintStack(stackTrace: stackTrace);
+
+      _showError(
+        fromCamera
+            ? 'Could not open camera'
+            : 'Could not select image',
+      );
+    }
+  }
+  void removeImage() {
+    panImage = null;
+    update();
+  }
+
+  Future<void> pickDateOfBirth(BuildContext context) async {
+    final now = DateTime.now();
+
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDob ?? DateTime(now.year - 25),
+      firstDate: DateTime(1940),
+      lastDate: now,
+    );
+
+    if (picked == null) return;
+
+    selectedDob = picked;
+    // yyyy-MM-dd — change if your backend expects another format
+    dobController.text =
+    '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
+    update();
+  }
+
+  bool _validate() {
+    final pan = panNumberController.text.trim().toUpperCase();
+    final fullName = fullNameController.text.trim();
+    final dateOfBirth = dobController.text.trim();
+
+    // At least image OR PAN text details required
+    final hasImage = panImage != null;
+    final hasTextData =
+        pan.isNotEmpty || fullName.isNotEmpty || dateOfBirth.isNotEmpty;
+
+    if (!hasImage && !hasTextData) {
+      _showError(
+        'Please upload your PAN card image or enter PAN details',
+      );
+      return false;
+    }
+
+    // If PAN number is entered, validate it
+    if (pan.isNotEmpty &&
+        !RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]$').hasMatch(pan)) {
+      _showError(
+        'Enter a valid PAN number (e.g. ABCDE1234F)',
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<void> verifyPan() async {
+    if (isLoading) return;
+
+    if (!_validate()) return;
+
+    try {
+      isLoading = true;
+      errorMessage = null;
+      update();
+
+      final pan = panNumberController.text.trim().toUpperCase();
+      final fullName = fullNameController.text.trim();
+      final dateOfBirth = dobController.text.trim();
+
+      final KycVerificationResponse? response =
+      await apiServices.submitKycDocumentApi(
+        image: panImage,
+        number: pan.isNotEmpty ? pan : null,
+        fullName: fullName.isNotEmpty ? fullName : null,
+        dateOfBirth: dateOfBirth.isNotEmpty ? dateOfBirth : null,
+      );
+
+      if (response == null) {
+        _showError(
+          'PAN uploading failed. Please try again.',
+        );
+        return;
+      }
+
+       KycVerificationResponse? data = response;
+
+      debugPrint("Status Code = ${data.statusCode}");
+
+      final isUploaded = data.statusCode == 200;
+
+      if (isUploaded) {
+        Get.snackbar(
+          panImage != null ? 'PAN Card':'PAN Card Details',
+          'Upload successfully',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+        );
+
+        final role = prefs.getString('role');
+
+        print('Saved Role = $role');
+        print('Token = ${prefs.getString('token')}');
+
+        if (prefs.getString('token') != null) {
+          if (role == 'investor') {
+            Get.to(() => InvestorDashBoardScreen());
+          } else if (role == 'founder') {
+            Get.to(() => FounderDashboardScreen());
+          } else {
+            Get.to(() => StartupDashboardScreen());
+          }
+        }
+      } else {
+        _showError(
+          response.message.isNotEmpty
+              ? response.message
+              : 'PAN could not be upload',
+        );
+      }
+    } catch (e, stackTrace) {
+      debugPrint('Verify PAN error: $e');
+      debugPrintStack(stackTrace: stackTrace);
+
+      _showError('Something went wrong');
+    } finally {
+      isLoading = false;
+      update();
+    }
+  }
+
+  void _showError(String message) {
+    errorMessage = message;
+    update();
+
+    Get.snackbar(
+      'PAN Verification',
+      message,
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.black,
+      colorText: Colors.white,
+    );
+  }
+
   void clickSubmitButton() {
     Get.to(KYCIdentityScreen());
   }
@@ -35,7 +238,7 @@ class KYCController extends GetxController {
   }
 
   void clickCaptureButton() {
-    Get.to(KYCIdentityScreen());
+    Get.to(const KYCIdentityScreen());
   }
 
   void clickNotNow() {
@@ -1052,6 +1255,9 @@ class KYCController extends GetxController {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
+            // =========================
+            // HEADER
+            // =========================
             Row(
               children: [
                 GestureDetector(
@@ -1076,259 +1282,332 @@ class KYCController extends GetxController {
                 ),
               ],
             ),
-            
+
             Expanded(
               child: SingleChildScrollView(
-                child: Column(children: [  const SizedBox(height: 32),
-                   Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Verify your identity',
-                      style: GoogleFonts.montserrat(
-                        color: AppColors.whiteColor,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.2,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 32),
+
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("Scan your PAN card",
+                        style: GoogleFonts.montserrat(
+                          color: AppColors.whiteColor,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.2,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 11),
-                   Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Place your PAN card inside the frame. Make sure the card is clearly visible and all details are readable.',
-                      style: GoogleFonts.montserrat(
-                        color: AppColors.darkGreyColor,
-                        fontSize: 12.5,
-                        height: 1.35,
-                        fontWeight: FontWeight.w400,
+
+                    const SizedBox(height: 11),
+
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Place your PAN card inside the frame. Make sure the card is clearly visible and all details are readable.',
+                        style: GoogleFonts.montserrat(
+                          color: AppColors.darkGreyColor,
+                          fontSize: 12.5,
+                          height: 1.35,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 21),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.darkGreyColor, width: 1),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
+
+                    const SizedBox(height: 21),
+
+                    // =========================
+                    // IMAGE / CAMERA CARD
+                    // =========================
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: AppColors.darkGreyColor,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          if (panImage == null) ...[
+                            // =========================
+                            // CAMERA MODE
+                            // =========================
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: AppColors.darkGreyColor,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: const Row(
+                                    children: [
+                                      Icon(
+                                        Icons.flash_on,
+                                        size: 22,
+                                        color: AppColors.whiteColor,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Flash',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 14,
+                                          color: AppColors.whiteColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 30),
+
                             Container(
-                              padding:
-                              EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                              height: 400,
+                              width: double.infinity,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                      color: AppColors.darkGreyColor, width: 1)),
-                              child: const Row(
-                                children: [
-                                  Icon(
-                                    Icons.flash_on,
-                                    size: 22,
+                                border: Border.all(
+                                  color: AppColors.darkGreyColor,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.camera_alt_outlined,
+                                  size: 50,
+                                  color: AppColors.darkGreyColor,
+                                ),
+                              ),
+                            ),
+                          ] else ...[
+                            // =========================
+                            // CAPTURED IMAGE
+                            // =========================
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.file(
+                                panImage!,
+                                width: double.infinity,
+                                height: 400,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+
+                            const SizedBox(height: 15),
+
+                            // Retake button
+                            SizedBox(
+                              width: double.infinity,
+                              height: 45,
+                              child: OutlinedButton.icon(
+                                onPressed: () async {
+                                  await pickImage(
+                                    fromCamera: true,
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.camera_alt_outlined,
+                                  color: AppColors.whiteColor,
+                                ),
+                                label: const Text(
+                                  'Retake',
+                                  style: TextStyle(
                                     color: AppColors.whiteColor,
+                                    fontSize: 14,
                                   ),
-                                  SizedBox(
-                                    width: 8,
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                  side: const BorderSide(
+                                    color: AppColors.darkGreyColor,
                                   ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // =========================
+                    // TIPS
+                    // =========================
+                    if (panImage == null)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: AppColors.darkGreyColor,
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  const Icon(
+                                    Icons.ac_unit,
+                                    size: 24,
+                                    color: AppColors.darkGreyColor,
+                                  ),
+                                  const SizedBox(height: 10),
                                   Text(
-                                    'Flash',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14,
-                                        color: AppColors.whiteColor),
-                                  )
+                                    'Keep the card flat',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.darkGreyColor,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
+
+                            const SizedBox(width: 10),
+
                             Container(
-                              padding:
-                              EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                      color: AppColors.darkGreyColor, width: 1)),
-                              child: const Row(
+                              color: AppColors.darkGreyColor,
+                              height: 70,
+                              width: 1,
+                            ),
+
+                            const SizedBox(width: 10),
+
+                            Expanded(
+                              child: Column(
                                 children: [
-                                  Icon(
-                                    Icons.picture_in_picture,
-                                    size: 22,
-                                    color: AppColors.whiteColor,
+                                  const Icon(
+                                    Icons.sunny,
+                                    size: 24,
+                                    color: AppColors.darkGreyColor,
                                   ),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
+                                  const SizedBox(height: 10),
                                   Text(
-                                    'Gallery',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 14,
-                                        color: AppColors.whiteColor),
-                                  )
+                                    'Avoid glare or shadows',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.darkGreyColor,
+                                    ),
+                                  ),
                                 ],
                               ),
-                            )
+                            ),
+
+                            const SizedBox(width: 10),
+
+                            Container(
+                              color: AppColors.darkGreyColor,
+                              height: 70,
+                              width: 1,
+                            ),
+
+                            const SizedBox(width: 10),
+
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  const Icon(
+                                    Icons.remove_red_eye,
+                                    size: 24,
+                                    color: AppColors.darkGreyColor,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'Make sure all details are visible',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.darkGreyColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Container(
-                          height: 2000,
-                          width: MediaQuery.sizeOf(context).width,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: AppColors.darkGreyColor, width: 1),
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: AppColors.darkGreyColor, width: 1)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.ac_unit,
-                                size: 24,
-                                color: AppColors.darkGreyColor,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                'Keep the card flat',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.darkGreyColor),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(color: AppColors.darkGreyColor),
-                          height: 70,
-                          width: 1,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.sunny,
-                                size: 24,
-                                color: AppColors.darkGreyColor,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                'Avoid glare or shadows',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.darkGreyColor),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(color: AppColors.darkGreyColor),
-                          height: 70,
-                          width: 1,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.remove_red_eye,
-                                size: 24,
-                                color: AppColors.darkGreyColor,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                'Make sure all details are visible',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.darkGreyColor),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width,
-                    height: 59,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        clickSubmitButton();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        disabledBackgroundColor: const Color(0xFF252527),
-                        foregroundColor: Colors.black,
-                        disabledForegroundColor: const Color(0xFF66666A),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(17),
-                        ),
                       ),
-                      child: const Text(
-                        'Capture',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
+
+                    const SizedBox(height: 40),
+
+                    // =========================
+                    // BUTTON
+                    // =========================
+                    SizedBox(
+                      width: double.infinity,
+                      height: 59,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (panImage == null) {
+                            // Open camera
+                            await pickImage(
+                              fromCamera: true,
+                            );
+                          } else {
+                            // Submit captured image
+                            await verifyPan();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          disabledBackgroundColor:
+                          const Color(0xFF252527),
+                          foregroundColor: Colors.black,
+                          disabledForegroundColor:
+                          const Color(0xFF66666A),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(17),
+                          ),
+                        ),
+                        child: Text(
+                          panImage == null ? 'Capture' : 'Submit',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ),
-                  ),],),
+
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
-            )
-          
+            ),
           ],
         ),
       ),
@@ -1342,6 +1621,9 @@ class KYCController extends GetxController {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
+            // =========================
+            // HEADER
+            // =========================
             Row(
               children: [
                 GestureDetector(
@@ -1366,170 +1648,308 @@ class KYCController extends GetxController {
                 ),
               ],
             ),
+
             const SizedBox(height: 32),
-            const Align(
+
+            // =========================
+            // TITLE
+            // =========================
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'Upload your PAN Card',
-                style: TextStyle(
-                  color: Colors.white,
+                style: GoogleFonts.montserrat(
+                  color: AppColors.whiteColor,
                   fontSize: 17,
                   fontWeight: FontWeight.w600,
                   letterSpacing: -0.2,
                 ),
               ),
             ),
+
             const SizedBox(height: 11),
-            const Align(
+
+            // =========================
+            // DESCRIPTION
+            // =========================
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'Upload a clear image of the front side of your PAN card. All details must be clearly visible.',
-                style: TextStyle(
-                  color: Color(0xFF858589),
+                style: GoogleFonts.montserrat(
+                  color: const Color(0xFF858589),
                   fontSize: 12.5,
                   height: 1.35,
                   fontWeight: FontWeight.w400,
                 ),
               ),
             ),
+
             const SizedBox(height: 21),
+
+            // =========================
+            // UPLOAD / IMAGE PREVIEW
+            // =========================
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              width: double.infinity,
+              height: 230,
               decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.darkGreyColor, width: 1),
-                  borderRadius: BorderRadius.circular(10)),
-              child: Column(
-                children: [
-                  Column(
+                color: const Color(0xFF1B1B1B),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: const Color(0xFF333333),
+                  width: 1,
+                ),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: panImage == null
+                    ? GestureDetector(
+                  onTap: () async {
+                    await pickImage(
+                      fromCamera: false,
+                    );
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // Upload icon
                       Container(
-                        child: Icon(
-                          Icons.drive_folder_upload,
-                          size: 32,
+                        width: 70,
+                        height: 70,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF101010),
+                          shape: BoxShape.circle,
                         ),
-                      )
+                        child: const Icon(
+                          Icons.cloud_upload_outlined,
+                          color: Colors.white,
+                          size: 34,
+                        ),
+                      ),
+
+                      const SizedBox(height: 25),
+
+                      const Text(
+                        'Tap to upload PAN card',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+
+                      const SizedBox(height: 22),
+
+                      const Text(
+                        'JPG, PNG or PDF · Max size 5MB',
+                        style: TextStyle(
+                          color: Color(0xFF858589),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
                     ],
-                  )
-                ],
+                  ),
+                )
+                    : Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // =========================
+                    // IMAGE
+                    // =========================
+                    Image.file(
+                      panImage!,
+                      fit: BoxFit.cover,
+                    ),
+
+                    // =========================
+                    // DARK OVERLAY
+                    // =========================
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black.withValues(alpha: 0.25),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // =========================
+                    // CHANGE IMAGE
+                    // =========================
+                    Positioned(
+                      top: 12,
+                      right: 12,
+                      child: GestureDetector(
+                        onTap: () async {
+                          await pickImage(
+                            fromCamera: false,
+                          );
+                        },
+                        child: Container(
+                          width: 42,
+                          height: 42,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withValues(
+                              alpha: 0.70,
+                            ),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.edit_outlined,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+
+            const SizedBox(height: 20),
+
+            // =========================
+            // TIPS
+            // =========================
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 10,
+              ),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppColors.darkGreyColor, width: 1)),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: AppColors.darkGreyColor,
+                  width: 1,
+                ),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // CARD FLAT
                   Expanded(
                     child: Column(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.ac_unit,
                           size: 24,
                           color: AppColors.darkGreyColor,
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 10),
                         Text(
                           'Keep the card flat',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.montserrat(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.darkGreyColor),
-                        )
+                            fontSize: 10,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.darkGreyColor,
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
+
+                  const SizedBox(width: 10),
+
                   Container(
-                    decoration: BoxDecoration(color: AppColors.darkGreyColor),
+                    color: AppColors.darkGreyColor,
                     height: 70,
                     width: 1,
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
+
+                  const SizedBox(width: 10),
+
+                  // AVOID GLARE
                   Expanded(
                     child: Column(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.sunny,
                           size: 24,
                           color: AppColors.darkGreyColor,
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 10),
                         Text(
                           'Avoid glare or shadows',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.montserrat(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.darkGreyColor),
-                        )
+                            fontSize: 10,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.darkGreyColor,
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
+
+                  const SizedBox(width: 10),
+
                   Container(
-                    decoration: BoxDecoration(color: AppColors.darkGreyColor),
+                    color: AppColors.darkGreyColor,
                     height: 70,
                     width: 1,
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
+
+                  const SizedBox(width: 10),
+
+                  // DETAILS VISIBLE
                   Expanded(
                     child: Column(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.remove_red_eye,
                           size: 24,
                           color: AppColors.darkGreyColor,
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 10),
                         Text(
                           'Make sure all details are visible',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.montserrat(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.darkGreyColor),
-                        )
+                            fontSize: 10,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.darkGreyColor,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(
-              height: 40,
-            ),
+
+            const Spacer(),
+
+            // =========================
+            // BUTTON
+            // =========================
             SizedBox(
-              width: MediaQuery.sizeOf(context).width,
+              width: double.infinity,
               height: 59,
               child: ElevatedButton(
-                onPressed: () {
-                  clickCaptureButton();
+                onPressed: () async {
+                  if (panImage == null) {
+                    await pickImage(
+                      fromCamera: false,
+                    );
+                  } else {
+                    await verifyPan();
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -1541,18 +1961,22 @@ class KYCController extends GetxController {
                     borderRadius: BorderRadius.circular(17),
                   ),
                 ),
-                child: const Text(
-                  'Capture',
-                  style: TextStyle(
+                child: Text(
+                  panImage == null ? 'Choose Image' : 'Submit',
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
             ),
+
+            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
+
 }
+

@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class KYCIdentityScreen extends StatelessWidget {
+  const KYCIdentityScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<KYCController>(builder: (controller) {

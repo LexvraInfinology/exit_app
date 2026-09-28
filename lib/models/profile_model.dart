@@ -64,6 +64,7 @@ class ResultsProfile {
   bool? isVerified;
   String? connectionStatus;
   bool? isSaved;
+  bool? isPrivate;
   String? profilePhoto;
   String? bio;
   String? experience;
@@ -86,6 +87,7 @@ class ResultsProfile {
         this.isVerified,
         this.connectionStatus,
         this.isSaved,
+        this.isPrivate,
         this.profilePhoto,
         this.bio,
         this.experience,
@@ -108,6 +110,7 @@ class ResultsProfile {
     isVerified = json['is_verified'];
     connectionStatus = json['connection_status'];
     isSaved = json['isSaved'];
+    isPrivate = json['isPrivate'];
     profilePhoto = json['profile_photo'];
     bio = json['bio'];
     experience = json['experience'];
@@ -132,6 +135,7 @@ class ResultsProfile {
     data['is_verified'] = this.isVerified;
     data['connection_status'] = this.connectionStatus;
     data['isSaved'] = this.isSaved;
+    data['isPrivate'] = this.isPrivate;
     data['profile_photo'] = this.profilePhoto;
     data['bio'] = this.bio;
     data['experience'] = this.experience;
