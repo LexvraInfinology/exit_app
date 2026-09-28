@@ -1,6 +1,8 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/controller/founder_dashboard_controller.dart';
+import 'package:exit_app/controller/kyc_controller.dart';
 import 'package:exit_app/screens/dashoard_screen/founder_dashboard/widgets/settings_row_widget.dart';
+import 'package:exit_app/screens/kyc_screens/kyc_identity_screen.dart';
 import 'package:exit_app/screens/notification_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -339,8 +341,10 @@ class FounderProfileScreen extends StatelessWidget {
                               ),
                             ),
                             Obx(
-                              () => GestureDetector(
-                                onTap: profileController.toggleVisibility,
+                                  () => GestureDetector(
+                                onTap: profileController.isUpdatingPrivacy.value
+                                    ? null
+                                    : profileController.toggleVisibility,
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 14,
@@ -355,22 +359,36 @@ class FounderProfileScreen extends StatelessWidget {
                                   ),
                                   child: Row(
                                     children: [
-                                      Text(
-                                        profileController.isPublic.value
-                                            ? 'Public'
-                                            : 'Private',
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xFFCCCCCC),
+                                      if (profileController.isUpdatingPrivacy.value)
+                                        const SizedBox(
+                                          width: 14,
+                                          height: 14,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 1.8,
+                                            color: Color(0xFFCCCCCC),
+                                          ),
+                                        )
+                                      else
+                                        Text(
+                                          profileController.isPrivate.value
+                                              ? 'Private'
+                                              : 'Public',
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: const Color(0xFFCCCCCC),
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 5),
-                                      const Icon(
-                                        Icons.keyboard_arrow_down_rounded,
-                                        size: 16,
-                                        color: Color(0xFF888888),
-                                      ),
+
+                                      if (!profileController.isUpdatingPrivacy.value)
+                                        const SizedBox(width: 5),
+
+                                      if (!profileController.isUpdatingPrivacy.value)
+                                        const Icon(
+                                          Icons.keyboard_arrow_down_rounded,
+                                          size: 16,
+                                          color: Color(0xFF888888),
+                                        ),
                                     ],
                                   ),
                                 ),
@@ -670,6 +688,19 @@ class FounderProfileScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(16)),
                         child: Column(
                           children: [
+                            GestureDetector(
+                              onTap: () {
+                                Get.isRegistered<KYCController>()
+                                    ? Get.find<KYCController>()
+                                    : Get.put(KYCController());
+                                Get.to(const KYCIdentityScreen());
+                              },
+                              child: SettingsRowWidget(
+                                  icon: Icons.notifications_none_rounded,
+                                  title: 'Kyc',
+                                  showArrow: true),
+                            ),
+                            const Divider(),
                             GestureDetector(
                               onTap: () {
                                 Get.to(const NotificationScreen());

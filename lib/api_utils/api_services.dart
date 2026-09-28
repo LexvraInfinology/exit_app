@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:exit_app/controller/kyc_controller.dart';
 import 'package:exit_app/models/chat_model.dart';
 import 'package:exit_app/models/connection_response.dart';
 import 'package:exit_app/models/conversation_response.dart';
@@ -8,6 +9,7 @@ import 'package:exit_app/models/create_fund_model_class.dart';
 import 'package:exit_app/models/create_profile_model.dart';
 import 'package:exit_app/models/founder_discovery_response.dart';
 import 'package:exit_app/models/get_plan_model.dart';
+import 'package:exit_app/models/kyc_response_model.dart';
 import 'package:exit_app/models/last_visited_response.dart';
 import 'package:exit_app/models/portfollio_response_model.dart';
 import 'package:exit_app/models/profile_model.dart';
@@ -1165,6 +1167,83 @@ class ApiServices {
     }
   }
 
+  Future<KycVerificationResponse?> submitKycDocumentApi({
+    File? image,
+    String? number,
+    String? fullName,
+    String? dateOfBirth, // yyyy-MM-dd
+  }) async {
+    final token = prefs.getString('token');
+    final Uri url = Uri.parse(ApiUtils.panVerificationApi);
+
+    try {
+      final request = http.MultipartRequest('POST', url)
+        ..headers.addAll({
+          "Accept": "application/json",
+          "Authorization": "token $token",
+        });
+
+      // =========================
+      // IMAGE MODE
+      // =========================
+      if (image != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'pan_image',
+            image.path,
+          ),
+        );
+      }
+
+      // =========================
+      // TEXT DATA MODE
+      // =========================
+      else {
+        if (number != null && number.isNotEmpty) {
+          request.fields['pan_number'] = number;
+        }
+
+        if (fullName != null && fullName.isNotEmpty) {
+          request.fields['full_name'] = fullName;
+        }
+
+        if (dateOfBirth != null && dateOfBirth.isNotEmpty) {
+          request.fields['date_of_birth'] = dateOfBirth;
+        }
+      }
+
+      debugPrint("API URL: $url");
+      debugPrint("Fields: ${request.fields}");
+      debugPrint("Files: ${request.files.length}");
+
+      final streamed = await request.send();
+      final response = await http.Response.fromStream(streamed);
+
+      debugPrint("Status Code: ${response.statusCode}");
+      debugPrint("Response Body: ${response.body}");
+
+      Map<String, dynamic> body = {};
+
+      try {
+        body = jsonDecode(response.body) as Map<String, dynamic>;
+      } catch (e) {
+        debugPrint("JSON Decode Error: $e");
+      }
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return KycVerificationResponse.fromJson(body);
+      }
+      debugPrint(
+        "KYC API Error: ${body['message']?.toString() ?? 'Unknown error'}",
+      );
+
+      return null;
+    } catch (e, stackTrace) {
+      debugPrint("KYC Submit Error: $e");
+      debugPrintStack(stackTrace: stackTrace);
+      return null;
+    }
+  }
+
 
   Future<CreateFundRaiseModel?> getCreateFundsRaiseApi() async {
     final token = prefs.getString('token');
@@ -1198,6 +1277,41 @@ class ApiServices {
       debugPrint("Get Portfolio Error: $e");
       debugPrintStack(stackTrace: stackTrace);
       return null;
+    }
+  }
+
+  Future<bool> updatePrivateAccountApi({
+    required bool isPrivate,
+  }) async {
+    final token = prefs.getString('token');
+
+    final Uri url = Uri.parse(ApiUtils.getUserProfile);
+
+    try {
+
+      debugPrint("isPrivate: $isPrivate");
+
+      final response = await http.patch(
+        url,
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "Authorization": "Token $token",
+        },
+        body: jsonEncode({
+          "isPrivate": isPrivate,
+        }),
+      );
+
+      debugPrint("Update Private API URL: $url");
+      debugPrint("Status Code: ${response.statusCode}");
+      debugPrint("Response: ${response.body}");
+
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e, stackTrace) {
+      debugPrint("Update Private API Error: $e");
+      debugPrintStack(stackTrace: stackTrace);
+      return false;
     }
   }
 

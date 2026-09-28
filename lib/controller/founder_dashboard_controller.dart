@@ -31,12 +31,13 @@ class FounderDashboardController extends GetxController {
   final selectedBottomIndex = 0.obs;
 
   RxInt selectedIndex = 0.obs;
-  final RxBool isPublic = true.obs;
+  final RxBool isPrivate = false.obs;
   int selectedFilter = 0;
   int selectedBottomNav = 1;
   RxInt selectedPostIndex = (-1).obs;
   var isLoading = false.obs;
   int? currentUserId;
+  final RxBool isUpdatingPrivacy = false.obs;
 
   final ApiServices apiServices = ApiServices();
   final SharedPreferences prefs = Get.find<SharedPreferences>();
@@ -66,6 +67,61 @@ class FounderDashboardController extends GetxController {
     isLoading.value = false;
     update();
   }
+
+  void toggleVisibility() {
+    final bool value = !isPrivate.value;
+    updatePrivateAccount(value);
+  }
+
+  Future<void> updatePrivateAccount(bool value) async {
+
+    if (isUpdatingPrivacy.value) {
+      debugPrint('❌ Already updating, returning...');
+      return;
+    }
+
+    try {
+      isUpdatingPrivacy.value = true;
+
+
+      final success = await apiServices.updatePrivateAccountApi(
+        isPrivate: value,
+      );
+
+      if (success) {
+        isPrivate.value = value;
+
+        debugPrint('✅ API SUCCESS');
+        debugPrint('isPrivate sent: $value');
+        
+        Get.snackbar(
+          'Success',
+          'Privacy settings updated successfully',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+        );
+      } else {
+        debugPrint('❌ API FAILED');
+        debugPrint('isPrivate sent: $value');
+
+        Get.snackbar(
+          'Error',
+          'Failed to update privacy settings',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e, stackTrace) {
+      debugPrint('❌ Update Private Account Error: $e');
+      debugPrintStack(stackTrace: stackTrace);
+    } finally {
+      isUpdatingPrivacy.value = false;
+      debugPrint('========== UPDATE FINISHED ==========');
+    }
+  }
+
 
   void onItemSelected(int index) {
     selectedIndex.value = index;
@@ -102,9 +158,7 @@ class FounderDashboardController extends GetxController {
     }
   }
 
-  void toggleVisibility() {
-    isPublic.value = !isPublic.value;
-  }
+
 
   void onRaiseCapital() {}
 
@@ -718,6 +772,7 @@ class FounderDashboardController extends GetxController {
 
       resultProfile.value = response?.data!.results ?? [];
       currentUserId = resultProfile.first.id;
+      isPrivate.value = resultProfile.first.isPrivate??false;
       print('click dat ${resultProfile.single.firstName}');
     } catch (e) {
       print('object ${e}');
