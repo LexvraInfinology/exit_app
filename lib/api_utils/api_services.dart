@@ -640,6 +640,151 @@ class ApiServices {
       return null;
     }
   }
+  Future<CreateFundRaiseModel?> createSellCompanyApi(
+      String fundingGoal,
+      String currency,
+      String stage,
+      String acquisition_type,
+      String companyName,
+      String companyLogo,
+      String industry,
+      String location,
+      String companyWebsite,
+      String companyDescription,
+      String raiseDescription,
+      String profitability,
+      String? pitchDeck,
+      ) async {
+    try {
+      final token = prefs.getString('token');
+
+      final Uri url = Uri.parse(ApiUtils.createFundsRaiseApi);
+
+      debugPrint('========== FUND RAISE API ==========');
+      debugPrint('URL: $url');
+      debugPrint('Funding Goal: $fundingGoal');
+      debugPrint('Currency: $currency');
+      debugPrint('Stage: $stage');
+      debugPrint('acquisition_type: $acquisition_type');
+      debugPrint('Company Name: $companyName');
+      debugPrint('Company Logo: $companyLogo');
+      debugPrint('Industry: $industry');
+      debugPrint('Location: $location');
+      debugPrint('Website: $companyWebsite');
+      debugPrint('Description: $companyDescription');
+      debugPrint('Raise Description: $raiseDescription');
+      debugPrint('profitability: $profitability');
+      debugPrint('Pitch Deck: $pitchDeck');
+      debugPrint('====================================');
+
+      final request = http.MultipartRequest(
+        'POST',
+        url,
+      );
+
+      request.headers.addAll({
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      });
+
+      request.fields.addAll({
+        "funding_goal": fundingGoal,
+        "currency": currency,
+        "company_stage": stage,
+        "acquisition_type": acquisition_type,
+        "company_name": companyName,
+        "industry": industry,
+        "location": location,
+        "company_website": companyWebsite,
+        // "company_description": companyDescription,
+        "raise_description": raiseDescription,
+        "profitability": profitability,
+      });
+
+      // Company logo
+      if (companyLogo.isNotEmpty) {
+        final logoFile = File(companyLogo);
+
+        debugPrint('Logo exists: ${logoFile.existsSync()}');
+
+        if (!logoFile.existsSync()) {
+          debugPrint('ERROR: Logo file does not exist: $companyLogo');
+          return null;
+        }
+
+        debugPrint(
+          'Logo size: ${logoFile.lengthSync()} bytes',
+        );
+
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            "company_logo",
+            companyLogo,
+          ),
+        );
+      }
+
+      // Pitch deck
+      // if (pitchDeck.isNotEmpty) {
+      //   final pitchFile = File(pitchDeck);
+      //
+      //   debugPrint('Pitch deck exists: ${pitchFile.existsSync()}');
+      //
+      //   if (!pitchFile.existsSync()) {
+      //     debugPrint('ERROR: Pitch deck does not exist: $pitchDeck');
+      //     return null;
+      //   }
+      //
+      //   request.files.add(
+      //     await http.MultipartFile.fromPath(
+      //       "pitch_deck",
+      //       pitchDeck,
+      //     ),
+      //   );
+      // }
+
+      debugPrint('Fields: ${request.fields}');
+      debugPrint(
+        'Files: ${request.files.map((e) => '${e.field}: ${e.filename}').toList()}',
+      );
+
+      debugPrint('Sending request...');
+
+      final streamedResponse = await request.send();
+
+      debugPrint(
+        'Response received: ${streamedResponse.statusCode}',
+      );
+
+      final response = await http.Response.fromStream(
+        streamedResponse,
+      );
+
+      debugPrint('Status Code: ${response.statusCode}');
+      debugPrint('Response Body: ${response.body}');
+
+      if (response.statusCode >= 200 &&
+          response.statusCode < 300) {
+        final Map<String, dynamic> jsonResponse =
+        jsonDecode(response.body);
+
+        return CreateFundRaiseModel.fromJson(jsonResponse);
+      }
+
+      debugPrint(
+        'API Error: ${response.statusCode} - ${response.body}',
+      );
+
+      return null;
+    } catch (e, stackTrace) {
+      debugPrint('Create Fund Raise Error: $e');
+      debugPrint('StackTrace: $stackTrace');
+      return null;
+    }
+  }
+
+
+
   // Investor Home Apis
   Future<NeedsAttentionResponse?> getNeedsAttentionApi({int? limit}) async {
     final token = prefs.getString('token');

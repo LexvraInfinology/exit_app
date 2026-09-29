@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:exit_app/screens/dashoard_screen/founder_dashboard/founder_dashboard_screen.dart';
 import 'package:exit_app/screens/kyc_screens/kyc_verified_screen.dart';
 import 'package:exit_app/screens/post_successfully_created_screen.dart';
 import 'package:file_picker/file_picker.dart';
@@ -258,6 +259,8 @@ class RaiseFundsRequestController extends GetxController {
           backgroundColor: AppColors.blackColor,
           colorText: AppColors.whiteColor,
         );
+
+        Get.offAll(() => FounderDashboardScreen());
       } else {
         isLoading.value = false;
         Get.snackbar(

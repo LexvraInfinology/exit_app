@@ -223,8 +223,8 @@ class StartUpDashBoardController extends GetxController {
     removedInvestorApi(investor_id);
   }
 
-  void clickViewInterestInvestors() {
-    Get.to(() => ViewInvestorActivityListScreen());
+  void clickViewInterestInvestors(List<InvestorActivity>  investorActivity) {
+    Get.to(() => ViewInvestorActivityListScreen(investorActivity));
   }
 
   void clickBoostProfile() {

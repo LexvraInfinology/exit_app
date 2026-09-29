@@ -1768,7 +1768,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(height: 18),
+                const SizedBox(height: 18),
 
                 // _buildUploadedFile(),
               ],
@@ -2828,16 +2828,5 @@ class CreateFundsRequestScreen extends StatelessWidget {
       ),
     );
   }
-}
 
-class _InvestorOption {
-  final IconData icon;
-  final String name;
-  final String subtitle;
-
-  const _InvestorOption({
-    required this.icon,
-    required this.name,
-    required this.subtitle,
-  });
 }

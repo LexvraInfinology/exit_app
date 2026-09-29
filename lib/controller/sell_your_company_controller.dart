@@ -6,12 +6,35 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../api_utils/api_services.dart';
+import '../constants/app_color.dart';
 import '../screens/post_successfully_created_screen.dart';
 
 class SellYourCompanyController extends GetxController {
 
-  final TextEditingController amountController =
+
+  var isLoading = false.obs;
+  final ApiServices apiServices = ApiServices();
+
+
+  final TextEditingController amountController = TextEditingController();
+  final TextEditingController companyNameController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController companyWebsiteController =
   TextEditingController();
+  final TextEditingController companyDescriptionController =
+  TextEditingController();
+  final TextEditingController raiseDescriptionController =
+  TextEditingController();
+
+  final RxString industry = 'FinTech'.obs;
+  final RxInt selectedStage = 0.obs;
+  final RxString selectedStageStringValue = ''.obs;
+
+  void changeIndustry(String value) {
+    industry.value = value;
+  }
+
   final TextEditingController revenueController =
   TextEditingController();
 
@@ -19,8 +42,11 @@ class SellYourCompanyController extends GetxController {
   final Rxn<File> selectedImage = Rxn<File>();
 
   final RxInt selectedAcquisition = (0).obs;
-  void selectAcquisition(int index) {
+  final RxString selectedStringAcquisition = ''.obs;
+  void selectAcquisition(int index,String acquisition_value) {
     selectedAcquisition.value = index;
+    selectedStringAcquisition.value = acquisition_value;
+    update();
   }
 
   final RxInt selectedPurpose = 0.obs;
@@ -32,17 +58,19 @@ class SellYourCompanyController extends GetxController {
   ];
 
 
-  final RxString industry = 'FinTech'.obs;
-  void changeIndustry(String value) {
-    industry.value = value;
-  }
-
   final RxString selectedProfitability = 'Profitable'.obs;
 
 
   void postSubmitButton(){
-    Get.to(() =>  PostSuccefullyCreatedScreen());
+    createSellCompanyApi();
   }
+  void selectStage(int index,String value) {
+    selectedStage.value = index + 1;
+    selectedStageStringValue.value = value;
+    print('object ${value}');
+    update();
+  }
+
 
   RxInt currentStep = 0.obs;
 
@@ -142,4 +170,67 @@ class SellYourCompanyController extends GetxController {
       print('PDF path: ${file.path}');
     }
   }
+
+  Future<void> createSellCompanyApi() async {
+    final funding_goal = amountController.value.text.trim();
+    final companyName = companyNameController.value.text.trim();
+    final location = locationController.value.text.trim();
+    final companyWebsite = companyWebsiteController.value.text.trim();
+    final companyDescription = companyDescriptionController.value.text.trim();
+    final raiseDescription = raiseDescriptionController.value.text.trim();
+    print('object===${companyNameController.value.text.trim()}');
+    try {
+      isLoading.value = true;
+      final response = await apiServices.createSellCompanyApi(
+          funding_goal.replaceAll(',', ''),
+          "INR",
+          (selectedStage.value + 1).toString(),
+          (selectedPurpose.value + 1).toString(),
+          companyName,
+          selectedImage.value!.path,
+          industry.value,
+          location,
+          companyWebsite,
+          companyDescription,
+          raiseDescription,
+          "",
+          "");
+      print("Status Code: ${response?.statusCode}");
+      print("Message: ${response?.message}");
+      if (response?.statusCode == 201) {
+        isLoading.value = false;
+        Get.snackbar(
+          'Success',
+          response?.message ?? 'Funds Raise successfully',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: AppColors.blackColor,
+          colorText: AppColors.whiteColor,
+        );
+        Get.to(() =>  PostSuccefullyCreatedScreen());
+
+      } else {
+        isLoading.value = false;
+        Get.snackbar(
+          'Funds raise Failed',
+          response?.message ?? 'Funds raise failed',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: AppColors.blackColor,
+          colorText: AppColors.whiteColor,
+        );
+      }
+    } catch (e) {
+      print('object ${e}');
+      isLoading.value = false;
+      Get.snackbar(
+        'Error',
+        'Something went wrong. Please try again.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.blackColor,
+        colorText: AppColors.whiteColor,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
 }

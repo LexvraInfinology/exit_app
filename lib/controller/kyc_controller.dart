@@ -1651,9 +1651,6 @@ class KYCController extends GetxController {
 
             const SizedBox(height: 32),
 
-            // =========================
-            // TITLE
-            // =========================
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -1669,9 +1666,6 @@ class KYCController extends GetxController {
 
             const SizedBox(height: 11),
 
-            // =========================
-            // DESCRIPTION
-            // =========================
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -1687,9 +1681,6 @@ class KYCController extends GetxController {
 
             const SizedBox(height: 21),
 
-            // =========================
-            // UPLOAD / IMAGE PREVIEW
-            // =========================
             Container(
               width: double.infinity,
               height: 230,
@@ -1755,17 +1746,11 @@ class KYCController extends GetxController {
                     : Stack(
                   fit: StackFit.expand,
                   children: [
-                    // =========================
-                    // IMAGE
-                    // =========================
                     Image.file(
                       panImage!,
                       fit: BoxFit.cover,
                     ),
 
-                    // =========================
-                    // DARK OVERLAY
-                    // =========================
                     Positioned.fill(
                       child: Container(
                         decoration: BoxDecoration(
@@ -1773,7 +1758,7 @@ class KYCController extends GetxController {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              Colors.black.withValues(alpha: 0.25),
+                              Colors.black.withOpacity(0.25),
                               Colors.transparent,
                             ],
                           ),
@@ -1781,9 +1766,6 @@ class KYCController extends GetxController {
                       ),
                     ),
 
-                    // =========================
-                    // CHANGE IMAGE
-                    // =========================
                     Positioned(
                       top: 12,
                       right: 12,
@@ -1797,9 +1779,7 @@ class KYCController extends GetxController {
                           width: 42,
                           height: 42,
                           decoration: BoxDecoration(
-                            color: Colors.black.withValues(
-                              alpha: 0.70,
-                            ),
+                            color: Colors.black.withOpacity(0.70),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(

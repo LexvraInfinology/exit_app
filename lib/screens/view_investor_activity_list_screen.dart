@@ -1,5 +1,6 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/controller/founder_dashboard_controller.dart';
+import 'package:exit_app/models/create_fund_model_class.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_images.dart';
 
 class ViewInvestorActivityListScreen extends StatelessWidget {
+  List<InvestorActivity> investorActivity = <InvestorActivity>[];
+
+  ViewInvestorActivityListScreen(this.investorActivity, {super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<FounderDashboardController>(builder: (controller) {
@@ -34,8 +39,8 @@ class ViewInvestorActivityListScreen extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'Investor Visitor',
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: GoogleFonts.montserrat(
+                        color: AppColors.whiteColor,
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
                       ),
@@ -48,11 +53,11 @@ class ViewInvestorActivityListScreen extends StatelessWidget {
             ListView.builder(
                 physics: BouncingScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: 2,
+                itemCount: investorActivity.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    margin: EdgeInsets.symmetric(horizontal: 24,vertical: 10),
-                    padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10),
+                    margin: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
@@ -76,7 +81,9 @@ class ViewInvestorActivityListScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Northstar Ventures',
+                                    investorActivity![index]
+                                        .investorName
+                                        .toString(),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.montserrat(
@@ -84,8 +91,9 @@ class ViewInvestorActivityListScreen extends StatelessWidget {
                                         fontWeight: FontWeight.w600,
                                         color: AppColors.whiteColor),
                                   ),
+
                                   Text(
-                                    'VC Fund . Bengaluru',
+                                    '${investorActivity[index].fundType} . ${investorActivity[index].location}',
                                     style: GoogleFonts.montserrat(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400,
@@ -115,7 +123,6 @@ class ViewInvestorActivityListScreen extends StatelessWidget {
                             )
                           ],
                         ),
-
                       ],
                     ),
                   );

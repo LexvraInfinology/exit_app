@@ -416,8 +416,8 @@ class SellYourCompanyScreen extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            SizedBox(width: 4),
-                            Icon(
+                            const SizedBox(width: 4),
+                            const Icon(
                               Icons.keyboard_arrow_down,
                               size: 14,
                               color: Colors.white,
@@ -445,6 +445,8 @@ class SellYourCompanyScreen extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             controller.selectedAcquisition.value = 0;
+                            controller.selectedStringAcquisition.value =
+                                'full_acquisition';
                           },
                           child: Container(
                             height: 150,
@@ -497,6 +499,8 @@ class SellYourCompanyScreen extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () {
                             controller.selectedAcquisition.value = 1;
+                            controller.selectedStringAcquisition.value =
+                                'partial_acquisition';
                           },
                           child: Container(
                             height: 150,
@@ -662,24 +666,12 @@ class SellYourCompanyScreen extends StatelessWidget {
 
   Widget _buildCompany(
       BuildContext context, SellYourCompanyController controller) {
-    final TextEditingController companyNameController =
-        TextEditingController(text: 'NovaNest');
-
-    final TextEditingController locationController =
-        TextEditingController(text: 'Bengaluru, India');
-
-    final TextEditingController websiteController =
-        TextEditingController(text: 'www.novanest.com');
-
-    final TextEditingController descriptionController = TextEditingController();
-    String industry = 'FinTech';
-
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Row(
@@ -1061,7 +1053,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                   ),
                 ),
                 child: TextField(
-                  controller: companyNameController,
+                  controller: controller.companyNameController,
                   style: const TextStyle(
                     color: Color(0xFFE7E7E7),
                     fontSize: 15,
@@ -1107,12 +1099,12 @@ class SellYourCompanyScreen extends StatelessWidget {
                       value: controller.industry.value.isEmpty
                           ? null
                           : controller.industry.value,
-                      hint: const Text(
+                      hint: Text(
                         'Select Industry',
-                        style: TextStyle(
-                          color: Color(0xFF777777),
-                          fontSize: 15,
-                        ),
+                        style: GoogleFonts.montserrat(
+                            color: Color(0xFF777777),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500),
                       ),
                       isExpanded: true,
                       dropdownColor: const Color(0xFF171717),
@@ -1120,10 +1112,10 @@ class SellYourCompanyScreen extends StatelessWidget {
                         Icons.keyboard_arrow_down,
                         color: Color(0xFF777777),
                       ),
-                      style: const TextStyle(
-                        color: Color(0xFFE7E7E7),
-                        fontSize: 15,
-                      ),
+                      style: GoogleFonts.montserrat(
+                          color: Color(0xFFE7E7E7),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500),
                       items: const [
                         DropdownMenuItem(
                           value: 'FinTech',
@@ -1172,10 +1164,10 @@ class SellYourCompanyScreen extends StatelessWidget {
                   ),
                 ),
                 child: TextField(
-                  style: const TextStyle(
-                    color: Color(0xFFE7E7E7),
-                    fontSize: 15,
-                  ),
+                  style: GoogleFonts.montserrat(
+                      color: Color(0xFFE7E7E7),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500),
                   cursorColor: AppColors.whiteColor,
                   decoration: const InputDecoration(
                     contentPadding: EdgeInsets.symmetric(horizontal: 16),
@@ -1212,12 +1204,12 @@ class SellYourCompanyScreen extends StatelessWidget {
                   ),
                 ),
                 child: TextField(
-                  controller: locationController,
-                  style: const TextStyle(
-                    color: Color(0xFFE1E1E1),
-                    fontSize: 15,
-                  ),
-                  cursorColor: Colors.white,
+                  controller: controller.locationController,
+                  style: GoogleFonts.montserrat(
+                      color: Color(0xFFE1E1E1),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500),
+                  cursorColor: AppColors.whiteColor,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     prefixIcon: Icon(
@@ -1263,11 +1255,11 @@ class SellYourCompanyScreen extends StatelessWidget {
                   ),
                 ),
                 child: TextField(
-                  controller: websiteController,
-                  style: const TextStyle(
-                    color: Color(0xFFE1E1E1),
-                    fontSize: 15,
-                  ),
+                  controller: controller.companyWebsiteController,
+                  style: GoogleFonts.montserrat(
+                      color: Color(0xFFE1E1E1),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500),
                   cursorColor: Colors.white,
                   decoration: InputDecoration(
                     border: InputBorder.none,
@@ -1304,7 +1296,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                 child: Stack(
                   children: [
                     TextField(
-                      controller: descriptionController,
+                      controller: controller.companyDescriptionController,
                       maxLength: 250,
                       maxLines: 5,
                       style: GoogleFonts.montserrat(
@@ -1312,7 +1304,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                         fontSize: 14,
                         height: 1.5,
                       ),
-                      cursorColor: Colors.white,
+                      cursorColor: AppColors.whiteColor,
                       decoration: InputDecoration(
                         hintText:
                             'Tell investors what your company does in a\nfew sentences...',
@@ -1330,13 +1322,14 @@ class SellYourCompanyScreen extends StatelessWidget {
                       right: 12,
                       bottom: 7,
                       child: ValueListenableBuilder<TextEditingValue>(
-                        valueListenable: descriptionController,
+                        valueListenable:
+                            controller.companyDescriptionController,
                         builder: (_, value, __) {
                           return Text(
                             '${value.text.length}/250',
                             style: GoogleFonts.montserrat(
                               color: Color(0xFF777777),
-                              fontSize: 10,
+                              fontSize: 12,
                             ),
                           );
                         },
@@ -1384,8 +1377,6 @@ class SellYourCompanyScreen extends StatelessWidget {
 
   Widget _buildSnapshot(
       BuildContext context, SellYourCompanyController controller) {
-
-
     final TextEditingController detailsController = TextEditingController();
 
     return SingleChildScrollView(
@@ -1662,7 +1653,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                     const SizedBox(width: 12),
                     Expanded(
                       child: TextField(
-                        controller:controller. revenueController,
+                        controller: controller.revenueController,
                         onChanged: (value) {
                           final number = int.tryParse(
                             value.replaceAll(',', ''),
@@ -1676,11 +1667,11 @@ class SellYourCompanyScreen extends StatelessWidget {
                             if (formatted != value) {
                               controller.revenueController.value =
                                   TextEditingValue(
-                                    text: formatted,
-                                    selection: TextSelection.collapsed(
-                                      offset: formatted.length,
-                                    ),
-                                  );
+                                text: formatted,
+                                selection: TextSelection.collapsed(
+                                  offset: formatted.length,
+                                ),
+                              );
                             }
                           }
                         },
@@ -1690,7 +1681,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                           fontSize: 21,
                           fontWeight: FontWeight.w400,
                         ),
-                        cursorColor: Colors.white,
+                        cursorColor: AppColors.whiteColor,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: '12345678',
@@ -1829,7 +1820,6 @@ class SellYourCompanyScreen extends StatelessWidget {
     return Obx(
       () {
         final bool selected = controller.selectedProfitability.value == value;
-
         return GestureDetector(
           onTap: () {
             controller.selectedProfitability.value = value;
@@ -1837,13 +1827,14 @@ class SellYourCompanyScreen extends StatelessWidget {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 150),
             height: 58,
-            width: double.infinity,
+            width: MediaQuery.sizeOf(Get.context!).width,
             padding: const EdgeInsets.symmetric(horizontal: 17),
             decoration: BoxDecoration(
               color: const Color(0xFF111111),
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: selected ? Colors.white : const Color(0xFF2B2B2B),
+                color:
+                    selected ? AppColors.whiteColor : const Color(0xFF2B2B2B),
                 width: selected ? 2 : 1,
               ),
             ),
@@ -1851,12 +1842,12 @@ class SellYourCompanyScreen extends StatelessWidget {
               children: [
                 Text(
                   value,
-                  style: TextStyle(
+                  style: GoogleFonts.montserrat(
                     color: selected
                         ? const Color(0xFFEDEDED)
                         : const Color(0xFF888888),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 const Spacer(),
@@ -1866,9 +1857,11 @@ class SellYourCompanyScreen extends StatelessWidget {
                   height: 20,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: selected ? Colors.white : Colors.transparent,
+                    color: selected ? AppColors.whiteColor : Colors.transparent,
                     border: Border.all(
-                      color: selected ? Colors.white : const Color(0xFF333333),
+                      color: selected
+                          ? AppColors.whiteColor
+                          : const Color(0xFF333333),
                       width: 1,
                     ),
                   ),
@@ -1876,7 +1869,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                       ? const Icon(
                           Icons.check,
                           size: 14,
-                          color: Colors.black,
+                          color: AppColors.blackColor,
                         )
                       : null,
                 ),
@@ -2127,13 +2120,13 @@ class SellYourCompanyScreen extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           Container(
-            width: double.infinity,
+            width: MediaQuery.sizeOf(context).width,
             padding: const EdgeInsets.fromLTRB(24, 27, 24, 27),
             decoration: BoxDecoration(
               color: const Color(0xFF111111),
               borderRadius: BorderRadius.circular(15),
               border: Border.all(
-                color: Colors.white,
+                color: AppColors.whiteColor,
                 width: 1,
               ),
             ),
@@ -2148,10 +2141,11 @@ class SellYourCompanyScreen extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              const Text(
-                                'NovaNest',
-                                style: TextStyle(
-                                  color: Colors.white,
+                              Text(
+                                controller.companyNameController.text
+                                    .toString(),
+                                style: GoogleFonts.montserrat(
+                                  color: AppColors.whiteColor,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -2166,56 +2160,54 @@ class SellYourCompanyScreen extends StatelessWidget {
                                 ),
                                 child: const Icon(
                                   Icons.check,
-                                  color: Colors.black,
+                                  color: AppColors.blackColor,
                                   size: 10,
                                 ),
                               ),
                             ],
                           ),
                           const SizedBox(height: 10),
-                          const Text(
-                            'FinTech ·',
-                            style: TextStyle(
-                              color: Color(0xFF888888),
-                              fontSize: 14,
-                            ),
+                          Text(
+                            controller.industry.value,
+                            style: GoogleFonts.montserrat(
+                                color: AppColors.darkGreyColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
                           ),
                           const SizedBox(height: 2),
-                          const Text(
-                            'Bengaluru',
-                            style: TextStyle(
-                              color: Color(0xFF888888),
-                              fontSize: 14,
-                            ),
+                          Text(
+                            controller.locationController.toString(),
+                            style: GoogleFonts.montserrat(
+                                color: AppColors.darkGreyColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
                     ),
-
-                    Obx(()=> Container(
-                      width: 100,
-                      height: 100,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: AppColors.darkGreyColor,
-                          width: 1,
-                        ),
-                      ),
-                      child: controller.selectedImage.value != null
-                          ? Image.file(
-                        controller.selectedImage.value!,
-                        fit: BoxFit.cover,
-                      )
-                          : const Icon(
-                        Icons.image,
-                        size: 30,
-                      ),
-                    )),
+                    Obx(() => Container(
+                          width: 100,
+                          height: 100,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: AppColors.darkGreyColor,
+                              width: 1,
+                            ),
+                          ),
+                          child: controller.selectedImage.value != null
+                              ? Image.file(
+                                  controller.selectedImage.value!,
+                                  fit: BoxFit.cover,
+                                )
+                              : const Icon(
+                                  Icons.image,
+                                  size: 30,
+                                ),
+                        )),
                   ],
                 ),
-
                 const SizedBox(height: 29),
                 const Text(
                   '“Expanding into new markets while growing our product and sales team.”',
@@ -2297,7 +2289,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '₹2,50,00,000',
+                          controller.revenueController.text,
                           style: GoogleFonts.montserrat(
                             color: Color(0xFFEDEDED),
                             fontSize: 14,
@@ -2326,62 +2318,6 @@ class SellYourCompanyScreen extends StatelessWidget {
                         ),
                         Text(
                           'Full Acquisition',
-                          style: GoogleFonts.montserrat(
-                            color: Color(0xFFEDEDED),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Divider(),
-                SizedBox(
-                  height: 55,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Reason for Selling',
-                            style: GoogleFonts.montserrat(
-                              color: Color(0xFF777777),
-                              fontSize: 13,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          'Founder Exit',
-                          style: GoogleFonts.montserrat(
-                            color: Color(0xFFEDEDED),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Divider(),
-                SizedBox(
-                  height: 55,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Expected Timeline',
-                            style: GoogleFonts.montserrat(
-                              color: Color(0xFF777777),
-                              fontSize: 13,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          '1–3 Months',
                           style: GoogleFonts.montserrat(
                             color: Color(0xFFEDEDED),
                             fontSize: 14,
@@ -2432,7 +2368,7 @@ class SellYourCompanyScreen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Container(
@@ -2464,7 +2400,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '₹1,20,00,000',
+                          '₹ ${controller.revenueController}',
                           style: GoogleFonts.montserrat(
                             color: Color(0xFFEDEDED),
                             fontSize: 14,
@@ -2494,7 +2430,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Profitable',
+                          '${controller.selectedProfitability.value}',
                           style: GoogleFonts.montserrat(
                             color: Color(0xFFEDEDED),
                             fontSize: 14,
@@ -2534,7 +2470,7 @@ class SellYourCompanyScreen extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Padding(
@@ -2550,17 +2486,17 @@ class SellYourCompanyScreen extends StatelessWidget {
                       // List company for sale
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
+                      backgroundColor: AppColors.whiteColor,
+                      foregroundColor: AppColors.blackColor,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18),
                       ),
                     ),
-                    child: const Text(
+                    child:  Text(
                       'List Company For Sale',
-                      style: TextStyle(
-                        color: Colors.black,
+                      style: GoogleFonts.montserrat(
+                        color: AppColors.blackColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                       ),

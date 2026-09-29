@@ -216,6 +216,8 @@ class InvestorActivity {
   String? investorName;
   String? profilePhoto;
   String? investorRole;
+  String? fundType;
+  String? location;
   String? viewedAt;
 
   InvestorActivity(
@@ -224,6 +226,8 @@ class InvestorActivity {
       this.investorName,
       this.profilePhoto,
       this.investorRole,
+      this.fundType,
+      this.location,
       this.viewedAt});
 
   InvestorActivity.fromJson(Map<String, dynamic> json) {
@@ -232,6 +236,8 @@ class InvestorActivity {
     investorName = json['investor_name'];
     profilePhoto = json['profile_photo'];
     investorRole = json['investor_role'];
+    fundType = json['fund_type'];
+    location = json['location'];
     viewedAt = json['viewed_at'];
   }
 
@@ -242,6 +248,8 @@ class InvestorActivity {
     data['investor_name'] = this.investorName;
     data['profile_photo'] = this.profilePhoto;
     data['investor_role'] = this.investorRole;
+    data['fund_type'] = this.fundType;
+    data['location'] = this.location;
     data['viewed_at'] = this.viewedAt;
     return data;
   }

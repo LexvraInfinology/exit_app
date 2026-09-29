@@ -57,11 +57,11 @@ class PostDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         'Funding Details',
-                        style: TextStyle(
-                          color: Colors.white,
+                        style: GoogleFonts.montserrat(
+                          color: AppColors.whiteColor,
                           fontSize: 17,
                           fontWeight: FontWeight.w600,
                         ),
@@ -310,7 +310,9 @@ class PostDetailsScreen extends StatelessWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text('${createFundsRaiseData?.useOfFunds.toString()}', style: valueStyle),
+                                          Text(
+                                              '${createFundsRaiseData?.useOfFunds.toString()}',
+                                              style: valueStyle),
                                           const SizedBox(height: 6),
                                           Text('Funding Type',
                                               style: labelStyle),
@@ -348,7 +350,7 @@ class PostDetailsScreen extends StatelessWidget {
                                 style: sectionTitleStyle,
                               ),
                               Text(
-                                '4 investors interested',
+                                '${createFundsRaiseData?.interestedCount.toString()}  ${'investors interested'}',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.montserrat(
@@ -360,7 +362,7 @@ class PostDetailsScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 12),
                           Container(
-                            width: double.infinity,
+                            width: MediaQuery.sizeOf(context).width,
                             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                             decoration: cardDecoration,
                             child: Column(
@@ -369,7 +371,8 @@ class PostDetailsScreen extends StatelessWidget {
                                     physics:
                                         const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
-                                    itemCount: 3,
+                                    itemCount: createFundsRaiseData
+                                        ?.investorActivity?.length,
                                     itemBuilder: (context, index) {
                                       return Column(
                                         children: [
@@ -393,7 +396,11 @@ class PostDetailsScreen extends StatelessWidget {
                                                             .start,
                                                     children: [
                                                       Text(
-                                                        'Northstar Ventures',
+                                                        createFundsRaiseData!
+                                                            .investorActivity![
+                                                                index]
+                                                            .investorName
+                                                            .toString(),
                                                         maxLines: 1,
                                                         overflow: TextOverflow
                                                             .ellipsis,
@@ -408,7 +415,7 @@ class PostDetailsScreen extends StatelessWidget {
                                                       ),
                                                       const SizedBox(height: 2),
                                                       Text(
-                                                        'VC Fund · Bengaluru',
+                                                        '${createFundsRaiseData?.investorActivity![index].fundType.toString()} · ${createFundsRaiseData?.investorActivity![index].location.toString()}',
                                                         style: GoogleFonts
                                                             .montserrat(
                                                                 fontSize: 12,
@@ -470,7 +477,9 @@ class PostDetailsScreen extends StatelessWidget {
                                 const SizedBox(height: 14),
                                 InkWell(
                                   onTap: () {
-                                    controller.clickViewInterestInvestors();
+                                    controller.clickViewInterestInvestors(
+                                        createFundsRaiseData!
+                                            .investorActivity!);
                                   },
                                   child: Text(
                                     'View all interested investors →',
@@ -492,7 +501,7 @@ class PostDetailsScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 12),
                           Container(
-                            width: double.infinity,
+                            width: MediaQuery.sizeOf(context).width,
                             padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                             decoration: cardDecoration,
                             child: Column(
@@ -502,9 +511,7 @@ class PostDetailsScreen extends StatelessWidget {
                                   spacing: 8,
                                   runSpacing: 8,
                                   children: [
-                                    'FinTech',
-                                    'Saas',
-                                    'Seed',
+                                    '${createFundsRaiseData!.stage.toString()}',
                                   ].map((tag) {
                                     return Container(
                                         padding: const EdgeInsets.symmetric(
@@ -538,7 +545,7 @@ class PostDetailsScreen extends StatelessWidget {
                                   children: [
                                     Text('Location', style: labelStyle),
                                     Text(
-                                      'Bengaluru, India',
+                                      '${createFundsRaiseData?.location.toString()}, India',
                                       style: GoogleFonts.montserrat(
                                           fontSize: 13,
                                           color: AppColors.whiteColor,
@@ -553,7 +560,7 @@ class PostDetailsScreen extends StatelessWidget {
                                   children: [
                                     Text('Founded', style: labelStyle),
                                     Text(
-                                      '2024',
+                                      createFundsRaiseData!.founded.toString(),
                                       style: GoogleFonts.montserrat(
                                           fontSize: 13,
                                           color: AppColors.whiteColor,
@@ -568,7 +575,7 @@ class PostDetailsScreen extends StatelessWidget {
                                   children: [
                                     Text('Team Size', style: labelStyle),
                                     Text(
-                                      '2-10',
+                                      createFundsRaiseData!.teamSize!.toString(),
                                       style: GoogleFonts.montserrat(
                                           fontSize: 13,
                                           color: AppColors.whiteColor,
@@ -582,15 +589,15 @@ class PostDetailsScreen extends StatelessWidget {
                                   color: AppColors.containerBorderColor,
                                 ),
                                 const SizedBox(height: 14),
-                                Center(
-                                  child: Text(
-                                    'View Company Profile →',
-                                    style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 13,
-                                        color: AppColors.whiteColor),
-                                  ),
-                                )
+                                // Center(
+                                //   child: Text(
+                                //     'View Company Profile →',
+                                //     style: GoogleFonts.montserrat(
+                                //         fontWeight: FontWeight.w500,
+                                //         fontSize: 13,
+                                //         color: AppColors.whiteColor),
+                                //   ),
+                                // )
                               ],
                             ),
                           )
