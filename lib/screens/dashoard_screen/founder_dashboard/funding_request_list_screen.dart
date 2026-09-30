@@ -121,209 +121,194 @@ class FundingRequestListScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: ListView.builder(
-                  itemCount: fundingController.createFundsList.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 16),
-                      width: MediaQuery.sizeOf(context).width,
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: AppColors.containerBackgroundColor,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AppColors.containerBorderColor,
-                          width: 1,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.blackColor.withOpacity(0.25),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await fundingController.getCreateFundsRaiseListApi();
+                },
+                child: ListView.builder(
+                    itemCount: fundingController.createFundsList.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 16),
+                        width: MediaQuery.sizeOf(context).width,
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: AppColors.containerBackgroundColor,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: AppColors.containerBorderColor,
+                            width: 1,
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 36,
-                                height: 36,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFDCE9ED),
-                                  borderRadius: BorderRadius.circular(9),
-                                ),
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.business_center_outlined,
-                                    size: 22,
-                                    color: AppColors.darkGreyColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.blackColor.withOpacity(0.25),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 36,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFDCE9ED),
+                                    borderRadius: BorderRadius.circular(9),
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.business_center_outlined,
+                                      size: 22,
+                                      color: AppColors.darkGreyColor,
+                                    ),
                                   ),
                                 ),
-                              ),
 
-                              const SizedBox(width: 10),
+                                const SizedBox(width: 10),
 
-                              // Company info
-                              Expanded(
-                                child: Column(
-                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            fundingController
-                                                .createFundsList[index]
-                                                .companyName
-                                                .toString(),
-                                            style: GoogleFonts.montserrat(
-                                              color: AppColors.whiteColor,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600,
+                                // Company info
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              fundingController
+                                                  .createFundsList[index]
+                                                  .companyName
+                                                  .toString(),
+                                              style: GoogleFonts.montserrat(
+                                                color: AppColors.whiteColor,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 7,
-                                            vertical: 3,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.greenColor
-                                                .withOpacity(0.30),
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          child: Text(
-                                            'Published',
-                                            style: GoogleFonts.montserrat(
-                                              color: AppColors.greenColor,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
+                                          const SizedBox(width: 10),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 7,
+                                              vertical: 3,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.greenColor
+                                                  .withOpacity(0.30),
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: Text(
+                                              'Published',
+                                              style: GoogleFonts.montserrat(
+                                                color: AppColors.greenColor,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                             ),
                                           ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 3),
+                                      Text(
+                                        '${fundingController.createFundsList[index].stage} . ${fundingController.createFundsList[index].location}',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.montserrat(
+                                          color: AppColors.darkGreyColor,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400,
                                         ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 3),
-                                    Text(
-                                      '${fundingController.createFundsList[index].stage} . ${fundingController.createFundsList[index].location}',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.montserrat(
-                                        color: AppColors.darkGreyColor,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                PopupMenuButton<String>(
+                                  icon: const Icon(
+                                    Icons.more_vert,
+                                    color: AppColors.darkGreyColor,
+                                    size: 24,
+                                  ),
+                                  color: AppColors.containerBackgroundColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  onSelected: (value) {
+                                    if (value == 'edit') {
+                                      fundingController.editPostOrDeletePost(
+                                          index, 'FundRaise', 'edit', '');
+                                    } else if (value == 'delete') {
+                                      fundingController.editPostOrDeletePost(
+                                          index,
+                                          'SellCompany',
+                                          'delete',
+                                          fundingController
+                                              .createFundsList[index].id
+                                              .toString());
+                                    }
+                                  },
+                                  itemBuilder: (context) => [
+                                    // PopupMenuItem<String>(
+                                    //   value: 'edit',
+                                    //   child: Row(
+                                    //     children: [
+                                    //       const Icon(
+                                    //         Icons.edit_outlined,
+                                    //         size: 24,
+                                    //         color: AppColors.whiteColor,
+                                    //       ),
+                                    //       const SizedBox(width: 10),
+                                    //       Text(
+                                    //         'Edit',
+                                    //         style: GoogleFonts.montserrat(
+                                    //             color: AppColors.whiteColor,
+                                    //             fontSize: 16,
+                                    //             fontWeight: FontWeight.w500),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
+                                    PopupMenuItem<String>(
+                                      value: 'delete',
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.delete_outline,
+                                            size: 24,
+                                            color: AppColors.whiteColor,
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Text(
+                                            'Delete',
+                                            style: GoogleFonts.montserrat(
+                                                color: AppColors.whiteColor,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-
-                              PopupMenuButton<String>(
-                                icon: const Icon(
-                                  Icons.more_vert,
-                                  color: AppColors.darkGreyColor,
-                                  size: 24,
-                                ),
-                                color: AppColors.containerBackgroundColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                onSelected: (value) {
-                                  if (value == 'edit') {
-                                    fundingController.editPostOrDeletePost(
-                                        index, 'FundRaise', 'edit');
-                                  } else if (value == 'delete') {
-                                    fundingController.editPostOrDeletePost(
-                                        index, 'SellCompany', 'delete');
-                                  }
-                                },
-                                itemBuilder: (context) => [
-                                  PopupMenuItem<String>(
-                                    value: 'edit',
-                                    child: Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.edit_outlined,
-                                          size: 24,
-                                          color: AppColors.whiteColor,
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          'Edit',
-                                          style: GoogleFonts.montserrat(
-                                              color: AppColors.whiteColor,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  PopupMenuItem<String>(
-                                    value: 'delete',
-                                    child: Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.delete_outline,
-                                          size: 24,
-                                          color: AppColors.whiteColor,
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          'Delete',
-                                          style: GoogleFonts.montserrat(
-                                              color: AppColors.whiteColor,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          Row(children: [
-                            Expanded(
-                                child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '₹${fundingController.createFundsList[index].fundingGoal}',
-                                  style: GoogleFonts.montserrat(
-                                    color: AppColors.whiteColor,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Text(
-                                  'Funding Goal',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.montserrat(
-                                    color: AppColors.darkGreyColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
                               ],
-                            )),
-
-                            Expanded(
-                              child: Column(
+                            ),
+                            const SizedBox(height: 16),
+                            Row(children: [
+                              Expanded(
+                                  child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    fundingController.createFundsList[index].stage.toString(),
+                                    '₹${fundingController.createFundsList[index].fundingGoal}',
                                     style: GoogleFonts.montserrat(
                                       color: AppColors.whiteColor,
                                       fontSize: 16,
@@ -331,7 +316,7 @@ class FundingRequestListScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Text(
-                                    'Stage',
+                                    'Funding Goal',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.montserrat(
@@ -341,93 +326,126 @@ class FundingRequestListScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ],
-                              ),
-                            )
-                          ]),
-                          const SizedBox(height: 16),
-                          Container(
-                            height: 1.5,
-                            color: AppColors.containerBorderColor,
-                          ),
-                          const SizedBox(height: 11),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.visibility_outlined,
-                                size: 22,
-                                color: AppColors.darkGreyColor,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                fundingController.createFundsList[index].viewsCount.toString(),
-                                style: GoogleFonts.montserrat(
-                                    color: AppColors.whiteColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Views',
-                                style: GoogleFonts.montserrat(
-                                    color: AppColors.darkGreyColor,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              const SizedBox(width: 12),
-                              const Icon(
-                                Icons.person_outline,
-                                size: 24,
-                                color: AppColors.darkGreyColor,
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                fundingController.createFundsList[index].interestedCount.toString(),
-                                style: GoogleFonts.montserrat(
-                                    color: AppColors.whiteColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              const SizedBox(width: 3),
-                              Text(
-                                'Interested',
-                                style: GoogleFonts.montserrat(
-                                    color: AppColors.darkGreyColor,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              const Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  fundingController.clickPostDetails(fundingController.createFundsList[index]);
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'View Request',
-                                        style: GoogleFonts.montserrat(
-                                          color: AppColors.whiteColor,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 6),
-                                      const Icon(
-                                        Icons.arrow_forward,
-                                        size: 22,
+                              )),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      fundingController
+                                          .createFundsList[index].stage
+                                          .toString(),
+                                      style: GoogleFonts.montserrat(
                                         color: AppColors.whiteColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    ],
+                                    ),
+                                    Text(
+                                      'Stage',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.montserrat(
+                                        color: AppColors.darkGreyColor,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ]),
+                            const SizedBox(height: 16),
+                            Container(
+                              height: 1.5,
+                              color: AppColors.containerBorderColor,
+                            ),
+                            const SizedBox(height: 11),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.visibility_outlined,
+                                  size: 22,
+                                  color: AppColors.darkGreyColor,
+                                ),
+                                const SizedBox(width: 6),
+                                Text(
+                                  fundingController
+                                      .createFundsList[index].viewsCount
+                                      .toString(),
+                                  style: GoogleFonts.montserrat(
+                                      color: AppColors.whiteColor,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  'Views',
+                                  style: GoogleFonts.montserrat(
+                                      color: AppColors.darkGreyColor,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                const SizedBox(width: 12),
+                                const Icon(
+                                  Icons.person_outline,
+                                  size: 24,
+                                  color: AppColors.darkGreyColor,
+                                ),
+                                const SizedBox(width: 5),
+                                Text(
+                                  fundingController
+                                      .createFundsList[index].interestedCount
+                                      .toString(),
+                                  style: GoogleFonts.montserrat(
+                                      color: AppColors.whiteColor,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                const SizedBox(width: 3),
+                                Text(
+                                  'Interested',
+                                  style: GoogleFonts.montserrat(
+                                      color: AppColors.darkGreyColor,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                const Spacer(),
+                                GestureDetector(
+                                  onTap: () {
+                                    fundingController.clickPostDetails(
+                                        fundingController
+                                            .createFundsList[index]);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'View Request',
+                                          style: GoogleFonts.montserrat(
+                                            color: AppColors.whiteColor,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 6),
+                                        const Icon(
+                                          Icons.arrow_forward,
+                                          size: 22,
+                                          color: AppColors.whiteColor,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+              ),
             ),
           ]),
         ),

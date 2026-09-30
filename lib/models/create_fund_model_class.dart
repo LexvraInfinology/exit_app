@@ -117,7 +117,7 @@ class CreateFundsRaiseData {
     owner = json['owner'];
     fundingGoal = json['funding_goal'];
     currency = json['currency'];
-    stage = json['stage'];
+    stage = json['company_stage'];
     purpose = json['purpose'];
     companyName = json['company_name'];
     companyLogo = json['company_logo'];
@@ -155,7 +155,7 @@ class CreateFundsRaiseData {
     data['owner'] = this.owner;
     data['funding_goal'] = this.fundingGoal;
     data['currency'] = this.currency;
-    data['stage'] = this.stage;
+    data['company_stage'] = this.stage;
     data['purpose'] = this.purpose;
     data['company_name'] = this.companyName;
     data['company_logo'] = this.companyLogo;

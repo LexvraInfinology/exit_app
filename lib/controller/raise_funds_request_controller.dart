@@ -44,14 +44,14 @@ class RaiseFundsRequestController extends GetxController {
   final RxString selectedStageStringValue = ''.obs;
   final RxString selectedPurposeStringValue = ''.obs;
 
-  void selectPurpose(int index,String value) {
+  void selectPurpose(int index, String value) {
     selectedPurpose.value = index;
     selectedPurposeStringValue.value = value;
-    print('select purpose ${ value}');
+    print('select purpose ${value}');
     update();
   }
 
-  void selectStage(int index,String value) {
+  void selectStage(int index, String value) {
     selectedStage.value = index + 1;
     selectedStageStringValue.value = value;
     print('object ${value}');
@@ -260,7 +260,7 @@ class RaiseFundsRequestController extends GetxController {
           colorText: AppColors.whiteColor,
         );
 
-        Get.offAll(() => FounderDashboardScreen());
+        postSubmitButton();
       } else {
         isLoading.value = false;
         Get.snackbar(

@@ -74,7 +74,6 @@ class FounderDashboardController extends GetxController {
   }
 
   Future<void> updatePrivateAccount(bool value) async {
-
     if (isUpdatingPrivacy.value) {
       debugPrint('❌ Already updating, returning...');
       return;
@@ -82,7 +81,6 @@ class FounderDashboardController extends GetxController {
 
     try {
       isUpdatingPrivacy.value = true;
-
 
       final success = await apiServices.updatePrivateAccountApi(
         isPrivate: value,
@@ -93,7 +91,7 @@ class FounderDashboardController extends GetxController {
 
         debugPrint('✅ API SUCCESS');
         debugPrint('isPrivate sent: $value');
-        
+
         Get.snackbar(
           'Success',
           'Privacy settings updated successfully',
@@ -122,7 +120,6 @@ class FounderDashboardController extends GetxController {
     }
   }
 
-
   void onItemSelected(int index) {
     selectedIndex.value = index;
   }
@@ -145,20 +142,19 @@ class FounderDashboardController extends GetxController {
     selectedPostIndex.value = index;
   }
 
-  void editPostOrDeletePost(int index, String ScreenType, String type) {
+  void editPostOrDeletePost(
+      int index, String screenType, String type, String? item_id) {
     selectedPostIndex.value = -1;
     if (type == 'delete') {
-      showDeletePostDialog(Get.context!, index);
+      showDeletePostDialog(Get.context!, index, item_id ?? '');
     } else {
-      if (ScreenType == '') {
+      if (screenType == '') {
         Get.to(() => CreateFundsRequestScreen());
       } else {
         Get.to(() => SellYourCompanyScreen());
       }
     }
   }
-
-
 
   void onRaiseCapital() {}
 
@@ -221,7 +217,7 @@ class FounderDashboardController extends GetxController {
     removedInvestorApi(investor_id);
   }
 
-  void clickViewInterestInvestors(List<InvestorActivity>  investorActivity) {
+  void clickViewInterestInvestors(List<InvestorActivity> investorActivity) {
     Get.to(() => ViewInvestorActivityListScreen(investorActivity));
   }
 
@@ -444,6 +440,10 @@ class FounderDashboardController extends GetxController {
     );
   }
 
+  void clickDeleteFunds(String item_id) {
+    deleteCreatedFundsApi(item_id);
+  }
+
   void showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -507,7 +507,6 @@ class FounderDashboardController extends GetxController {
                           ),
                           onPressed: () async {
                             final success = await apiServices.logoutApi();
-
                             if (success) {
                               await prefs.clear();
                               Get.offAll(
@@ -538,7 +537,7 @@ class FounderDashboardController extends GetxController {
     );
   }
 
-  void showDeletePostDialog(BuildContext context, int index) {
+  void showDeletePostDialog(BuildContext context, int index, String item_id) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -601,7 +600,7 @@ class FounderDashboardController extends GetxController {
                             foregroundColor: AppColors.blackColor,
                           ),
                           onPressed: () {
-                            Navigator.pop(context);
+                            clickDeleteFunds(item_id);
                           },
                           child: Text(
                             "Yes",
@@ -773,7 +772,7 @@ class FounderDashboardController extends GetxController {
 
       resultProfile.value = response?.data!.results ?? [];
       currentUserId = resultProfile.first.id;
-      isPrivate.value = resultProfile.first.isPrivate??false;
+      isPrivate.value = resultProfile.first.isPrivate ?? false;
       print('click dat ${resultProfile.single.firstName}');
     } catch (e) {
       print('object ${e}');
@@ -815,7 +814,9 @@ class FounderDashboardController extends GetxController {
 
       if (response?.statusCode == 200) {
         if (response?.data != null) {
+          createFundsList.clear();
           createFundsList.value = response?.data?.results ?? [];
+          update();
         }
       } else {
         Get.snackbar(
@@ -824,6 +825,48 @@ class FounderDashboardController extends GetxController {
     } catch (e) {
       debugPrint('object $e');
       Get.snackbar('Error', 'Something went wrong. Please try again.');
+    }
+  }
+
+  Future<void> deleteCreatedFundsApi(String item_id) async {
+    try {
+      isLoading.value = true;
+      final response = await apiServices.deleteFundsApiResonse(item_id);
+      print("Status Code: ${response?.statusCode}");
+      print("Message: ${response?.message}");
+      if (response?.statusCode == 200) {
+        isLoading.value = false;
+        Navigator.pop(Get.context!);
+        Get.snackbar(
+          'Success',
+          response?.message ?? 'Remove successfully',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: AppColors.blackColor,
+          colorText: AppColors.whiteColor,
+        );
+      } else {
+        isLoading.value = false;
+        Get.snackbar(
+          'Remove successfully',
+          response?.message ?? 'Remove successfully',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: AppColors.blackColor,
+          colorText: AppColors.whiteColor,
+        );
+      }
+      getCreateFundsRaiseListApi();
+      update();
+    } catch (e) {
+      isLoading.value = false;
+      Get.snackbar(
+        'Error',
+        'Something went wrong. Please try again.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.blackColor,
+        colorText: AppColors.whiteColor,
+      );
+    } finally {
+      isLoading.value = false;
     }
   }
 }

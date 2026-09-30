@@ -8,24 +8,24 @@ import 'package:image_picker/image_picker.dart';
 
 import '../api_utils/api_services.dart';
 import '../constants/app_color.dart';
+import '../models/marketplace_Industries_model.dart';
 import '../screens/post_successfully_created_screen.dart';
 
 class SellYourCompanyController extends GetxController {
-
-
   var isLoading = false.obs;
   final ApiServices apiServices = ApiServices();
 
+  final RxList<MarketplaceIndustry> stageList = <MarketplaceIndustry>[].obs;
 
   final TextEditingController amountController = TextEditingController();
   final TextEditingController companyNameController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController companyWebsiteController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController companyDescriptionController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController raiseDescriptionController =
-  TextEditingController();
+      TextEditingController();
 
   final RxString industry = 'FinTech'.obs;
   final RxInt selectedStage = 0.obs;
@@ -35,42 +35,46 @@ class SellYourCompanyController extends GetxController {
     industry.value = value;
   }
 
-  final TextEditingController revenueController =
-  TextEditingController();
+  final TextEditingController revenueController = TextEditingController();
 
   final ImagePicker _picker = ImagePicker();
   final Rxn<File> selectedImage = Rxn<File>();
 
   final RxInt selectedAcquisition = (0).obs;
-  final RxString selectedStringAcquisition = ''.obs;
-  void selectAcquisition(int index,String acquisition_value) {
+  final RxString selectedStringAcquisition = 'full_acquisition'.obs;
+
+  void selectAcquisition(int index, String acquisition_value) {
     selectedAcquisition.value = index;
     selectedStringAcquisition.value = acquisition_value;
     update();
   }
 
   final RxInt selectedPurpose = 0.obs;
-  final List<String> purposes = [
-    'Immediately',
-    '1–3 Months',
-    '3–6 Months',
-    '6 Months',
-  ];
-
 
   final RxString selectedProfitability = 'Profitable'.obs;
 
-
-  void postSubmitButton(){
+  void postSubmitButton() {
     createSellCompanyApi();
   }
-  void selectStage(int index,String value) {
+
+  void selectStage(int index, String value) {
     selectedStage.value = index + 1;
     selectedStageStringValue.value = value;
     print('object ${value}');
     update();
   }
 
+  @override
+  void onInit() {
+    super.onInit();
+    loadApi();
+  }
+
+  Future<void> loadApi() async {
+    isLoading.value = true;
+    await getMarketplaceStagesApi();
+    isLoading.value = false;
+  }
 
   RxInt currentStep = 0.obs;
 
@@ -103,7 +107,7 @@ class SellYourCompanyController extends GetxController {
     } else if (step == 1) {
       currentStep.value = 0;
       update();
-    }else if (step == 0) {
+    } else if (step == 0) {
       Get.back();
       update();
     }
@@ -172,7 +176,7 @@ class SellYourCompanyController extends GetxController {
   }
 
   Future<void> createSellCompanyApi() async {
-    final funding_goal = amountController.value.text.trim();
+    final fundingGoal = amountController.value.text.trim();
     final companyName = companyNameController.value.text.trim();
     final location = locationController.value.text.trim();
     final companyWebsite = companyWebsiteController.value.text.trim();
@@ -182,10 +186,10 @@ class SellYourCompanyController extends GetxController {
     try {
       isLoading.value = true;
       final response = await apiServices.createSellCompanyApi(
-          funding_goal.replaceAll(',', ''),
+          fundingGoal.replaceAll(',', ''),
           "INR",
           (selectedStage.value + 1).toString(),
-          (selectedPurpose.value + 1).toString(),
+          selectedStringAcquisition.value,
           companyName,
           selectedImage.value!.path,
           industry.value,
@@ -193,8 +197,8 @@ class SellYourCompanyController extends GetxController {
           companyWebsite,
           companyDescription,
           raiseDescription,
-          "",
-          "");
+          selectedProfitability.value,
+          '');
       print("Status Code: ${response?.statusCode}");
       print("Message: ${response?.message}");
       if (response?.statusCode == 201) {
@@ -206,8 +210,7 @@ class SellYourCompanyController extends GetxController {
           backgroundColor: AppColors.blackColor,
           colorText: AppColors.whiteColor,
         );
-        Get.to(() =>  PostSuccefullyCreatedScreen());
-
+        Get.to(() => PostSuccefullyCreatedScreen());
       } else {
         isLoading.value = false;
         Get.snackbar(
@@ -233,4 +236,23 @@ class SellYourCompanyController extends GetxController {
     }
   }
 
+  Future<void> getMarketplaceStagesApi() async {
+    try {
+      isLoading.value = true;
+      final MarketplaceIndustriesResponse? response =
+          await apiServices.getMarketplaceStagesApi();
+      if (response?.statusCode == 200) {
+        stageList.value = response?.data ?? [];
+        // purposeList.assignAll(response?.data ?? []);
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      print('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

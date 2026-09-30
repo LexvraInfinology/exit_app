@@ -583,17 +583,8 @@ class CreateFundsRequestScreen extends StatelessWidget {
 
   Widget _buildCompany(
       BuildContext context, RaiseFundsRequestController controller) {
-    final TextEditingController companyNameController =
-        TextEditingController(text: 'Lexvra');
-
-    final TextEditingController locationController =
-        TextEditingController(text: 'Mohali, India');
-
-    final TextEditingController websiteController =
-        TextEditingController(text: 'www.lexvra.com');
 
     final TextEditingController descriptionController = TextEditingController();
-    String industry = 'FinTech';
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),

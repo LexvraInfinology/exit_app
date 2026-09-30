@@ -3,6 +3,7 @@ import 'package:exit_app/constants/app_images.dart';
 import 'package:exit_app/screens/dashoard_screen/founder_dashboard/founder_dashboard_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PostSuccefullyCreatedScreen extends StatelessWidget {
@@ -19,12 +20,11 @@ class PostSuccefullyCreatedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 4), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) =>  FounderDashboardScreen(),
-        ),
-      );
+
+Get.offAll(()=> FounderDashboardScreen());
+
+
+
     });
     final size = MediaQuery.sizeOf(context);
     final imageHeight = (size.height * 0.25).clamp(120.0, 200.0);

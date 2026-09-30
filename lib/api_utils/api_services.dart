@@ -26,6 +26,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/auth_flow_response_model.dart';
 import '../models/buy_plan_model.dart';
+import '../models/delete_funds_api_response.dart';
 import '../models/get_investor_list_model.dart';
 import 'api_utils.dart';
 
@@ -658,7 +659,7 @@ class ApiServices {
     try {
       final token = prefs.getString('token');
 
-      final Uri url = Uri.parse(ApiUtils.createFundsRaiseApi);
+      final Uri url = Uri.parse(ApiUtils.createSellCompanyApi);
 
       debugPrint('========== FUND RAISE API ==========');
       debugPrint('URL: $url');
@@ -1459,6 +1460,36 @@ class ApiServices {
       return false;
     }
   }
+
+  Future<DeleteFundsApiResponse?> deleteFundsApiResonse(
+      String item_id,
+      )
+  async {
+    final token = prefs.getString('token');
+    debugPrint('object${token}');
+
+    final Uri url = Uri.parse(
+      '${ApiUtils.deleteCreateFundsApi}/$item_id/',
+    );
+
+    final response = await http.delete(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode == 201) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      return DeleteFundsApiResponse.fromJson(jsonResponse);
+    }
+  }
+
 
 }
 

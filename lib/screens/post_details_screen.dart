@@ -91,22 +91,25 @@ class PostDetailsScreen extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                createFundsRaiseData?.companyName != null
-                                    ? createFundsRaiseData!.companyName
-                                        .toString()
-                                    : 'Lexvra',
-                                style: GoogleFonts.montserrat(
-                                    color: AppColors.whiteColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600),
+                              Expanded(
+                                child: Text(
+                                  textAlign: TextAlign.center,
+                                  createFundsRaiseData?.companyName != null
+                                      ? createFundsRaiseData!.companyName
+                                          .toString()
+                                      : 'Lexvra',
+                                  style: GoogleFonts.montserrat(
+                                      color: AppColors.whiteColor,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600),
+                                ),
                               ),
                               const SizedBox(width: 4),
-                              const Icon(
-                                Icons.verified,
-                                color: AppColors.verifiedColor,
-                                size: 16,
-                              ),
+                              // const Icon(
+                              //   Icons.verified,
+                              //   color: AppColors.verifiedColor,
+                              //   size: 16,
+                              // ),
                             ],
                           ),
                           const SizedBox(height: 12),
@@ -254,7 +257,7 @@ class PostDetailsScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 12),
                           Container(
-                            width: double.infinity,
+                            width: MediaQuery.sizeOf(context).width,
                             padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
                             decoration: cardDecoration,
                             child: Column(
@@ -268,7 +271,7 @@ class PostDetailsScreen extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                              '₹ ${createFundsRaiseData?.fundingGoal.toString()}',
+                                              '₹ ${createFundsRaiseData?.fundingGoal.toString()}/-',
                                               style: valueStyle),
                                           const SizedBox(height: 6),
                                           Text('Funding Goal',
@@ -339,159 +342,168 @@ class PostDetailsScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 24),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Investor Activity',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: sectionTitleStyle,
-                              ),
-                              Text(
-                                '${createFundsRaiseData?.interestedCount.toString()}  ${'investors interested'}',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 12,
-                                    color: AppColors.darkGreyColor,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
+                          createFundsRaiseData!.investorActivity!.isEmpty
+                              ? const SizedBox()
+                              : const SizedBox(height: 24),
+                          createFundsRaiseData!.investorActivity!.isEmpty
+                              ? SizedBox()
+                              : Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Investor Activity',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: sectionTitleStyle,
+                                    ),
+                                    Text(
+                                      '${createFundsRaiseData?.interestedCount.toString()}  ${'investors interested'}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.montserrat(
+                                          fontSize: 12,
+                                          color: AppColors.darkGreyColor,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
                           const SizedBox(height: 12),
-                          Container(
-                            width: MediaQuery.sizeOf(context).width,
-                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                            decoration: cardDecoration,
-                            child: Column(
-                              children: [
-                                ListView.builder(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: createFundsRaiseData
-                                        ?.investorActivity?.length,
-                                    itemBuilder: (context, index) {
-                                      return Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 12),
-                                            child: Row(
+                          createFundsRaiseData!.investorActivity!.isEmpty
+                              ? SizedBox()
+                              : Container(
+                                  width: MediaQuery.sizeOf(context).width,
+                                  padding:
+                                      const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                                  decoration: cardDecoration,
+                                  child: Column(
+                                    children: [
+                                      ListView.builder(
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount: createFundsRaiseData
+                                              ?.investorActivity?.length,
+                                          itemBuilder: (context, index) {
+                                            return Column(
                                               children: [
-                                                ClipOval(
-                                                    child: Image.asset(
-                                                  AppImages.createProfileImage,
-                                                  width: 36,
-                                                  height: 36,
-                                                  fit: BoxFit.cover,
-                                                )),
-                                                const SizedBox(width: 12),
-                                                Expanded(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 12),
+                                                  child: Row(
                                                     children: [
-                                                      Text(
-                                                        createFundsRaiseData!
-                                                            .investorActivity![
-                                                                index]
-                                                            .investorName
-                                                            .toString(),
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: GoogleFonts
-                                                            .montserrat(
-                                                                fontSize: 14,
+                                                      ClipOval(
+                                                          child: Image.asset(
+                                                        AppImages
+                                                            .createProfileImage,
+                                                        width: 36,
+                                                        height: 36,
+                                                        fit: BoxFit.cover,
+                                                      )),
+                                                      const SizedBox(width: 12),
+                                                      Expanded(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              createFundsRaiseData!
+                                                                  .investorActivity![
+                                                                      index]
+                                                                  .investorName
+                                                                  .toString(),
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: GoogleFonts.montserrat(
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color: AppColors
+                                                                      .whiteColor),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 2),
+                                                            Text(
+                                                              '${createFundsRaiseData?.investorActivity![index].fundType.toString()} · ${createFundsRaiseData?.investorActivity![index].location.toString()}',
+                                                              style: GoogleFonts.montserrat(
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: AppColors
+                                                                      .darkGreyColor),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          Text(
+                                                            'Interested',
+                                                            style: GoogleFonts.montserrat(
+                                                                fontSize: 12,
                                                                 fontWeight:
                                                                     FontWeight
-                                                                        .w600,
+                                                                        .w500,
                                                                 color: AppColors
                                                                     .whiteColor),
-                                                      ),
-                                                      const SizedBox(height: 2),
-                                                      Text(
-                                                        '${createFundsRaiseData?.investorActivity![index].fundType.toString()} · ${createFundsRaiseData?.investorActivity![index].location.toString()}',
-                                                        style: GoogleFonts
-                                                            .montserrat(
-                                                                fontSize: 12,
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 2),
+                                                          Text(
+                                                            '2h ago',
+                                                            style: GoogleFonts.montserrat(
+                                                                fontSize: 11,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w400,
                                                                 color: AppColors
                                                                     .darkGreyColor),
-                                                      ),
+                                                          )
+                                                        ],
+                                                      )
                                                     ],
                                                   ),
                                                 ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
-                                                  children: [
-                                                    Text(
-                                                      'Interested',
-                                                      style: GoogleFonts
-                                                          .montserrat(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              color: AppColors
-                                                                  .whiteColor),
-                                                    ),
-                                                    const SizedBox(height: 2),
-                                                    Text(
-                                                      '2h ago',
-                                                      style: GoogleFonts
-                                                          .montserrat(
-                                                              fontSize: 11,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: AppColors
-                                                                  .darkGreyColor),
-                                                    )
-                                                  ],
-                                                )
+                                                if (index != 2)
+                                                  Container(
+                                                    height: 1,
+                                                    color: AppColors
+                                                        .containerBorderColor,
+                                                  ),
                                               ],
-                                            ),
-                                          ),
-                                          if (index != 2)
-                                            Container(
-                                              height: 1,
-                                              color: AppColors
-                                                  .containerBorderColor,
-                                            ),
-                                        ],
-                                      );
-                                    }),
-                                const SizedBox(height: 8),
-                                Container(
-                                  height: 1,
-                                  color: AppColors.containerBorderColor,
-                                ),
-                                const SizedBox(height: 14),
-                                InkWell(
-                                  onTap: () {
-                                    controller.clickViewInterestInvestors(
-                                        createFundsRaiseData!
-                                            .investorActivity!);
-                                  },
-                                  child: Text(
-                                    'View all interested investors →',
-                                    style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 13,
-                                        color: AppColors.whiteColor),
+                                            );
+                                          }),
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        height: 1,
+                                        color: AppColors.containerBorderColor,
+                                      ),
+                                      const SizedBox(height: 14),
+                                      InkWell(
+                                        onTap: () {
+                                          controller.clickViewInterestInvestors(
+                                              createFundsRaiseData!
+                                                  .investorActivity!);
+                                        },
+                                        child: Text(
+                                          'View all interested investors →',
+                                          style: GoogleFonts.montserrat(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 13,
+                                              color: AppColors.whiteColor),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
                           const SizedBox(height: 24),
                           Text(
                             'About the Company',
@@ -575,7 +587,8 @@ class PostDetailsScreen extends StatelessWidget {
                                   children: [
                                     Text('Team Size', style: labelStyle),
                                     Text(
-                                      createFundsRaiseData!.teamSize!.toString(),
+                                      createFundsRaiseData!.teamSize!
+                                          .toString(),
                                       style: GoogleFonts.montserrat(
                                           fontSize: 13,
                                           color: AppColors.whiteColor,

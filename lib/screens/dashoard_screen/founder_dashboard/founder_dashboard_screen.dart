@@ -28,19 +28,21 @@ class FounderDashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Scaffold(
-        backgroundColor: AppColors.blackColor,
-        body: IndexedStack(
-          index: controller.selectedIndex.value,
-          children: pages,
-        ),
+   return GetBuilder(init: FounderDashboardController(), builder: (controller){
+     return Obx(
+           () => Scaffold(
+         backgroundColor: AppColors.blackColor,
+         body: IndexedStack(
+           index: controller.selectedIndex.value,
+           children: pages,
+         ),
 
-        bottomNavigationBar: _FounderBottomNavigation(
-          controller: controller,
-        ),
-      ),
-    );
+         bottomNavigationBar: _FounderBottomNavigation(
+           controller: controller,
+         ),
+       ),
+     );
+   });
   }
 }
 

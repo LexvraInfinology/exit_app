@@ -1154,6 +1154,69 @@ class SellYourCompanyScreen extends StatelessWidget {
               ),
 
               const SizedBox(height: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'What stage is your company?',
+                    style: GoogleFonts.montserrat(
+                      color: AppColors.whiteColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 11),
+                  Obx(
+                        () => Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: List.generate(
+                        controller.stageList.length,
+                            (index) {
+                          final selected = controller.selectedStage.value == index;
+                          return GestureDetector(
+                            onTap: () {
+                              controller.selectStage(index, controller.stageList[index].name);
+
+                              controller.selectedStage.value = index;
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 150),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 9,
+                              ),
+                              decoration: BoxDecoration(
+                                color: selected
+                                    ? const Color(0xFF101010)
+                                    : const Color(0xFF111111),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: selected
+                                      ? AppColors.whiteColor
+                                      : const Color(0xFF171717),
+                                  width: selected ? 1.2 : 1,
+                                ),
+                              ),
+                              child: Text(
+                                controller.stageList[index].name,
+                                style: GoogleFonts.montserrat(
+                                  color: selected
+                                      ? AppColors.whiteColor
+                                      : const Color(0xFF777777),
+                                  fontSize: 10,
+                                  fontWeight:
+                                  selected ? FontWeight.w600 : FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              ),
               Container(
                 height: 53,
                 decoration: BoxDecoration(
@@ -2141,29 +2204,33 @@ class SellYourCompanyScreen extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Text(
-                                controller.companyNameController.text
-                                    .toString(),
-                                style: GoogleFonts.montserrat(
-                                  color: AppColors.whiteColor,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
+                              Flexible(
+                                child: Text(
+                                  controller.companyNameController.text
+                                      .toString(),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.montserrat(
+                                    color: AppColors.whiteColor,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 7),
-                              Container(
-                                width: 14,
-                                height: 14,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFFA855F7),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.check,
-                                  color: AppColors.blackColor,
-                                  size: 10,
-                                ),
-                              ),
+                              // Container(
+                              //   width: 14,
+                              //   height: 14,
+                              //   decoration: const BoxDecoration(
+                              //     color: Color(0xFFA855F7),
+                              //     shape: BoxShape.circle,
+                              //   ),
+                              //   child: const Icon(
+                              //     Icons.check,
+                              //     color: AppColors.blackColor,
+                              //     size: 10,
+                              //   ),
+                              // ),
                             ],
                           ),
                           const SizedBox(height: 10),
@@ -2176,7 +2243,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            controller.locationController.toString(),
+                            controller.locationController.text.toString(),
                             style: GoogleFonts.montserrat(
                                 color: AppColors.darkGreyColor,
                                 fontSize: 14,
@@ -2249,7 +2316,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                     SizedBox(width: 5),
                     Icon(
                       Icons.arrow_forward,
-                      color: Colors.white,
+                      color: AppColors.whiteColor,
                       size: 15,
                     ),
                   ],
@@ -2289,7 +2356,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          controller.revenueController.text,
+                          '₹ ${controller.revenueController.text} /-',
                           style: GoogleFonts.montserrat(
                             color: Color(0xFFEDEDED),
                             fontSize: 14,
@@ -2357,10 +2424,10 @@ class SellYourCompanyScreen extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Icon(
                       Icons.arrow_forward,
-                      color: Colors.white,
+                      color: AppColors.whiteColor,
                       size: 15,
                     ),
                   ],
@@ -2400,7 +2467,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '₹ ${controller.revenueController}',
+                          '₹ ${controller.revenueController.text} /-',
                           style: GoogleFonts.montserrat(
                             color: Color(0xFFEDEDED),
                             fontSize: 14,
@@ -2411,7 +2478,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                Divider(
+                const Divider(
                   color: AppColors.darkGreyColor,
                 ),
                 SizedBox(
@@ -2441,7 +2508,7 @@ class SellYourCompanyScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                Divider(color: AppColors.darkGreyColor),
+                const Divider(color: AppColors.darkGreyColor),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 17, 16, 16),
                   child: Column(
