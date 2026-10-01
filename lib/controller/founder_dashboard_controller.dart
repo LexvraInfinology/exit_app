@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../api_utils/api_services.dart';
 import '../constants/app_color.dart';
 import '../constants/app_images.dart';
+import '../models/InvestorActivity.dart';
 import '../models/conversation_response.dart';
 import '../models/profile_model.dart';
 import '../screens/choose_user_screen.dart';
@@ -817,7 +818,11 @@ class FounderDashboardController extends GetxController {
           createFundsList.clear();
           createFundsList.value = response?.data?.results ?? [];
           update();
-        }
+          print('object testing if');
+        }else
+          {
+            print('object testing');
+          }
       } else {
         Get.snackbar(
             'Failed', response?.message ?? 'Failed to fetch industries');
@@ -836,7 +841,7 @@ class FounderDashboardController extends GetxController {
       print("Message: ${response?.message}");
       if (response?.statusCode == 200) {
         isLoading.value = false;
-        Navigator.pop(Get.context!);
+
         Get.snackbar(
           'Success',
           response?.message ?? 'Remove successfully',
@@ -855,6 +860,8 @@ class FounderDashboardController extends GetxController {
         );
       }
       getCreateFundsRaiseListApi();
+      Navigator.pop(Get.context!);
+
       update();
     } catch (e) {
       isLoading.value = false;

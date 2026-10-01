@@ -50,198 +50,222 @@ class FounderDiscoverScreen extends StatelessWidget {
     },
   ];
 
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<InvestorDashboardController>(
         builder: (discoverFounderController) {
       return Scaffold(
         backgroundColor: AppColors.blackColor,
-        body:  discoverFounderController.isLoading.value
+        body: discoverFounderController.isLoading.value
             ? const Center(
-            child: CupertinoActivityIndicator(
-              radius: 15,
-              color: Colors.white,
-            ))
-            :SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(children: [  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          discoverFounderController.selectedIndex.value = 0;
-                          // Get.back();
-                        },
-                        child: Image.asset(
-                          AppImages.backIcon,
-                          width: 42,
-                          height: 42,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      const Expanded(
-                        child: Text(
-                          'Discover Founders',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      height: 58,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF111111),
-                        borderRadius: BorderRadius.circular(18),
-                        border: Border.all(
-                          color: const Color(0xFF292929),
-                        ),
-                      ),
-                      child: const Row(
-                        children: [
-                          SizedBox(width: 20),
-                          Icon(
-                            Icons.search,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                          SizedBox(width: 20),
-                          Expanded(
-                            child: TextField(
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
+                child: CupertinoActivityIndicator(
+                radius: 15,
+                color: Colors.white,
+              ))
+            : SafeArea(
+                child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                discoverFounderController.selectedIndex.value =
+                                    0;
+                                // Get.back();
+                              },
+                              child: Image.asset(
+                                AppImages.backIcon,
+                                width: 42,
+                                height: 42,
                               ),
-                              cursorColor: Colors.white,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText:
-                                'Search by investor name, fund, or industry',
-                                hintStyle: TextStyle(
-                                  color: Color(0xFF9A9A9A),
-                                  fontSize: 13,
+                            ),
+                            const SizedBox(width: 12),
+                            const Expanded(
+                              child: Text(
+                                'Discover Founders',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
                             ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: 58,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF111111),
+                            borderRadius: BorderRadius.circular(18),
+                            border: Border.all(
+                              color: const Color(0xFF292929),
+                            ),
                           ),
-                          SizedBox(width: 12),
+                          child: const Row(
+                            children: [
+                              SizedBox(width: 20),
+                              Icon(
+                                Icons.search,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              SizedBox(width: 20),
+                              Expanded(
+                                child: TextField(
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                  ),
+                                  cursorColor: Colors.white,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText:
+                                        'Search by investor name, fund, or industry',
+                                    hintStyle: TextStyle(
+                                      color: Color(0xFF9A9A9A),
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                            child: FilterHandleWidget(
+                              items: discoverFounderController.filterListItems,
+                              backgroundColor: Colors.black,
+                              showArrow: true,
+                              selectedFor:
+                                  discoverFounderController.selectedFor,
+                              onFilterSelected:
+                                  discoverFounderController.onFilterSelected,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      '${discoverFounderController.founderList.length} founders found',
+                                      style: const TextStyle(
+                                        color: AppColors.darkGreyColor,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    const Text(
+                                      'Sort by:',
+                                      style: TextStyle(
+                                        color: AppColors.darkGreyColor,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    const Text(
+                                      'Relevance',
+                                      style: TextStyle(
+                                        color: AppColors.whiteColor,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    const Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: AppColors.darkGreyColor,
+                                      size: 17,
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: discoverFounderController
+                                      .founderList.length,
+                                  itemBuilder: (context, index) {
+                                    return Obx(() {
+                                      final fundingData =
+                                          discoverFounderController
+                                              .founderList[index];
+                                      return GestureDetector(
+                                        onTap: () {
+                                          discoverFounderController
+                                              .clickFounderDetails(fundingData);
+                                        },
+                                        child: Container(
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          padding: const EdgeInsets.all(24),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.blackColor,
+                                            borderRadius:
+                                                BorderRadius.circular(11),
+                                            border: Border.all(
+                                                color: const Color(0xFF292929),
+                                                width: 1),
+                                          ),
+                                          child: InvestorWidget(
+                                            name: fundingData.companyName,
+                                            type: '',
+                                            location: fundingData.location,
+                                            investment:
+                                                formatIndianShortCurrency(
+                                                    fundingData.fundingGoal),
+                                            stage:
+                                                fundingData.stage.toUpperCase(),
+                                            logo: fundingData.companyName[0]
+                                                .toUpperCase(),
+                                            timeline: formatFundingTimeline(
+                                                fundingData.fundingTimeline),
+                                            industry: fundingData.industry,
+                                            context: context,
+                                            isLoading: fundingData.isLoading,
+                                            isSaved: fundingData.isSaved,
+                                            onBookmarkTap: () {
+                                              if (!fundingData.isLoading) {
+                                                discoverFounderController
+                                                    .toggleSavedFounder(
+                                                        fundingData);
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                          )
                         ],
                       ),
-                    ),],),
-                ),
-               Expanded(
-                 child: SingleChildScrollView(
-                   child: Column(
-                     children: [
-                       SizedBox(
-                         height: 40,
-                         child: FilterHandleWidget(
-                           items: discoverFounderController.filterListItems,
-                           backgroundColor: Colors.black,
-                           showArrow: true,
-                           selectedFor: discoverFounderController.selectedFor,
-                           onFilterSelected: discoverFounderController.onFilterSelected,),
-                       ),
-                       const SizedBox(
-                         height: 20,
-                       ),
-                       Padding(
-                         padding: const EdgeInsets.all(24.0),
-                         child: Column(children: [
-                            Row(
-                             children: [
-                               Text(
-                                 '${discoverFounderController.founderList.length} founders found',
-                                 style: const TextStyle(
-                                   color: AppColors.darkGreyColor,
-                                   fontSize: 12,
-                                 ),
-                               ),
-                               const Spacer(),
-                               const Text(
-                                 'Sort by:',
-                                 style: TextStyle(
-                                   color: AppColors.darkGreyColor,
-                                   fontSize: 12,
-                                 ),
-                               ),
-                               const SizedBox(width: 5),
-                               const Text(
-                                 'Relevance',
-                                 style: TextStyle(
-                                   color: AppColors.whiteColor,
-                                   fontSize: 12,
-                                 ),
-                               ),
-                               const Icon(
-                                 Icons.keyboard_arrow_down,
-                                 color: AppColors.darkGreyColor,
-                                 size: 17,
-                               ),
-                             ],
-                           ),
-                           const SizedBox(
-                             height: 20,
-                           ),
-                           ListView.builder(
-                             shrinkWrap: true,
-                             physics: const NeverScrollableScrollPhysics(),
-                             itemCount: discoverFounderController.founderList.length,
-                             itemBuilder: (context, index) {
-                               return Obx(() {
-                                 final fundingData = discoverFounderController.founderList[index];
-                                 return GestureDetector(
-                                   onTap: () {
-                                     discoverFounderController.clickFounderDetails(fundingData);
-                                   },
-                                   child: Container(
-                                     margin: const EdgeInsets.symmetric(vertical: 10),
-                                     padding: const EdgeInsets.all(24),
-                                     decoration: BoxDecoration(
-                                       color: AppColors.blackColor,
-                                       borderRadius: BorderRadius.circular(11),
-                                       border: Border.all(color: const Color(0xFF292929), width: 1),
-                                     ),
-                                     child: InvestorWidget(
-                                       name: fundingData.companyName,
-                                       type: '',
-                                       location: fundingData.location,
-                                       investment: formatIndianShortCurrency(fundingData.fundingGoal),
-                                       stage: fundingData.stage.toUpperCase(),
-                                       logo: fundingData.companyName[0].toUpperCase(),
-                                       timeline: formatFundingTimeline(fundingData.fundingTimeline),
-                                       industry: fundingData.industry,
-                                       context: context,
-                                       isLoading: fundingData.isLoading,
-                                       isSaved: fundingData.isSaved,
-                                       onBookmarkTap: () {
-                                         if (!fundingData.isLoading) {
-                                           discoverFounderController.toggleSavedFounder(fundingData);
-                                         }
-                                       },
-                                     ),
-                                   ),
-                                 );
-                               });
-                             },
-                           )
-                         ],),
-                       )
-                     ],
-                   ),
-                 ),
-               )
-              ],
-            )),
+                    ),
+                  )
+                ],
+              )),
       );
     });
   }
@@ -253,11 +277,11 @@ class FounderDiscoverScreen extends StatelessWidget {
       required String investment,
       required String stage,
       required String logo,
-     required String timeline,
-        required String industry,
-        required bool isLoading,
-        required bool isSaved,
-        required GestureTapCallback onBookmarkTap,
+      required String timeline,
+      required String industry,
+      required bool isLoading,
+      required bool isSaved,
+      required GestureTapCallback onBookmarkTap,
       required BuildContext context}) {
     return Column(
       children: [
@@ -275,9 +299,9 @@ class FounderDiscoverScreen extends StatelessWidget {
               child: Center(
                 child: Text(
                   logo,
-                  style: const TextStyle(
+                  style: GoogleFonts.montserrat(
                     color: AppColors.whiteColor,
-                    fontSize: 15,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -295,8 +319,8 @@ class FounderDiscoverScreen extends StatelessWidget {
                           name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: GoogleFonts.montserrat(
+                            color: AppColors.whiteColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
@@ -304,33 +328,31 @@ class FounderDiscoverScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 5),
                       Container(
-                        width: 11,
-                        height: 11,
+                        width: 12,
+                        height: 12,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Color(0xFF9654FF),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.check,
                           size: 8,
-                          color: Colors.white,
+                          color: AppColors.whiteColor,
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    '$industry · $location',
+                    '$industry · $location, India',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Color(0xFF777777),
-                      fontSize: 11,
-                    ),
+                    style: GoogleFonts.montserrat(
+                        color: Color(0xFF777777),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                 
                   const SizedBox(height: 20),
                 ],
               ),
@@ -340,20 +362,21 @@ class FounderDiscoverScreen extends StatelessWidget {
               onTap: onBookmarkTap,
               child: isLoading
                   ? const SizedBox(
-                width: 15,
-                height: 15,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF777777)),
-                ),
-              )
+                      width: 15,
+                      height: 15,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Color(0xFF777777)),
+                      ),
+                    )
                   : Icon(
-                isSaved
-                    ? Icons.bookmark_rounded
-                    : Icons.bookmark_border_rounded,
-                size: 21,
-                color: isSaved ? Colors.white : const Color(0xFF777777),
-              ),
+                      isSaved
+                          ? Icons.bookmark_rounded
+                          : Icons.bookmark_border_rounded,
+                      size: 21,
+                      color: isSaved ? Colors.white : const Color(0xFF777777),
+                    ),
             ),
           ],
         ),
@@ -367,43 +390,22 @@ class FounderDiscoverScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Raising',
-                    style: TextStyle(
+                    style: GoogleFonts.montserrat(
                       color: AppColors.darkGreyColor,
-                      fontSize: 10,
+                      fontSize: 14,
                     ),
                   ),
                   Text(
                     investment,
-                    style: TextStyle(
+                    style: GoogleFonts.montserrat(
                         color: AppColors.whiteColor,
-                        fontSize: 11,
+                        fontSize: 13,
                         fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
             ),
-            SizedBox(
-              width: MediaQuery.sizeOf(context).width / 4,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'TimeLine',
-                    style: TextStyle(
-                      color: AppColors.darkGreyColor,
-                      fontSize: 10,
-                    ),
-                  ),
-                  Text(
-                    timeline,
-                    style: TextStyle(
-                        color: AppColors.whiteColor,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-            ),
+
           ],
         ),
         const SizedBox(
@@ -415,18 +417,16 @@ class FounderDiscoverScreen extends StatelessWidget {
             SizedBox(
               height: 30,
               child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 5),
                 padding: const EdgeInsets.symmetric(horizontal: 6),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: AppColors.blackColor,
                   borderRadius: BorderRadius.circular(11),
-                  border: Border.all(
-                      color: const Color(0xFF292929), width: 1),
+                  border: Border.all(color: const Color(0xFF292929), width: 1),
                 ),
-                child:  Text(
+                child: Text(
                   stage,
-                  style: const TextStyle(
+                  style: GoogleFonts.montserrat(
                       color: AppColors.darkGreyColor,
                       fontSize: 12,
                       fontWeight: FontWeight.w500),
@@ -434,27 +434,24 @@ class FounderDiscoverScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            InkWell(
-              onTap: () {},
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'View Profile',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'View Profile',
+                  style: GoogleFonts.montserrat(
+                    color: AppColors.whiteColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
-                  SizedBox(width: 6),
-                  Icon(
-                    Icons.arrow_forward_rounded,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 6),
+                const Icon(
+                  Icons.arrow_forward_rounded,
+                  color: AppColors.whiteColor,
+                  size: 18,
+                ),
+              ],
             )
           ],
         )

@@ -1,7 +1,9 @@
 import 'package:exit_app/constants/app_color.dart';
+import 'package:exit_app/constants/app_images.dart';
 import 'package:exit_app/controller/founder_dashboard_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -129,7 +131,27 @@ class FundingRequestListScreen extends StatelessWidget {
                     itemCount: fundingController.createFundsList.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      return Container(
+                      return fundingController.createFundsList == null ||
+                              fundingController.createFundsList!.isEmpty
+                          ?  Column(
+                        children: [
+                          Center(
+                            child: SvgPicture.asset(
+                              AppImages.noDataFound,
+                              width: 100,
+                              height: 100,
+                            ),
+                          ),
+                          Text(
+                            'No Posts Yet!',
+                            style: GoogleFonts.montserrat(
+                                color: AppColors.whiteColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500),
+                          )
+                        ],
+                      )
+                          : Container(
                         margin: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 16),
                         width: MediaQuery.sizeOf(context).width,
@@ -143,7 +165,8 @@ class FundingRequestListScreen extends StatelessWidget {
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.blackColor.withOpacity(0.25),
+                              color:
+                              AppColors.blackColor.withOpacity(0.25),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -153,14 +176,16 @@ class FundingRequestListScreen extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
                               children: [
                                 Container(
                                   width: 36,
                                   height: 36,
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFDCE9ED),
-                                    borderRadius: BorderRadius.circular(9),
+                                    borderRadius:
+                                    BorderRadius.circular(9),
                                   ),
                                   child: const Center(
                                     child: Icon(
@@ -177,7 +202,7 @@ class FundingRequestListScreen extends StatelessWidget {
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -187,16 +212,20 @@ class FundingRequestListScreen extends StatelessWidget {
                                                   .createFundsList[index]
                                                   .companyName
                                                   .toString(),
-                                              style: GoogleFonts.montserrat(
-                                                color: AppColors.whiteColor,
+                                              style:
+                                              GoogleFonts.montserrat(
+                                                color:
+                                                AppColors.whiteColor,
                                                 fontSize: 18,
-                                                fontWeight: FontWeight.w600,
+                                                fontWeight:
+                                                FontWeight.w600,
                                               ),
                                             ),
                                           ),
                                           const SizedBox(width: 10),
                                           Container(
-                                            padding: const EdgeInsets.symmetric(
+                                            padding: const EdgeInsets
+                                                .symmetric(
                                               horizontal: 7,
                                               vertical: 3,
                                             ),
@@ -204,14 +233,18 @@ class FundingRequestListScreen extends StatelessWidget {
                                               color: AppColors.greenColor
                                                   .withOpacity(0.30),
                                               borderRadius:
-                                                  BorderRadius.circular(5),
+                                              BorderRadius.circular(
+                                                  5),
                                             ),
                                             child: Text(
                                               'Published',
-                                              style: GoogleFonts.montserrat(
-                                                color: AppColors.greenColor,
+                                              style:
+                                              GoogleFonts.montserrat(
+                                                color:
+                                                AppColors.greenColor,
                                                 fontSize: 14,
-                                                fontWeight: FontWeight.w600,
+                                                fontWeight:
+                                                FontWeight.w600,
                                               ),
                                             ),
                                           ),
@@ -238,21 +271,26 @@ class FundingRequestListScreen extends StatelessWidget {
                                     color: AppColors.darkGreyColor,
                                     size: 24,
                                   ),
-                                  color: AppColors.containerBackgroundColor,
+                                  color:
+                                  AppColors.containerBackgroundColor,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius:
+                                    BorderRadius.circular(12),
                                   ),
                                   onSelected: (value) {
                                     if (value == 'edit') {
-                                      fundingController.editPostOrDeletePost(
-                                          index, 'FundRaise', 'edit', '');
+                                      fundingController
+                                          .editPostOrDeletePost(index,
+                                          'FundRaise', 'edit', '');
                                     } else if (value == 'delete') {
-                                      fundingController.editPostOrDeletePost(
+                                      fundingController
+                                          .editPostOrDeletePost(
                                           index,
                                           'SellCompany',
                                           'delete',
                                           fundingController
-                                              .createFundsList[index].id
+                                              .createFundsList[index]
+                                              .id
                                               .toString());
                                     }
                                   },
@@ -290,9 +328,11 @@ class FundingRequestListScreen extends StatelessWidget {
                                           Text(
                                             'Delete',
                                             style: GoogleFonts.montserrat(
-                                                color: AppColors.whiteColor,
+                                                color:
+                                                AppColors.whiteColor,
                                                 fontSize: 16,
-                                                fontWeight: FontWeight.w500),
+                                                fontWeight:
+                                                FontWeight.w500),
                                           ),
                                         ],
                                       ),
@@ -305,31 +345,33 @@ class FundingRequestListScreen extends StatelessWidget {
                             Row(children: [
                               Expanded(
                                   child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '₹${fundingController.createFundsList[index].fundingGoal}',
-                                    style: GoogleFonts.montserrat(
-                                      color: AppColors.whiteColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Funding Goal',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.montserrat(
-                                      color: AppColors.darkGreyColor,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              )),
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '₹${fundingController.createFundsList[index].fundingGoal}',
+                                        style: GoogleFonts.montserrat(
+                                          color: AppColors.whiteColor,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Funding Goal',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.montserrat(
+                                          color: AppColors.darkGreyColor,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  )),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       fundingController
@@ -394,8 +436,8 @@ class FundingRequestListScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 5),
                                 Text(
-                                  fundingController
-                                      .createFundsList[index].interestedCount
+                                  fundingController.createFundsList[index]
+                                      .interestedCount
                                       .toString(),
                                   style: GoogleFonts.montserrat(
                                       color: AppColors.whiteColor,
@@ -444,6 +486,7 @@ class FundingRequestListScreen extends StatelessWidget {
                           ],
                         ),
                       );
+
                     }),
               ),
             ),

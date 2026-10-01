@@ -24,6 +24,8 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../constants/app_color.dart';
+import '../models/ForIncreaseViewCountModel.dart';
 import '../models/auth_flow_response_model.dart';
 import '../models/buy_plan_model.dart';
 import '../models/delete_funds_api_response.dart';
@@ -80,8 +82,7 @@ class ApiServices {
   }
 
   Future<CreateProfileModel?> createProfileApi(String first_name,
-      String last_name, String email, String current_location)
-  async {
+      String last_name, String email, String current_location) async {
     final token = prefs.getString('token');
     debugPrint('object${token}');
     final Uri url = Uri.parse(ApiUtils.createProfileApi);
@@ -112,19 +113,18 @@ class ApiServices {
     }
   }
 
-
   Future<CreateProfileModel?> setYourPreferencesApi(
-      String firstName,
-      String lastName,
-      String email,
-      String location,
-      String preferredInvestment,
-      String preferredStage,
-      String preferredIndustries,
-      String preferredLocation,
-      String founded,
-      String fundingType,
-      ) async {
+    String firstName,
+    String lastName,
+    String email,
+    String location,
+    String preferredInvestment,
+    String preferredStage,
+    String preferredIndustries,
+    String preferredLocation,
+    String founded,
+    String fundingType,
+  ) async {
     final token = prefs.getString('token');
     debugPrint('object${token}');
     final Uri url = Uri.parse(ApiUtils.createProfileApi);
@@ -235,7 +235,6 @@ class ApiServices {
     return null;
   }
 
-
   Future<MarketplaceIndustriesResponse?> getMarketplaceRangesApi() async {
     final token = prefs.getString('token');
     final Uri url = Uri.parse(ApiUtils.marketplaceRangesApi);
@@ -258,7 +257,6 @@ class ApiServices {
     }
     return null;
   }
-
 
   Future<MarketplaceIndustriesResponse?> getMarketplaceLocationsApi() async {
     final token = prefs.getString('token');
@@ -305,7 +303,6 @@ class ApiServices {
     }
     return null;
   }
-
 
   Future<MarketplaceIndustriesResponse?> getFundsRaisePurposeApi() async {
     final token = prefs.getString('token');
@@ -413,8 +410,7 @@ class ApiServices {
 
   Future<SavedInvestorModel?> savedInvestorApi(
     String investor_id,
-  )
-  async {
+  ) async {
     final token = prefs.getString('token');
     debugPrint('object${token}');
     final Uri url = Uri.parse(ApiUtils.savedInvestorApi);
@@ -443,8 +439,7 @@ class ApiServices {
 
   Future<SavedInvestorModel?> removeInvestorApi(
     String investor_id,
-  )
-  async {
+  ) async {
     final token = prefs.getString('token');
     debugPrint('object${token}');
 
@@ -472,8 +467,7 @@ class ApiServices {
 
   Future<ProfileModel?> getUserProfileApi(
     String id,
-  )
-  async {
+  ) async {
     final token = prefs.getString('token');
     print('object${token}');
 
@@ -500,25 +494,23 @@ class ApiServices {
   }
 
   Future<CreateFundRaiseModel?> createFundsRaiseApi(
-      String fundingGoal,
-      String currency,
-      String stage,
-      String purpose,
-      String companyName,
-      String companyLogo,
-      String industry,
-      String location,
-      String companyWebsite,
-      String companyDescription,
-      String raiseDescription,
-      String fundingTimeline,
-      String pitchDeck,
-      ) async {
+    String fundingGoal,
+    String currency,
+    String stage,
+    String purpose,
+    String companyName,
+    String companyLogo,
+    String industry,
+    String location,
+    String companyWebsite,
+    String companyDescription,
+    String raiseDescription,
+    String fundingTimeline,
+    String pitchDeck,
+  ) async {
     try {
       final token = prefs.getString('token');
-
       final Uri url = Uri.parse(ApiUtils.createFundsRaiseApi);
-
       debugPrint('========== FUND RAISE API ==========');
       debugPrint('URL: $url');
       debugPrint('Funding Goal: $fundingGoal');
@@ -540,7 +532,6 @@ class ApiServices {
         'POST',
         url,
       );
-
       request.headers.addAll({
         "Accept": "application/json",
         "Authorization": "token $token",
@@ -622,10 +613,8 @@ class ApiServices {
       debugPrint('Status Code: ${response.statusCode}');
       debugPrint('Response Body: ${response.body}');
 
-      if (response.statusCode >= 200 &&
-          response.statusCode < 300) {
-        final Map<String, dynamic> jsonResponse =
-        jsonDecode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
         return CreateFundRaiseModel.fromJson(jsonResponse);
       }
@@ -641,21 +630,22 @@ class ApiServices {
       return null;
     }
   }
+
   Future<CreateFundRaiseModel?> createSellCompanyApi(
-      String fundingGoal,
-      String currency,
-      String stage,
-      String acquisition_type,
-      String companyName,
-      String companyLogo,
-      String industry,
-      String location,
-      String companyWebsite,
-      String companyDescription,
-      String raiseDescription,
-      String profitability,
-      String? pitchDeck,
-      ) async {
+    String fundingGoal,
+    String currency,
+    String stage,
+    String acquisition_type,
+    String companyName,
+    String companyLogo,
+    String industry,
+    String location,
+    String companyWebsite,
+    String companyDescription,
+    String raiseDescription,
+    String profitability,
+    String? pitchDeck,
+  ) async {
     try {
       final token = prefs.getString('token');
 
@@ -764,10 +754,8 @@ class ApiServices {
       debugPrint('Status Code: ${response.statusCode}');
       debugPrint('Response Body: ${response.body}');
 
-      if (response.statusCode >= 200 &&
-          response.statusCode < 300) {
-        final Map<String, dynamic> jsonResponse =
-        jsonDecode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
         return CreateFundRaiseModel.fromJson(jsonResponse);
       }
@@ -783,8 +771,6 @@ class ApiServices {
       return null;
     }
   }
-
-
 
   // Investor Home Apis
   Future<NeedsAttentionResponse?> getNeedsAttentionApi({int? limit}) async {
@@ -814,7 +800,6 @@ class ApiServices {
     return null;
   }
 
-
   Future<NeedsAttentionAllResponse?> getNeedsAttentionAllApi() async {
     final token = prefs.getString('token');
 
@@ -838,7 +823,6 @@ class ApiServices {
     }
     return null;
   }
-
 
   Future<FundingRequestListResponse?> getFounderDiscoveryApi({
     int? limit,
@@ -875,7 +859,6 @@ class ApiServices {
     return null;
   }
 
-
   Future<NewSinceLastVisitResponse?> getLastVisitListApi({
     int? limit,
     int? page,
@@ -911,7 +894,6 @@ class ApiServices {
     return null;
   }
 
-
   Future<UpdateProfileResponse?> updateProfileApi({
     required String firstName,
     required String lastName,
@@ -927,8 +909,7 @@ class ApiServices {
     required String preferredStage,
     required String preferredIndustries,
     required String preferredLocation,
-  })
-  async {
+  }) async {
     try {
       final token = prefs.getString('token');
 
@@ -963,8 +944,7 @@ class ApiServices {
       });
 
       // Profile Image
-      if (profileImagePath != null &&
-          profileImagePath.isNotEmpty) {
+      if (profileImagePath != null && profileImagePath.isNotEmpty) {
         request.files.add(
           await http.MultipartFile.fromPath(
             "profile_photo",
@@ -986,10 +966,8 @@ class ApiServices {
       debugPrint("Status Code: ${response.statusCode}");
       debugPrint("Response Body: ${response.body}");
 
-      if (response.statusCode >= 200 &&
-          response.statusCode < 300) {
-        final Map<String, dynamic> jsonResponse =
-        jsonDecode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
         await getPlanApi();
 
@@ -998,7 +976,7 @@ class ApiServices {
 
       debugPrint(
         "Update Profile Failed: "
-            "${response.statusCode} - ${response.body}",
+        "${response.statusCode} - ${response.body}",
       );
 
       return null;
@@ -1010,12 +988,10 @@ class ApiServices {
     }
   }
 
-
   Future<ConnectionResponse?> createConnectionApi({
     required int founderId,
     required int fundingId,
-  })
-  async {
+  }) async {
     final token = prefs.getString('token');
 
     final Uri url = Uri.parse(ApiUtils.connectionsCheck);
@@ -1027,10 +1003,8 @@ class ApiServices {
         "Accept": "application/json",
         "Authorization": "token $token",
       },
-      body: jsonEncode({
-        "founder_id": founderId,
-        "funding_request_id": fundingId
-      }),
+      body: jsonEncode(
+          {"founder_id": founderId, "funding_request_id": fundingId}),
     );
     debugPrint("API URL: $founderId");
     debugPrint("API URL: $url");
@@ -1045,11 +1019,10 @@ class ApiServices {
 
     return null;
   }
+
   Future<ConnectionResponse?> createConnectionWithInvestorApi({
     required int investorId,
-
-  })
-  async {
+  }) async {
     final token = prefs.getString('token');
 
     final Uri url = Uri.parse(ApiUtils.connectionsCheck);
@@ -1063,7 +1036,6 @@ class ApiServices {
       },
       body: jsonEncode({
         "investor_id": investorId,
-
       }),
     );
     debugPrint("API URL: $investorId");
@@ -1115,12 +1087,10 @@ class ApiServices {
   //   return null;
   // }
 
-
   Future<ChatHistoryResponse?> getChatHistoryApi({
     required String conversationId,
     required int currentUserId,
-  })
-  async {
+  }) async {
     final token = prefs.getString('token');
 
     final Uri url = Uri.parse(
@@ -1141,10 +1111,8 @@ class ApiServices {
       debugPrint("Status Code: ${response.statusCode}");
       debugPrint("Response Body: ${response.body}");
 
-      if (response.statusCode >= 200 &&
-          response.statusCode < 300) {
-        final Map<String, dynamic> jsonResponse =
-        jsonDecode(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
         return ChatHistoryResponse.fromJson(
           jsonResponse,
@@ -1199,11 +1167,9 @@ class ApiServices {
     }
   }
 
-
   Future<bool> saveFounderApi({
     required int founderId,
-  })
-  async {
+  }) async {
     final token = prefs.getString('token');
 
     final Uri url = Uri.parse(ApiUtils.saveFounderApi);
@@ -1294,8 +1260,7 @@ class ApiServices {
       debugPrint("Response Body: ${response.body}");
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonResponse =
-        jsonDecode(response.body);
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
         debugPrint(
           "Logout Message: ${jsonResponse['data']?['message']}",
@@ -1339,12 +1304,7 @@ class ApiServices {
             image.path,
           ),
         );
-      }
-
-      // =========================
-      // TEXT DATA MODE
-      // =========================
-      else {
+      } else {
         if (number != null && number.isNotEmpty) {
           request.fields['pan_number'] = number;
         }
@@ -1390,7 +1350,6 @@ class ApiServices {
     }
   }
 
-
   Future<CreateFundRaiseModel?> getCreateFundsRaiseApi() async {
     final token = prefs.getString('token');
 
@@ -1434,7 +1393,6 @@ class ApiServices {
     final Uri url = Uri.parse(ApiUtils.getUserProfile);
 
     try {
-
       debugPrint("isPrivate: $isPrivate");
 
       final response = await http.patch(
@@ -1462,9 +1420,8 @@ class ApiServices {
   }
 
   Future<DeleteFundsApiResponse?> deleteFundsApiResonse(
-      String item_id,
-      )
-  async {
+    String item_id,
+  ) async {
     final token = prefs.getString('token');
     debugPrint('object${token}');
 
@@ -1490,10 +1447,31 @@ class ApiServices {
     }
   }
 
+  Future<ForIncreaseViewCountModel?> getForIncreaseFounderView(
+    String id,
+  ) async {
+    final token = prefs.getString('token');
+    print('object${token}');
 
+    final Uri url = Uri.parse(
+      '${ApiUtils.forIncreaseViewCountApi}/${id}/',
+    );
+
+    final response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    print("API URL: $url");
+    print("Status Code: ${response.statusCode}");
+    print("Response Body: ${response.body}");
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      return ForIncreaseViewCountModel.fromJson(jsonResponse);
+    }
+  }
 }
-
-
-
-
-

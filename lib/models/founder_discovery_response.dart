@@ -65,10 +65,10 @@ class FundingRequestListData {
 class FundingRequest {
   final int id;
   final String owner;
-  final String fundingGoal; // API returns "15000000.00" as string
+  final String fundingGoal;
   final String currency;
-  final String stage; // e.g. "seed"
-  final String purpose; // e.g. "product_development"
+  final String stage;
+  final String purpose;
   final String companyName;
   final String? companyLogo;
   final String industry;
@@ -76,9 +76,9 @@ class FundingRequest {
   final String companyWebsite;
   final String companyDescription;
   final String raiseDescription;
-  final String fundingTimeline; // e.g. "3_6_months"
+  final String fundingTimeline;
   final String? pitchDeck;
-  final String status; // e.g. "published"
+  final String status;
   final DateTime? publishedAt;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -123,7 +123,6 @@ class FundingRequest {
       if (value == null) return null;
       return DateTime.tryParse(value.toString());
     }
-
     return FundingRequest(
       id: json['id'] is int
           ? json['id'] as int
@@ -131,7 +130,7 @@ class FundingRequest {
       owner: json['owner']?.toString() ?? '',
       fundingGoal: json['funding_goal']?.toString() ?? '0',
       currency: json['currency']?.toString() ?? '',
-      stage: json['stage']?.toString() ?? '',
+      stage: json['company_stage']?.toString() ?? '',
       purpose: json['purpose']?.toString() ?? '',
       companyName: json['company_name']?.toString() ?? '',
       companyLogo: json['company_logo']?.toString(),
@@ -161,7 +160,7 @@ class FundingRequest {
       'owner': owner,
       'funding_goal': fundingGoal,
       'currency': currency,
-      'stage': stage,
+      'company_stage': stage,
       'purpose': purpose,
       'company_name': companyName,
       'company_logo': companyLogo,

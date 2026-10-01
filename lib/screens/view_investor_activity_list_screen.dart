@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../constants/app_images.dart';
+import '../models/InvestorActivity.dart';
 
 class ViewInvestorActivityListScreen extends StatelessWidget {
   List<InvestorActivity> investorActivity = <InvestorActivity>[];

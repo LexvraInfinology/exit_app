@@ -25,7 +25,6 @@ import '../screens/chat_details_screen.dart';
 import '../screens/onboarding_screen.dart';
 
 class InvestorDashboardController extends GetxController {
-
   RxInt selectedIndex = 0.obs;
   int selectedFilter = 0;
 
@@ -36,10 +35,10 @@ class InvestorDashboardController extends GetxController {
 
   final RxList<ResultsProfile> resultProfile = <ResultsProfile>[].obs;
   int? currentUserId;
-  final List<NeedsAttentionItem> needsAttentionList =
-      <NeedsAttentionItem>[];
+  final List<NeedsAttentionItem> needsAttentionList = <NeedsAttentionItem>[];
   final RxList<FundingRequest> founderList = <FundingRequest>[].obs;
-  final RxList<LastVisitFundingRequest> lastVisitedList = <LastVisitFundingRequest>[].obs;
+  final RxList<LastVisitFundingRequest> lastVisitedList =
+      <LastVisitFundingRequest>[].obs;
   final RxList<NeedsAttentionItem> needsAttentionAllList =
       <NeedsAttentionItem>[].obs;
 
@@ -55,8 +54,7 @@ class InvestorDashboardController extends GetxController {
 
   RxList<Investment> investments = <Investment>[].obs;
 
-
-  List<FilterListModel> filterListItems =  [
+  List<FilterListModel> filterListItems = [
     FilterListModel(title: "Stage", options: []),
     FilterListModel(title: "Sector", options: []),
     FilterListModel(title: "Under ₹25L", options: []),
@@ -68,8 +66,6 @@ class InvestorDashboardController extends GetxController {
   final Rxn<MarketplaceIndustry> selectedRange = Rxn<MarketplaceIndustry>();
   final Rxn<MarketplaceIndustry> selectedLocation = Rxn<MarketplaceIndustry>();
 
-
-
   @override
   void onInit() {
     super.onInit();
@@ -80,12 +76,12 @@ class InvestorDashboardController extends GetxController {
     if (newOptions.isEmpty) return;
     final index = filterListItems.indexWhere((e) => e.title == title);
     if (index != -1) {
-      filterListItems[index] = FilterListModel(title: title, options: newOptions);
+      filterListItems[index] =
+          FilterListModel(title: title, options: newOptions);
     }
   }
 
-
-MarketplaceIndustry? selectedFor(String title) {
+  MarketplaceIndustry? selectedFor(String title) {
     debugPrint("Checking ===> $title");
     switch (title) {
       case 'Stage':
@@ -100,6 +96,7 @@ MarketplaceIndustry? selectedFor(String title) {
         return null;
     }
   }
+
   void onFilterSelected(String title, MarketplaceIndustry? value) {
     debugPrint("Checking ===> ${value?.name}");
     switch (title) {
@@ -119,8 +116,7 @@ MarketplaceIndustry? selectedFor(String title) {
     update();
   }
 
-
-Future<void> loadHomePage() async {
+  Future<void> loadHomePage() async {
     isLoading.value = true;
     update();
 
@@ -165,7 +161,6 @@ Future<void> loadHomePage() async {
     }
   }
 
-
   void onItemSelected(int index) {
     selectedIndex.value = index;
   }
@@ -175,13 +170,14 @@ Future<void> loadHomePage() async {
   }
 
   void clickFounderDetails(FundingRequest? fundingData) {
-  if(fundingData != null){
-    Get.to(() => FounderDetailsScreen( fundingData: fundingData,));
-  }
+    if (fundingData != null) {
+      getForViewIncreaseApi(fundingData.id.toString());
+      Get.to(() => FounderDetailsScreen(fundingData: fundingData));
+    }
   }
 
   void clickInvestmentDetails() {
-    Get.to(() => ViewInvestmentDetailsScreen());
+    Get.to(() => const ViewInvestmentDetailsScreen());
   }
 
   void clickChatItem() {
@@ -266,7 +262,8 @@ Future<void> loadHomePage() async {
 
                             if (success) {
                               await prefs.clear();
-                              Get.offAll(() => const OnboardingScreen(),
+                              Get.offAll(
+                                () => const OnboardingScreen(),
                               );
                             } else {
                               Get.snackbar(
@@ -305,13 +302,11 @@ Future<void> loadHomePage() async {
     } catch (e) {
       debugPrint('object $e');
       Get.snackbar('Error', 'Something went wrong. Please try again.');
-    } finally {
-    }
+    } finally {}
   }
 
   Future<void> getNeedsAttentionAllApi() async {
     try {
-
       final NeedsAttentionAllResponse? response =
           await apiServices.getNeedsAttentionAllApi();
 
@@ -322,7 +317,6 @@ Future<void> loadHomePage() async {
         needsAttentionAllList.assignAll(response?.data ?? []);
         debugPrint(
             "Needs Attention All List Length: ${needsAttentionAllList.length}");
-
       } else {
         Get.snackbar(
           'Fetch Failed',
@@ -374,14 +368,13 @@ Future<void> loadHomePage() async {
 
   Future<void> getMarketplaceIndustriesApi() async {
     try {
-
       final MarketplaceIndustriesResponse? response =
-      await apiServices.getMarketplaceIndustriesApi();
+          await apiServices.getMarketplaceIndustriesApi();
 
       if (response?.statusCode == 200) {
         industriesList.assignAll(response?.data ?? []);
         final options = industriesList.map((e) => e.name).toList();
-        _replaceItemOptions("Sector",industriesList);
+        _replaceItemOptions("Sector", industriesList);
       } else {
         Get.snackbar(
             'Failed', response?.message ?? 'Failed to fetch industries');
@@ -396,11 +389,11 @@ Future<void> loadHomePage() async {
     try {
       isLoading.value = true;
       final MarketplaceIndustriesResponse? response =
-      await apiServices.getMarketplaceStagesApi();
+          await apiServices.getMarketplaceStagesApi();
 
       if (response?.statusCode == 200) {
         stagesList.assignAll(response?.data ?? []);
-        _replaceItemOptions("Stage",stagesList);
+        _replaceItemOptions("Stage", stagesList);
       } else {
         Get.snackbar(
             'Failed', response?.message ?? 'Failed to fetch industries');
@@ -415,11 +408,11 @@ Future<void> loadHomePage() async {
     try {
       isLoading.value = true;
       final MarketplaceIndustriesResponse? response =
-      await apiServices.getMarketplaceRangesApi();
+          await apiServices.getMarketplaceRangesApi();
 
       if (response?.statusCode == 200) {
         rangesList.assignAll(response?.data ?? []);
-        _replaceItemOptions("Under ₹25L",rangesList);
+        _replaceItemOptions("Under ₹25L", rangesList);
       } else {
         Get.snackbar(
             'Failed', response?.message ?? 'Failed to fetch industries');
@@ -434,11 +427,11 @@ Future<void> loadHomePage() async {
     try {
       isLoading.value = true;
       final MarketplaceIndustriesResponse? response =
-      await apiServices.getMarketplaceLocationsApi();
+          await apiServices.getMarketplaceLocationsApi();
 
       if (response?.statusCode == 200) {
         locationsList.assignAll(response?.data ?? []);
-        _replaceItemOptions("Location",locationsList);
+        _replaceItemOptions("Location", locationsList);
       } else {
         Get.snackbar(
             'Failed', response?.message ?? 'Failed to fetch industries');
@@ -451,7 +444,8 @@ Future<void> loadHomePage() async {
 
   Future<void> getuserProfileApi() async {
     try {
-      final response = await apiServices.getUserProfileApi(prefs.getString('id').toString());
+      final response =
+          await apiServices.getUserProfileApi(prefs.getString('id').toString());
       debugPrint("Status Code: ${response?.statusCode}");
       debugPrint("Message: ${response?.message}");
       resultProfile.value = response?.data!.results ?? [];
@@ -472,8 +466,7 @@ Future<void> loadHomePage() async {
   Future<void> getChatListApi() async {
     try {
       isLoading.value = true;
-      final ConversationResponse? response =
-      await apiServices.getChatListApi();
+      final ConversationResponse? response = await apiServices.getChatListApi();
 
       if (response?.statusCode == 200) {
         chats.assignAll(response?.data ?? []);
@@ -486,8 +479,6 @@ Future<void> loadHomePage() async {
       Get.snackbar('Error', 'Something went wrong. Please try again.');
     }
   }
-
-
 
   Future<void> toggleSavedFounder(FundingRequest item) async {
     if (item.isLoading) return;
@@ -515,21 +506,18 @@ Future<void> loadHomePage() async {
     founderList.refresh();
   }
 
-
   Future<void> getPortfolioApi() async {
     try {
       isLoading.value = true;
-      final PortfolioResponse? response =
-      await apiServices.getPortfolioApi();
+      final PortfolioResponse? response = await apiServices.getPortfolioApi();
 
       if (response?.statusCode == 200) {
-    if(response != null){
-      summary.value = response.data.summary;
-      investments.value = response.data.investments;
-    }
+        if (response != null) {
+          summary.value = response.data.summary;
+          investments.value = response.data.investments;
+        }
       } else {
-        Get.snackbar(
-            'Failed', response?.message ?? 'Failed to load portfolio');
+        Get.snackbar('Failed', response?.message ?? 'Failed to load portfolio');
       }
     } catch (e) {
       debugPrint('object $e');
@@ -537,4 +525,28 @@ Future<void> loadHomePage() async {
     }
   }
 
+  Future<void> getForViewIncreaseApi(String item_id) async {
+    try {
+      isLoading.value = true;
+      final response = await apiServices.getForIncreaseFounderView(item_id);
+      print("Status Code: ${response?.statusCode}");
+      print("Message: ${response?.message}");
+      if (response?.statusCode == 200) {
+        isLoading.value = false;
+      } else {
+        isLoading.value = false;
+      }
+    } catch (e) {
+      isLoading.value = false;
+      Get.snackbar(
+        'Error',
+        'Something went wrong. Please try again.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.blackColor,
+        colorText: AppColors.whiteColor,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

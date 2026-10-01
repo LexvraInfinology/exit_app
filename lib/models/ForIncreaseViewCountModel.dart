@@ -1,14 +1,14 @@
 import 'CompanyDetails.dart';
 import 'InvestorActivity.dart';
 
-class CreateFundRaiseModel {
+class ForIncreaseViewCountModel {
   int? statusCode;
   String? message;
   Data? data;
 
-  CreateFundRaiseModel({this.statusCode, this.message, this.data});
+  ForIncreaseViewCountModel({this.statusCode, this.message, this.data});
 
-  CreateFundRaiseModel.fromJson(Map<String, dynamic> json) {
+  ForIncreaseViewCountModel.fromJson(Map<String, dynamic> json) {
     statusCode = json['status_code'];
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
@@ -26,43 +26,13 @@ class CreateFundRaiseModel {
 }
 
 class Data {
-  int? count;
-  String? next;
-  String? previous;
-  List<CreateFundsRaiseData>? results;
-
-  Data({this.count, this.next, this.previous, this.results});
-
-  Data.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
-    next = json['next'];
-    previous = json['previous'];
-    if (json['results'] != null) {
-      results = <CreateFundsRaiseData>[];
-      json['results'].forEach((v) {
-        results!.add(new CreateFundsRaiseData.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['count'] = this.count;
-    data['next'] = this.next;
-    data['previous'] = this.previous;
-    if (this.results != null) {
-      data['results'] = this.results!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class CreateFundsRaiseData {
   int? id;
   String? owner;
   String? fundingGoal;
   String? currency;
-  String? stage;
+  String? equity;
+  String? acquisitionType;
+  String? companyStage;
   String? purpose;
   String? companyName;
   String? companyLogo;
@@ -71,6 +41,10 @@ class CreateFundsRaiseData {
   String? companyWebsite;
   String? companyDescription;
   String? raiseDescription;
+  String? buyerInformation;
+  String? annualRevenue;
+  String? monthlyRevenue;
+  String? profitability;
   String? fundingTimeline;
   String? pitchDeck;
   String? status;
@@ -86,41 +60,49 @@ class CreateFundsRaiseData {
   CompanyDetails? companyDetails;
   List<InvestorActivity>? investorActivity;
 
-  CreateFundsRaiseData(
+  Data(
       {this.id,
-      this.owner,
-      this.fundingGoal,
-      this.currency,
-      this.stage,
-      this.purpose,
-      this.companyName,
-      this.companyLogo,
-      this.industry,
-      this.location,
-      this.companyWebsite,
-      this.companyDescription,
-      this.raiseDescription,
-      this.fundingTimeline,
-      this.pitchDeck,
-      this.status,
-      this.publishedAt,
-      this.createdAt,
-      this.updatedAt,
-      this.viewsCount,
-      this.interestedCount,
-      this.connectionsCount,
-      this.useOfFunds,
-      this.founded,
-      this.teamSize,
-      this.companyDetails,
-      this.investorActivity});
+        this.owner,
+        this.fundingGoal,
+        this.currency,
+        this.equity,
+        this.acquisitionType,
+        this.companyStage,
+        this.purpose,
+        this.companyName,
+        this.companyLogo,
+        this.industry,
+        this.location,
+        this.companyWebsite,
+        this.companyDescription,
+        this.raiseDescription,
+        this.buyerInformation,
+        this.annualRevenue,
+        this.monthlyRevenue,
+        this.profitability,
+        this.fundingTimeline,
+        this.pitchDeck,
+        this.status,
+        this.publishedAt,
+        this.createdAt,
+        this.updatedAt,
+        this.viewsCount,
+        this.interestedCount,
+        this.connectionsCount,
+        this.useOfFunds,
+        this.founded,
+        this.teamSize,
+        this.companyDetails,
+        this.investorActivity});
 
-  CreateFundsRaiseData.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     owner = json['owner'];
     fundingGoal = json['funding_goal'];
     currency = json['currency'];
-    stage = json['company_stage'];
+    equity = json['equity'];
+    acquisitionType = json['acquisition_type'];
+    companyStage = json['company_stage'];
     purpose = json['purpose'];
     companyName = json['company_name'];
     companyLogo = json['company_logo'];
@@ -129,6 +111,10 @@ class CreateFundsRaiseData {
     companyWebsite = json['company_website'];
     companyDescription = json['company_description'];
     raiseDescription = json['raise_description'];
+    buyerInformation = json['buyer_information'];
+    annualRevenue = json['annual_revenue'];
+    monthlyRevenue = json['monthly_revenue'];
+    profitability = json['profitability'];
     fundingTimeline = json['funding_timeline'];
     pitchDeck = json['pitch_deck'];
     status = json['status'];
@@ -158,7 +144,9 @@ class CreateFundsRaiseData {
     data['owner'] = this.owner;
     data['funding_goal'] = this.fundingGoal;
     data['currency'] = this.currency;
-    data['company_stage'] = this.stage;
+    data['equity'] = this.equity;
+    data['acquisition_type'] = this.acquisitionType;
+    data['company_stage'] = this.companyStage;
     data['purpose'] = this.purpose;
     data['company_name'] = this.companyName;
     data['company_logo'] = this.companyLogo;
@@ -167,6 +155,10 @@ class CreateFundsRaiseData {
     data['company_website'] = this.companyWebsite;
     data['company_description'] = this.companyDescription;
     data['raise_description'] = this.raiseDescription;
+    data['buyer_information'] = this.buyerInformation;
+    data['annual_revenue'] = this.annualRevenue;
+    data['monthly_revenue'] = this.monthlyRevenue;
+    data['profitability'] = this.profitability;
     data['funding_timeline'] = this.fundingTimeline;
     data['pitch_deck'] = this.pitchDeck;
     data['status'] = this.status;

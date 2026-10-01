@@ -27,11 +27,11 @@ class RaiseFundsRequestController extends GetxController {
   final TextEditingController companyNameController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController companyWebsiteController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController companyDescriptionController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController raiseDescriptionController =
-      TextEditingController();
+  TextEditingController();
 
   final RxString industry = 'FinTech'.obs;
 
@@ -188,7 +188,7 @@ class RaiseFundsRequestController extends GetxController {
       isLoading.value = true;
 
       final MarketplaceIndustriesResponse? response =
-          await apiServices.getFundsRaisePurposeApi();
+      await apiServices.getFundsRaisePurposeApi();
 
       if (response?.statusCode == 200) {
         purposeList.value = response?.data ?? [];
@@ -208,7 +208,7 @@ class RaiseFundsRequestController extends GetxController {
     try {
       isLoading.value = true;
       final MarketplaceIndustriesResponse? response =
-          await apiServices.getMarketplaceStagesApi();
+      await apiServices.getMarketplaceStagesApi();
       if (response?.statusCode == 200) {
         stageList.value = response?.data ?? [];
         // purposeList.assignAll(response?.data ?? []);
@@ -232,57 +232,67 @@ class RaiseFundsRequestController extends GetxController {
     final companyDescription = companyDescriptionController.value.text.trim();
     final raiseDescription = raiseDescriptionController.value.text.trim();
     print('object===${companyNameController.value.text.trim()}');
-    try {
-      isLoading.value = true;
-      final response = await apiServices.createFundsRaiseApi(
-          funding_goal.replaceAll(',', ''),
-          "INR",
-          (selectedStage.value + 1).toString(),
-          (selectedPurpose.value + 1).toString(),
-          companyName,
-          selectedImage.value!.path,
-          industry.value,
-          location,
-          companyWebsite,
-          companyDescription,
-          raiseDescription,
-          "",
-          "");
-      print("Status Code: ${response?.statusCode}");
-      print("Message: ${response?.message}");
-      if (response?.statusCode == 201) {
-        isLoading.value = false;
-        Get.snackbar(
-          'Success',
-          response?.message ?? 'Funds Raise successfully',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: AppColors.blackColor,
-          colorText: AppColors.whiteColor,
-        );
-
-        postSubmitButton();
-      } else {
-        isLoading.value = false;
-        Get.snackbar(
-          'Funds raise Failed',
-          response?.message ?? 'Funds raise failed',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: AppColors.blackColor,
-          colorText: AppColors.whiteColor,
-        );
-      }
-    } catch (e) {
-      print('object ${e}');
-      isLoading.value = false;
+    if (selectedImage!.value == null) {
       Get.snackbar(
         'Error',
-        'Something went wrong. Please try again.',
+        'Please upload image first',
         snackPosition: SnackPosition.TOP,
         backgroundColor: AppColors.blackColor,
         colorText: AppColors.whiteColor,
       );
-    } finally {
-      isLoading.value = false;
+    }
+    else {
+      try {
+        isLoading.value = true;
+        final response = await apiServices.createFundsRaiseApi(
+            funding_goal.replaceAll(',', ''),
+            "INR",
+            (selectedStage.value + 1).toString(),
+            (selectedPurpose.value + 1).toString(),
+            companyName,
+            selectedImage.value!.path,
+            industry.value,
+            location,
+            companyWebsite,
+            companyDescription,
+            raiseDescription,
+            "",
+            "");
+        print("Status Code: ${response?.statusCode}");
+        print("Message: ${response?.message}");
+        if (response?.statusCode == 201) {
+          isLoading.value = false;
+          Get.snackbar(
+            'Success',
+            response?.message ?? 'Funds Raise successfully',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: AppColors.blackColor,
+            colorText: AppColors.whiteColor,
+          );
+          postSubmitButton();
+        } else {
+          isLoading.value = false;
+          Get.snackbar(
+            'Funds raise Failed',
+            response?.message ?? 'Funds raise failed',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: AppColors.blackColor,
+            colorText: AppColors.whiteColor,
+          );
+        }
+      } catch (e) {
+        print('object ${e}');
+        isLoading.value = false;
+        Get.snackbar(
+          'Error',
+          'Something went wrong. Please try again.',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: AppColors.blackColor,
+          colorText: AppColors.whiteColor,
+        );
+      } finally {
+        isLoading.value = false;
+      }
     }
   }
 }

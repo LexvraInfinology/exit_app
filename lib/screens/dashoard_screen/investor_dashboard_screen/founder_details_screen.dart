@@ -113,10 +113,11 @@ class FounderDetailsScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                      fundingData != null ?  '${fundingData!.industry} · ${fundingData!.stage.toUpperCase()} · ${fundingData!.location}':"",
+                                      fundingData != null ?  '${fundingData!.industry} · ${fundingData!.stage.toUpperCase()} · ${fundingData!.location}, India':"",
                                     style: GoogleFonts.montserrat(
                                       color: const Color(0xFF858585),
                                       fontSize: 13,
+                                      fontWeight: FontWeight.w500
                                     ),
                                   ),
                                 ],

@@ -548,50 +548,50 @@ class InvestorHomeScreen extends StatelessWidget {
                                                         ),
                                                       ),
                                                     ),
-                                                    Container(
-                                                      width: 1,
-                                                      height: 35,
-                                                      color:
-                                                      const Color(0xFF252525),
-                                                    ),
-                                                    Expanded(
-                                                      child: Padding(
-                                                        padding: const EdgeInsets
-                                                            .symmetric(
-                                                          horizontal: 16,
-                                                        ),
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                          crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                          children: [
-                                                            Text(
-                                                              'Closes in',
-                                                              style: GoogleFonts
-                                                                  .montserrat(
-                                                                color: const Color(
-                                                                    0xFF777777),
-                                                                fontSize: 10,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 7),
-                                                            Text(
-                                                              formatFundingTimeline(fundingData.fundingTimeline),
-                                                              style: GoogleFonts
-                                                                  .montserrat(
-                                                                  fontSize:
-                                                                  12,
-                                                                  color: AppColors
-                                                                      .whiteColor),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
+                                                    // Container(
+                                                    //   width: 1,
+                                                    //   height: 35,
+                                                    //   color:
+                                                    //   const Color(0xFF252525),
+                                                    // ),
+                                                    // Expanded(
+                                                    //   child: Padding(
+                                                    //     padding: const EdgeInsets
+                                                    //         .symmetric(
+                                                    //       horizontal: 16,
+                                                    //     ),
+                                                    //     child: Column(
+                                                    //       mainAxisAlignment:
+                                                    //       MainAxisAlignment
+                                                    //           .center,
+                                                    //       crossAxisAlignment:
+                                                    //       CrossAxisAlignment
+                                                    //           .start,
+                                                    //       children: [
+                                                    //         Text(
+                                                    //           'Closes in',
+                                                    //           style: GoogleFonts
+                                                    //               .montserrat(
+                                                    //             color: const Color(
+                                                    //                 0xFF777777),
+                                                    //             fontSize: 10,
+                                                    //           ),
+                                                    //         ),
+                                                    //         const SizedBox(
+                                                    //             height: 7),
+                                                    //         Text(
+                                                    //           formatFundingTimeline(fundingData.fundingTimeline),
+                                                    //           style: GoogleFonts
+                                                    //               .montserrat(
+                                                    //               fontSize:
+                                                    //               12,
+                                                    //               color: AppColors
+                                                    //                   .whiteColor),
+                                                    //         ),
+                                                    //       ],
+                                                    //     ),
+                                                    //   ),
+                                                    // ),
                                                   ],
                                                 ),
                                               ),
@@ -602,7 +602,7 @@ class InvestorHomeScreen extends StatelessWidget {
                                               SizedBox(
                                                 width: MediaQuery.sizeOf(context)
                                                     .width,
-                                                height: 41,
+                                                height: 45,
                                                 child: ElevatedButton(
                                                   onPressed: () {
                                                     homeController.clickFounderDetails(fundingData);
@@ -622,7 +622,7 @@ class InvestorHomeScreen extends StatelessWidget {
                                                   child: Text(
                                                     'View Opportunity',
                                                     style: GoogleFonts.montserrat(
-                                                      fontSize: 13,
+                                                      fontSize: 15,
                                                       fontWeight: FontWeight.w600,
                                                     ),
                                                   ),

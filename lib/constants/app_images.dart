@@ -50,6 +50,7 @@ class AppImages {
   static const String boostReach = 'assets/images/boost/icon_reach.svg';
   static const String boostInfo = 'assets/images/boost/icon_info.svg';
   static const String boostLock = 'assets/images/boost/icon_lock.svg';
+  static const String noDataFound = 'assets/images/no_data_found.svg';
   static const String confirmPlanCheck =
       'assets/images/confirm_plan/confirm_plan_check.svg';
   static const String confirmPlanInfo =
