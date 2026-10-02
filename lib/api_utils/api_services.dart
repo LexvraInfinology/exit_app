@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:exit_app/controller/kyc_controller.dart';
+import 'package:exit_app/models/boost_request_choose_option_list_model.dart';
 import 'package:exit_app/models/chat_model.dart';
 import 'package:exit_app/models/connection_response.dart';
 import 'package:exit_app/models/conversation_response.dart';
@@ -27,6 +28,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/app_color.dart';
 import '../models/ForIncreaseViewCountModel.dart';
 import '../models/auth_flow_response_model.dart';
+import '../models/boost_request_model.dart';
 import '../models/buy_plan_model.dart';
 import '../models/delete_funds_api_response.dart';
 import '../models/get_investor_list_model.dart';
@@ -355,7 +357,8 @@ class ApiServices {
   }
 
   Future<BuyPlanModel?> payPlanApi(String plan_id, String mock_payment_success,
-      String payment_reference) async {
+      String payment_reference)
+  async {
     final token = prefs.getString('token');
     debugPrint('object${token}');
     final Uri url = Uri.parse(ApiUtils.payPlanApi);
@@ -1169,7 +1172,8 @@ class ApiServices {
 
   Future<bool> saveFounderApi({
     required int founderId,
-  }) async {
+  })
+  async {
     final token = prefs.getString('token');
 
     final Uri url = Uri.parse(ApiUtils.saveFounderApi);
@@ -1294,9 +1298,6 @@ class ApiServices {
           "Authorization": "token $token",
         });
 
-      // =========================
-      // IMAGE MODE
-      // =========================
       if (image != null) {
         request.files.add(
           await http.MultipartFile.fromPath(
@@ -1474,4 +1475,65 @@ class ApiServices {
       return ForIncreaseViewCountModel.fromJson(jsonResponse);
     }
   }
+
+  Future<BoostProfileChooseOptionListModel?> getBoostRequestOptionApi() async {
+    final token = prefs.getString('token');
+    print('object${token}');
+
+    final Uri url = Uri.parse(
+      '${ApiUtils.boostRequestChooseOptionApi}',
+    );
+    final response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    print("API URL: $url");
+    print("Status Code: ${response.statusCode}");
+    print("Response Body: ${response.body}");
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      return BoostProfileChooseOptionListModel.fromJson(jsonResponse);
+    }
+  }
+
+  Future<BoostRequestModel?> boostProfileRequestApi(String goal, String target_audience,
+      String amount,String boost_start_date,String boost_start_time)
+  async {
+    final token = prefs.getString('token');
+    final Uri url = Uri.parse(ApiUtils.boostRequestApi);
+    var data = {
+      "goal": goal,
+      "target_audience": target_audience,
+      "amount": amount,
+      "boost_start_date": boost_start_date,
+      "boost_start_time": boost_start_time
+    };
+
+    final response = await http.post(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+      body: jsonEncode(data),
+    );
+    debugPrint("API URL: $url");
+    debugPrint("Status Code: ${response.statusCode}");
+    debugPrint("Response Body: ${response.body}");
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      return BoostRequestModel.fromJson(jsonResponse);
+    }
+    return null;
+  }
+
+
 }

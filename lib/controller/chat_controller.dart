@@ -57,7 +57,7 @@ class ChatController extends GetxController {
   int _reconnectAttempts = 0;
   static const int _maxReconnectAttempts = 5;
   static const String _wsBaseUrl =
-      'wss://ba52-2404-7c80-5d-97dc-a98b-38e4-9d2e-ca59.ngrok-free.app';
+      'wss://dc6c-2404-7c80-5d-18e2-594c-f1e5-9179-36ed.ngrok-free.app';
   int? _connectionId;
   bool _manualDisconnect = false;
 

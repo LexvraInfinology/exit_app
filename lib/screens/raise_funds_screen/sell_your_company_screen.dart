@@ -1217,27 +1217,6 @@ class SellYourCompanyScreen extends StatelessWidget {
                   )
                 ],
               ),
-              Container(
-                height: 53,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF111111),
-                  borderRadius: BorderRadius.circular(11),
-                  border: Border.all(
-                    color: const Color(0xFF2B2B2B),
-                  ),
-                ),
-                child: TextField(
-                  style: GoogleFonts.montserrat(
-                      color: Color(0xFFE7E7E7),
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500),
-                  cursorColor: AppColors.whiteColor,
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
               // _lockedField(
               //   text: '',
               //   icon: Icons.lock,

@@ -1,8 +1,11 @@
 import 'package:exit_app/constants/app_color.dart';
+import 'package:exit_app/models/boost_request_choose_option_list_model.dart';
 import 'package:exit_app/screens/notification_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../api_utils/api_services.dart';
 import '../models/choose_achieve_and_industry_model_class.dart';
 import '../screens/post_successfully_created_screen.dart';
 
@@ -10,6 +13,10 @@ class BoostProfileController extends GetxController {
   final TextEditingController boostAmountController =
       TextEditingController(text: '100');
   final RxInt boostAmount = 100.obs;
+
+  final ApiServices apiServices = ApiServices();
+  final RxBool isLoading = false.obs;
+  final SharedPreferences prefs = Get.find<SharedPreferences>();
 
   final RxDouble boostSliderValue = 0.0.obs;
 
@@ -20,7 +27,8 @@ class BoostProfileController extends GetxController {
   final RxString startDate = ''.obs;
 
   final RxString startTime = '10:00 AM'.obs;
-
+  RxList<Goals> goalList = <Goals>[].obs;
+  RxList<Goals> targetAudience = <Goals>[].obs;
   DateTime selectedStartDate = DateTime.now();
   TimeOfDay selectedStartTime = const TimeOfDay(hour: 10, minute: 0);
 
@@ -56,12 +64,15 @@ class BoostProfileController extends GetxController {
   ];
 
   RxInt selectedGoalIndex = 1.obs;
+  RxInt selectedGoalIndexID = 1.obs;
   RxInt selectedAudienceIndex = 1.obs;
+  RxInt selectedAudienceIndexID = 1.obs;
   RxInt currentStep = 0.obs;
 
   @override
   void onInit() {
     super.onInit();
+    loadHomePage();
     selectedStartDate = DateTime(
       DateTime.now().year,
       DateTime.now().month,
@@ -70,14 +81,48 @@ class BoostProfileController extends GetxController {
     _syncDateLabel();
   }
 
+  Future<void> loadHomePage() async {
+    isLoading.value = true;
+    update();
+
+    try {
+      final results = await Future.wait([
+        _safeCall(getBoostRequestChooseOptionListApi),
+      ]);
+
+      final allFailed = results.every((success) => success == false);
+      if (allFailed) {
+        Get.snackbar(
+          'Error',
+          'Unable to load dashboard. Please check your connection.',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+        );
+      }
+    } finally {
+      isLoading.value = false;
+      update();
+    }
+  }
+
+  Future<bool> _safeCall(Future<void> Function() apiCall) async {
+    try {
+      await apiCall();
+      return true;
+    } catch (e) {
+      debugPrint('object $e');
+      return false;
+    }
+  }
+
   @override
   void onClose() {
     boostAmountController.dispose();
     super.onClose();
   }
 
-  String get selectedGoalTitle =>
-      options_choose[selectedGoalIndex.value].title;
+  String get selectedGoalTitle => options_choose[selectedGoalIndex.value].title;
 
   String get selectedAudienceTitle =>
       options_choose_industry[selectedAudienceIndex.value].title;
@@ -102,12 +147,14 @@ class BoostProfileController extends GetxController {
     Get.back();
   }
 
-  void selectGoal(int index) {
+  void selectGoal(int index, int id) {
     selectedGoalIndex.value = index;
+    selectedGoalIndexID.value = id;
   }
 
-  void selectAudience(int index) {
+  void selectAudience(int index, int id) {
     selectedAudienceIndex.value = index;
+    selectedAudienceIndexID.value = id;
   }
 
   void updateBoost(double value) {
@@ -142,13 +189,7 @@ class BoostProfileController extends GetxController {
   }
 
   void postSubmitButton() {
-    Get.to(
-      () => PostSuccefullyCreatedScreen(
-        title: 'Your request is now boosted',
-        subtitle:
-            'Your funding request is now visible to relevant investors.',
-      ),
-    );
+    boostRequestApi();
   }
 
   Future<void> pickStartDate(BuildContext context) async {
@@ -243,5 +284,89 @@ class BoostProfileController extends GetxController {
       'Dec',
     ];
     return months[month - 1];
+  }
+
+  Future<void> getBoostRequestChooseOptionListApi() async {
+    try {
+      isLoading.value = true;
+      final response = await apiServices.getBoostRequestOptionApi();
+      print("Status Code: ${response?.statusCode}");
+      print("Message: ${response?.message}");
+      if (response?.statusCode == 200) {
+        isLoading.value = false;
+        goalList.clear();
+        goalList.value = response?.data?.goals ?? [];
+        targetAudience.clear();
+        targetAudience.value = response?.data?.targetAudiences ?? [];
+      } else {
+        isLoading.value = false;
+      }
+    } catch (e) {
+      isLoading.value = false;
+      Get.snackbar(
+        'Error',
+        'Something went wrong. Please try again.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.blackColor,
+        colorText: AppColors.whiteColor,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> boostRequestApi() async {
+    final goal = selectedGoalIndexID.value;
+    final targetAudience = selectedAudienceIndexID.value;
+    final amount = "100";
+    try {
+      isLoading.value = true;
+      final response = await apiServices.boostProfileRequestApi(
+          goal.toString(),
+          targetAudience.toString(),
+          amount,
+          startDate.toString(),
+          startTime.toString());
+      print("Status Code: ${response?.statusCode}");
+      print("Message: ${response?.message}");
+      if (response?.statusCode == 201) {
+        Get.to(
+          () => PostSuccefullyCreatedScreen(
+            title: 'Your request is now boosted',
+            subtitle:
+                'Your funding request is now visible to relevant investors.',
+          ),
+        );
+        isLoading.value = false;
+        Get.snackbar(
+          'Success',
+          response?.message ?? 'Boost Request successfully',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: AppColors.blackColor,
+          colorText: AppColors.whiteColor,
+        );
+      } else {
+        isLoading.value = false;
+        Get.snackbar(
+          'Plan Purchase Failed',
+          response?.message ?? 'Plan Purchase failed',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: AppColors.blackColor,
+          colorText: AppColors.whiteColor,
+        );
+      }
+    } catch (e) {
+      print('object ${e}');
+      isLoading.value = false;
+      Get.snackbar(
+        'Error',
+        'Something went wrong. Please try again.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.blackColor,
+        colorText: AppColors.whiteColor,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

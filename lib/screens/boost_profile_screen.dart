@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../constants/app_images.dart';
+import '../models/boost_request_choose_option_list_model.dart';
 import '../models/choose_achieve_and_industry_model_class.dart';
 
 
@@ -273,7 +274,7 @@ class BoostProfileScreen extends StatelessWidget {
   }
 
   Widget _optionCard({
-    required ChooseAchieveAndIndustryModelClass option,
+    required Goals option,
     required bool selected,
     required VoidCallback onTap,
   }) {
@@ -301,7 +302,7 @@ class BoostProfileScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    option.title,
+                    option.name.toString(),
                     style: GoogleFonts.montserrat(
                         color: AppColors.whiteColor,
                         fontSize: 16,
@@ -309,7 +310,7 @@ class BoostProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    option.description,
+                    'option.description',
                     style: GoogleFonts.montserrat(
                         color: AppColors.darkGreyColor,
                         fontSize: 16,
@@ -356,9 +357,9 @@ class BoostProfileScreen extends StatelessWidget {
                     const SizedBox(height: 16),
                     Obx(
                           () => _optionCard(
-                        option: controller.options_choose[index],
+                        option: controller.goalList[index],
                         selected: controller.selectedGoalIndex.value == index,
-                        onTap: () => controller.selectGoal(index),
+                        onTap: () => controller.selectGoal(index,controller.goalList[index].id!),
                       ),
                     ),
                   ],
@@ -366,9 +367,9 @@ class BoostProfileScreen extends StatelessWidget {
               }
               return Obx(
                     () => _optionCard(
-                  option: controller.options_choose[index],
+                  option: controller.goalList[index],
                   selected: controller.selectedGoalIndex.value == index,
-                  onTap: () => controller.selectGoal(index),
+                  onTap: () => controller.selectGoal(index,controller.goalList[index].id!),
                 ),
               );
             },
@@ -407,10 +408,10 @@ class BoostProfileScreen extends StatelessWidget {
                     const SizedBox(height: 16),
                     Obx(
                           () => _optionCard(
-                        option: controller.options_choose_industry[index],
+                        option: controller.targetAudience[index],
                         selected:
                         controller.selectedAudienceIndex.value == index,
-                        onTap: () => controller.selectAudience(index),
+                        onTap: () => controller.selectAudience(index,controller!.targetAudience[index].id!.toInt()),
                       ),
                     ),
                   ],
@@ -418,9 +419,9 @@ class BoostProfileScreen extends StatelessWidget {
               }
               return Obx(
                     () => _optionCard(
-                  option: controller.options_choose_industry[index],
+                  option: controller.targetAudience[index],
                   selected: controller.selectedAudienceIndex.value == index,
-                  onTap: () => controller.selectAudience(index),
+                  onTap: () => controller.selectAudience(index,controller!.targetAudience[index].id!.toInt()),
                 ),
               );
             },

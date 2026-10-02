@@ -662,7 +662,7 @@ class StartUpProfileScreen extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(24),
                                     ),
                                     child: Text(
-                                      'Manage Plan',
+                                      'Add Credit',
                                       style: GoogleFonts.montserrat(
                                         color: AppColors.blackColor,
                                         fontSize: 14,
@@ -693,7 +693,7 @@ class StartUpProfileScreen extends StatelessWidget {
                                     Get.to(const KYCIdentityScreen());
                                   },
                                   child: SettingsRowWidget(
-                                      icon: Icons.notifications_none_rounded,
+                                      icon: Icons.ac_unit,
                                       title: 'Kyc',
                                       showArrow: true),
                                 ),

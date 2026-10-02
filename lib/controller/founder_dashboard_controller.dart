@@ -21,12 +21,14 @@ import '../constants/app_images.dart';
 import '../models/InvestorActivity.dart';
 import '../models/conversation_response.dart';
 import '../models/profile_model.dart';
+import '../screens/add_credits_screen.dart';
 import '../screens/choose_user_screen.dart';
 import '../screens/help_and_support_screen.dart';
 import '../screens/notification_list_screen.dart';
 import '../screens/onboarding_screen.dart';
 import '../screens/plan_details_screen.dart';
 import '../screens/privacy_policy_screen.dart';
+import 'add_credits_controller.dart';
 
 class FounderDashboardController extends GetxController {
   final selectedBottomIndex = 0.obs;
@@ -199,7 +201,8 @@ class FounderDashboardController extends GetxController {
   }
 
   void clickManagePlan() {
-    // Get.to(() => ());
+    Get.put(AddCreditsController());
+    Get.to(() => const AddCreditsScreen());
   }
 
   void clickPrivacyPolicy() {

@@ -24,8 +24,8 @@ class NotificationScreen extends StatelessWidget {
                   Get.back();
                 },
                 child: Container(
-                  width: 26,
-                  height: 26,
+                  width: 38,
+                  height: 38,
                   padding: const EdgeInsets.all(1.4),
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
@@ -56,7 +56,7 @@ class NotificationScreen extends StatelessWidget {
                     child: const Icon(
                       Icons.chevron_left,
                       color: Colors.white,
-                      size: 20,
+                      size: 30,
                     ),
                   ),
                 ),

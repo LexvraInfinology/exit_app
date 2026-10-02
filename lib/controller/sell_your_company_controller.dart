@@ -21,11 +21,11 @@ class SellYourCompanyController extends GetxController {
   final TextEditingController companyNameController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController companyWebsiteController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController companyDescriptionController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController raiseDescriptionController =
-      TextEditingController();
+  TextEditingController();
 
   final RxString industry = 'FinTech'.obs;
   final RxInt selectedStage = 0.obs;
@@ -184,42 +184,52 @@ class SellYourCompanyController extends GetxController {
     final raiseDescription = raiseDescriptionController.value.text.trim();
     print('object===${companyNameController.value.text.trim()}');
     try {
-      isLoading.value = true;
-      final response = await apiServices.createSellCompanyApi(
-          fundingGoal.replaceAll(',', ''),
-          "INR",
-          (selectedStage.value + 1).toString(),
-          selectedStringAcquisition.value,
-          companyName,
-          selectedImage.value!.path,
-          industry.value,
-          location,
-          companyWebsite,
-          companyDescription,
-          raiseDescription,
-          selectedProfitability.value,
-          '');
-      print("Status Code: ${response?.statusCode}");
-      print("Message: ${response?.message}");
-      if (response?.statusCode == 201) {
-        isLoading.value = false;
+      if (selectedImage.value == null) {
         Get.snackbar(
-          'Success',
-          response?.message ?? 'Funds Raise successfully',
+          'Error',
+          'Please upload image first',
           snackPosition: SnackPosition.TOP,
           backgroundColor: AppColors.blackColor,
           colorText: AppColors.whiteColor,
         );
-        Get.to(() => PostSuccefullyCreatedScreen());
       } else {
-        isLoading.value = false;
-        Get.snackbar(
-          'Funds raise Failed',
-          response?.message ?? 'Funds raise failed',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: AppColors.blackColor,
-          colorText: AppColors.whiteColor,
-        );
+        isLoading.value = true;
+        final response = await apiServices.createSellCompanyApi(
+            fundingGoal.replaceAll(',', ''),
+            "INR",
+            (selectedStage.value + 1).toString(),
+            selectedStringAcquisition.value,
+            companyName,
+            selectedImage.value!.path,
+            industry.value,
+            location,
+            companyWebsite,
+            companyDescription,
+            raiseDescription,
+            selectedProfitability.value,
+            '');
+        print("Status Code: ${response?.statusCode}");
+        print("Message: ${response?.message}");
+        if (response?.statusCode == 201) {
+          isLoading.value = false;
+          Get.snackbar(
+            'Success',
+            response?.message ?? 'Funds Raise successfully',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: AppColors.blackColor,
+            colorText: AppColors.whiteColor,
+          );
+          Get.to(() => PostSuccefullyCreatedScreen());
+        } else {
+          isLoading.value = false;
+          Get.snackbar(
+            'Funds raise Failed',
+            response?.message ?? 'Funds raise failed',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: AppColors.blackColor,
+            colorText: AppColors.whiteColor,
+          );
+        }
       }
     } catch (e) {
       print('object ${e}');
@@ -236,23 +246,25 @@ class SellYourCompanyController extends GetxController {
     }
   }
 
-  Future<void> getMarketplaceStagesApi() async {
-    try {
-      isLoading.value = true;
-      final MarketplaceIndustriesResponse? response =
-          await apiServices.getMarketplaceStagesApi();
-      if (response?.statusCode == 200) {
-        stageList.value = response?.data ?? [];
-        // purposeList.assignAll(response?.data ?? []);
-      } else {
-        Get.snackbar(
-            'Failed', response?.message ?? 'Failed to fetch industries');
+
+    Future<void> getMarketplaceStagesApi() async {
+      try {
+        isLoading.value = true;
+        final MarketplaceIndustriesResponse? response =
+        await apiServices.getMarketplaceStagesApi();
+        if (response?.statusCode == 200) {
+          stageList.value = response?.data ?? [];
+          // purposeList.assignAll(response?.data ?? []);
+        } else {
+          Get.snackbar(
+              'Failed', response?.message ?? 'Failed to fetch industries');
+        }
       }
-    } catch (e) {
-      print('object $e');
-      Get.snackbar('Error', 'Something went wrong. Please try again.');
-    } finally {
-      isLoading.value = false;
+      catch (e) {
+        print('object $e');
+        Get.snackbar('Error', 'Something went wrong. Please try again.');
+      } finally {
+        isLoading.value = false;
+      }
     }
-  }
 }

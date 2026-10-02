@@ -1,3 +1,4 @@
+import 'package:exit_app/constants/app_color.dart';
 import 'package:get/get.dart';
 
 class CreditPack {
@@ -92,6 +93,7 @@ class AddCreditsController extends GetxController {
         'Plan Updated',
         'You are now on the $newPlanName',
         snackPosition: SnackPosition.TOP,
+        colorText: AppColors.whiteColor
       );
     } finally {
       isChangingPlan = false;
