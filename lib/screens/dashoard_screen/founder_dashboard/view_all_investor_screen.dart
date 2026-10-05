@@ -7,11 +7,15 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../common_widgets/filter_widget.dart';
 import '../../../constants/app_images.dart';
 import '../../../controller/founder_dashboard_controller.dart';
 import '../../../models/get_investor_list_model.dart';
 
 class ViewAllInvestorScreen extends StatelessWidget {
+
+  const ViewAllInvestorScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<FounderDashboardController>(builder: (controller) {
@@ -98,63 +102,15 @@ class ViewAllInvestorScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 60,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.only(
-                            right: 24,
-                            top: 20,
-                          ),
-                          children: [
-                            FilterButtonWidget(
-                              context: context,
-                              text: 'Stage',
-                              showArrow: true,
-                              options: [
-                                MarketplaceIndustry(id: "1", name: "Pre-Seed"),
-                                MarketplaceIndustry(id: "2", name: "Seed"),
-                                MarketplaceIndustry(id: "3", name: "Series A"),
-                                MarketplaceIndustry(id: "4", name: "Series B")
-                              ],
-                            ),
-                            const SizedBox(width: 8),
-                            FilterButtonWidget(
-                              context: context,
-                              text: 'Sector',
-                              showArrow: true,
-                              options: [
-                                MarketplaceIndustry(id: "1", name: "SaaS"),
-                                MarketplaceIndustry(id: "2", name: "FinTech"),
-                                MarketplaceIndustry(id: "3", name: "AI / ML"),
-                                MarketplaceIndustry(id: "4", name: "HealthTech")
-                              ],
-                            ),
-                            const SizedBox(width: 8),
-                            FilterButtonWidget(
-                              context: context,
-                              text: 'Under ₹25L',
-                              showArrow: true,
-                              options: [
-                                MarketplaceIndustry(
-                                    id: "1", name: "Under ₹25L"),
-                                MarketplaceIndustry(id: "2", name: "₹25L–₹50L"),
-                                MarketplaceIndustry(id: "3", name: "₹50L–₹1Cr"),
-                                MarketplaceIndustry(id: "4", name: "₹1Cr–₹5Cr")
-                              ],
-                            ),
-                            const SizedBox(width: 8),
-                            FilterButtonWidget(
-                              context: context,
-                              text: 'India',
-                              showArrow: true,
-                              options: [
-                                MarketplaceIndustry(id: "1", name: "India"),
-                                MarketplaceIndustry(id: "2", name: "Delhi NCR"),
-                                MarketplaceIndustry(id: "3", name: "Mumbai"),
-                                MarketplaceIndustry(id: "4", name: "Bengaluru")
-                              ],
-                            ),
-                          ],
+                        height: 40,
+                        child: FilterHandleWidget(
+                          items: controller.filterListItems,
+                          backgroundColor: Colors.black,
+                          showArrow: true,
+                          selectedFor:
+                          controller.selectedFor,
+                          onFilterSelected:
+                          controller.onFilterSelected,
                         ),
                       ),
                       const SizedBox(

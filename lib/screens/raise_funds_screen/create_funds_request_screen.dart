@@ -1742,7 +1742,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                 SizedBox(height: 6),
 
                 Text(
-                  'Help investors understand your business',
+                  'Help investors understand your business better',
                   style: TextStyle(
                     color: Color(0xFF747474),
                     fontSize: 11,
@@ -1750,17 +1750,143 @@ class CreateFundsRequestScreen extends StatelessWidget {
                   ),
                 ),
 
-                Text(
-                  'better.',
-                  style: TextStyle(
-                    color: Color(0xFF747474),
-                    fontSize: 11,
-                    height: 1.5,
-                  ),
-                ),
+
 
                 const SizedBox(height: 18),
-
+                Obx(() => DottedBorder(
+                  color: AppColors.darkGreyColor,
+                  strokeWidth: 1,
+                  dashPattern: [5, 4],
+                  borderType: BorderType.RRect,
+                  radius: const Radius.circular(12),
+                  child: controller.selectedImage.value == null
+                      ? Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration:
+                    BoxDecoration(border: Border.all(width: 1)),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                  color: AppColors.darkGreyColor,
+                                  width: 1)),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Select Your pdf file',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    color: AppColors.whiteColor),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  controller.showUploadOptions(context);
+                                },
+                                child: Text(
+                                  ' Upload',
+                                  style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      color: AppColors.greenColor),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                      : Container(
+                    padding: EdgeInsets.all(24),
+                    decoration:
+                    BoxDecoration(border: Border.all(width: 1)),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 60,
+                          height: 60,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: AppColors.darkGreyColor,
+                              width: 1,
+                            ),
+                          ),
+                          child: controller.selectedImage.value != null
+                              ? Image.file(
+                            controller.selectedImage.value!,
+                            fit: BoxFit.cover,
+                          )
+                              : const Icon(
+                            Icons.image,
+                            size: 30,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'images_text.png',
+                              style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                  color: AppColors.whiteColor),
+                            ),
+                            Row(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '1.5 MB',
+                                  style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 10,
+                                      color: AppColors.darkGreyColor),
+                                ),
+                                Text(
+                                  ' Uploaded',
+                                  style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      color: AppColors.greenColor),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            controller.selectedImage.value = null;
+                          },
+                          child: Icon(
+                            Icons.close,
+                            size: 32,
+                            color: AppColors.darkGreyColor,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )),
                 // _buildUploadedFile(),
               ],
             ),

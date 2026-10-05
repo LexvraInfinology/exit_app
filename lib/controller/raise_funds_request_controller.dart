@@ -130,22 +130,7 @@ class RaiseFundsRequestController extends GetxController {
         return SafeArea(
           child: Wrap(
             children: [
-              ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: const Text('Camera'),
-                onTap: () {
-                  Navigator.pop(context);
-                  pickImage(ImageSource.camera);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.photo),
-                title: const Text('Gallery'),
-                onTap: () {
-                  Navigator.pop(context);
-                  pickImage(ImageSource.gallery);
-                },
-              ),
+
               ListTile(
                 leading: const Icon(Icons.picture_as_pdf),
                 title: const Text('PDF'),
@@ -178,6 +163,8 @@ class RaiseFundsRequestController extends GetxController {
     );
     if (result != null) {
       final file = result.files.single;
+
+      update();
 
       print('PDF path: ${file.path}');
     }

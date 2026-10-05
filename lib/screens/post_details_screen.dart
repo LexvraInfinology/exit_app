@@ -167,7 +167,7 @@ class PostDetailsScreen extends StatelessWidget {
                                     ),
                                     InkWell(
                                       onTap: () {
-                                        controller.clickBoostProfile();
+                                        controller.clickBoostProfile(createFundsRaiseData!);
                                       },
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
@@ -325,20 +325,8 @@ class PostDetailsScreen extends StatelessWidget {
                                   ],
                                 ),
                                 const SizedBox(height: 18),
-                                Container(
-                                  height: 1,
-                                  color: AppColors.containerBorderColor,
-                                ),
-                                const SizedBox(height: 16),
-                                Text('Use of Funds', style: labelStyle),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Product development · Hiring · Marketing',
-                                  style: GoogleFonts.montserrat(
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.whiteColor,
-                                      fontSize: 14),
-                                ),
+
+
                               ],
                             ),
                           ),

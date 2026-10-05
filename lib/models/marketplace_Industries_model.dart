@@ -27,6 +27,7 @@ class MarketplaceIndustriesResponse {
       'data': data.map((e) => e.toJson()).toList(),
     };
   }
+
 }
 
 class  MarketplaceIndustry {

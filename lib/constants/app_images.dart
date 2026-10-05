@@ -65,6 +65,8 @@ class AppImages {
   static const String investorNorthstar =
       'assets/images/funding/investor_northstar.png';
   static const String investorArtha = 'assets/images/funding/investor_artha.png';
+  static const String sellCompanyIcon = 'assets/images/sell_your_company_icon.svg';
+  static const String fundsRaiseIcon = 'assets/images/fund_raise_icon.svg';
   static const String investorAcceledge =
       'assets/images/funding/investor_acceledge.png';
   static const String title1 = 'Where Startups Meet Capital';

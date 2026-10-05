@@ -233,7 +233,7 @@ class StartUpDashBoardController extends GetxController {
   }
 
   void clickBoostProfile() {
-    Get.to(() => BoostProfileScreen());
+    Get.to(() => BoostProfileScreen(createFundsRaiseData));
   }
 
   void clickFundingRequestButton(BuildContext context) {

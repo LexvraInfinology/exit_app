@@ -20,9 +20,11 @@ import '../constants/app_color.dart';
 import '../constants/app_images.dart';
 import '../models/InvestorActivity.dart';
 import '../models/conversation_response.dart';
+import '../models/marketplace_Industries_model.dart';
 import '../models/profile_model.dart';
 import '../screens/add_credits_screen.dart';
 import '../screens/choose_user_screen.dart';
+import '../screens/dashoard_screen/founder_dashboard/widgets/filtter_button_widget.dart';
 import '../screens/help_and_support_screen.dart';
 import '../screens/notification_list_screen.dart';
 import '../screens/onboarding_screen.dart';
@@ -54,6 +56,68 @@ class FounderDashboardController extends GetxController {
   final RxList<CreateFundsRaiseData> createFundsList =
       <CreateFundsRaiseData>[].obs;
 
+  List<FilterListModel> filterListItems = [
+    FilterListModel(title: "Stage", options: []),
+    FilterListModel(title: "Sector", options: []),
+    FilterListModel(title: "Under ₹25L", options: []),
+    FilterListModel(title: "Location", options: []),
+  ];
+  final Rxn<MarketplaceIndustry> selectedStage = Rxn<MarketplaceIndustry>();
+  final Rxn<MarketplaceIndustry> selectedIndustry = Rxn<MarketplaceIndustry>();
+  final Rxn<MarketplaceIndustry> selectedRange = Rxn<MarketplaceIndustry>();
+  final Rxn<MarketplaceIndustry> selectedLocation = Rxn<MarketplaceIndustry>();
+  final List<MarketplaceIndustry> industriesList = <MarketplaceIndustry>[];
+  final List<MarketplaceIndustry> stagesList = <MarketplaceIndustry>[];
+  final List<MarketplaceIndustry> rangesList = <MarketplaceIndustry>[];
+  final List<MarketplaceIndustry> locationsList = <MarketplaceIndustry>[];
+
+
+
+  void _replaceItemOptions(String title, List<MarketplaceIndustry> newOptions) {
+    if (newOptions.isEmpty) return;
+    final index = filterListItems.indexWhere((e) => e.title == title);
+    if (index != -1) {
+      filterListItems[index] =
+          FilterListModel(title: title, options: newOptions);
+    }
+  }
+
+
+  MarketplaceIndustry? selectedFor(String title) {
+    debugPrint("Checking ===> $title");
+    switch (title) {
+      case 'Stage':
+        return selectedStage.value;
+      case 'Sector':
+        return selectedIndustry.value;
+      case 'Under ₹25L':
+        return selectedRange.value;
+      case 'Location':
+        return selectedLocation.value;
+      default:
+        return null;
+    }
+  }
+
+  void onFilterSelected(String title, MarketplaceIndustry? value) {
+    debugPrint("Checking ===> ${value?.name}");
+    switch (title) {
+      case 'Stage':
+        selectedStage.value = value;
+        break;
+      case 'Sector':
+        selectedIndustry.value = value;
+        break;
+      case 'Under ₹25L':
+        selectedRange.value = value;
+        break;
+      case 'Location':
+        selectedLocation.value = value;
+        break;
+    }
+    update();
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -67,9 +131,90 @@ class FounderDashboardController extends GetxController {
     await getInvestorListApi();
     await getuserProfileApi(prefs.getString('id').toString());
     await getCreateFundsRaiseListApi();
+    await getMarketplaceStagesApi();
+    await getMarketplaceIndustriesApi();
+    await getMarketplaceLocationsApi();
+    await getMarketplaceRangesApi();
     isLoading.value = false;
     update();
   }
+
+  Future<void> getMarketplaceIndustriesApi() async {
+    try {
+      final MarketplaceIndustriesResponse? response =
+      await apiServices.getMarketplaceIndustriesApi();
+
+      if (response?.statusCode == 200) {
+        industriesList.assignAll(response?.data ?? []);
+        final options = industriesList.map((e) => e.name).toList();
+        _replaceItemOptions("Sector", industriesList);
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    }
+  }
+
+  Future<void> getMarketplaceStagesApi() async {
+    try {
+      isLoading.value = true;
+      final MarketplaceIndustriesResponse? response =
+      await apiServices.getMarketplaceStagesApi();
+
+      if (response?.statusCode == 200) {
+        stagesList.assignAll(response?.data ?? []);
+        _replaceItemOptions("Stage", stagesList);
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    }
+  }
+
+  Future<void> getMarketplaceRangesApi() async {
+    try {
+      isLoading.value = true;
+      final MarketplaceIndustriesResponse? response =
+      await apiServices.getMarketplaceRangesApi();
+
+      if (response?.statusCode == 200) {
+        rangesList.assignAll(response?.data ?? []);
+        _replaceItemOptions("Under ₹25L", rangesList);
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    }
+  }
+
+  Future<void> getMarketplaceLocationsApi() async {
+    try {
+      isLoading.value = true;
+      final MarketplaceIndustriesResponse? response =
+      await apiServices.getMarketplaceLocationsApi();
+
+      if (response?.statusCode == 200) {
+        locationsList.assignAll(response?.data ?? []);
+        _replaceItemOptions("Location", locationsList);
+      } else {
+        Get.snackbar(
+            'Failed', response?.message ?? 'Failed to fetch industries');
+      }
+    } catch (e) {
+      debugPrint('object $e');
+      Get.snackbar('Error', 'Something went wrong. Please try again.');
+    }
+  }
+
 
   void toggleVisibility() {
     final bool value = !isPrivate.value;
@@ -225,8 +370,8 @@ class FounderDashboardController extends GetxController {
     Get.to(() => ViewInvestorActivityListScreen(investorActivity));
   }
 
-  void clickBoostProfile() {
-    Get.to(() => BoostProfileScreen());
+  void clickBoostProfile(CreateFundsRaiseData createFundsRaiseData) {
+    Get.to(() => BoostProfileScreen(createFundsRaiseData));
   }
 
   void clickFundingRequestButton(BuildContext context) {

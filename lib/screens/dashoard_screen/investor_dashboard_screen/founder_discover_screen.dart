@@ -11,44 +11,9 @@ import '../../../constants/app_images.dart';
 import '../../../controller/investor_dashboard_controller.dart';
 
 class FounderDiscoverScreen extends StatelessWidget {
-  List investors = [
-    {
-      'name': 'NovaNest',
-      'type': 'Fintech',
-      'location': 'Bengaluru, India',
-      'raising': '₹25L',
-      'timeLine': '1-2 Months',
-      'tags': ['SaaS', 'FinTech', 'B2B'],
-      'logo': 'N',
-    },
-    {
-      'name': 'CloudXcel',
-      'type': 'Venture Capital',
-      'location': 'Mumbai, India',
-      'raising': '₹50L',
-      'timeLine': '2-4 Months',
-      'tags': ['SaaS', 'AI / ML'],
-      'logo': 'E',
-    },
-    {
-      'name': 'Artha Ventures',
-      'type': 'VC Fund',
-      'location': 'Delhi, India',
-      'raising': '₹25L – ₹1.5Cr',
-      'timeLine': '1-2 Months',
-      'tags': ['FinTech', 'Consumer'],
-      'logo': 'A',
-    },
-    {
-      'name': 'Momentum Capital',
-      'type': 'Venture Capital',
-      'location': 'Bengaluru, India',
-      'raising': '₹1Cr',
-      'timeLine': '2-4 Months',
-      'tags': ['SaaS', 'Deep Tech'],
-      'logo': 'M',
-    },
-  ];
+
+  const FounderDiscoverScreen({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,10 +22,10 @@ class FounderDiscoverScreen extends StatelessWidget {
       return Scaffold(
         backgroundColor: AppColors.blackColor,
         body: discoverFounderController.isLoading.value
-            ? const Center(
+            ?  Center(
                 child: CupertinoActivityIndicator(
                 radius: 15,
-                color: Colors.white,
+                color: AppColors.whiteColor,
               ))
             : SafeArea(
                 child: Column(

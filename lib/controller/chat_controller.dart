@@ -71,7 +71,6 @@ class ChatController extends GetxController {
         _jumpToBottomInstant();
       }
     });
-
     _initChat();
   }
 

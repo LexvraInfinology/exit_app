@@ -9,10 +9,13 @@ import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_images.dart';
 import '../models/boost_request_choose_option_list_model.dart';
 import '../models/choose_achieve_and_industry_model_class.dart';
-
+import '../models/create_fund_model_class.dart';
 
 class BoostProfileScreen extends StatelessWidget {
-  BoostProfileScreen({super.key});
+  CreateFundsRaiseData? createFundsRaiseData;
+
+  BoostProfileScreen(this.createFundsRaiseData, {super.key});
+
   static const _stepLabels = [
     'Goal',
     'Audience',
@@ -38,9 +41,11 @@ class BoostProfileScreen extends StatelessWidget {
                 children: [
                   Padding(
                     padding: EdgeInsets.fromLTRB(
-                      (MediaQuery.sizeOf(context).width < 360 ? 16.0 : 24.0) - 8,
+                      (MediaQuery.sizeOf(context).width < 360 ? 16.0 : 24.0) -
+                          8,
                       8,
-                      (MediaQuery.sizeOf(context).width < 360 ? 16.0 : 24.0) - 8,
+                      (MediaQuery.sizeOf(context).width < 360 ? 16.0 : 24.0) -
+                          8,
                       0,
                     ),
                     child: Row(
@@ -69,7 +74,9 @@ class BoostProfileScreen extends StatelessWidget {
                           ),
                         ),
                         _headerAction(
-                          onTap: (){Get.to(const NotificationScreen());},
+                          onTap: () {
+                            Get.to(const NotificationScreen());
+                          },
                           icon: const Icon(
                             Icons.notifications_none_rounded,
                             size: 36,
@@ -104,9 +111,9 @@ class BoostProfileScreen extends StatelessWidget {
   }
 
   Widget _buildStepContent(
-      BuildContext context,
-      BoostProfileController controller,
-      ) {
+    BuildContext context,
+    BoostProfileController controller,
+  ) {
     switch (controller.currentStep.value) {
       case 0:
         return _buildGoal(context, controller);
@@ -195,14 +202,14 @@ class BoostProfileScreen extends StatelessWidget {
         color: completed
             ? AppColors.whiteColor
             : active
-            ? Colors.transparent
-            : AppColors.containerBackgroundColor,
+                ? Colors.transparent
+                : AppColors.containerBackgroundColor,
         border: Border.all(
           color: completed
               ? AppColors.blackColor
               : active
-              ? AppColors.whiteColor
-              : AppColors.containerBorderColor,
+                  ? AppColors.whiteColor
+                  : AppColors.containerBorderColor,
           width: 1,
         ),
       ),
@@ -213,8 +220,8 @@ class BoostProfileScreen extends StatelessWidget {
             color: completed
                 ? AppColors.blackColor
                 : active
-                ? AppColors.whiteColor
-                : AppColors.whiteColor.withAlpha(4),
+                    ? AppColors.whiteColor
+                    : AppColors.whiteColor.withAlpha(4),
             fontSize: 12,
             fontWeight: FontWeight.w400),
       ),
@@ -255,20 +262,21 @@ class BoostProfileScreen extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(
-          color: selected ? AppColors.whiteColor : AppColors.containerBorderColor,
+          color:
+              selected ? AppColors.whiteColor : AppColors.containerBorderColor,
           width: 2,
         ),
       ),
       alignment: Alignment.center,
       child: selected
           ? Container(
-        width: 10,
-        height: 10,
-        decoration: const BoxDecoration(
-          color: AppColors.whiteColor,
-          shape: BoxShape.circle,
-        ),
-      )
+              width: 10,
+              height: 10,
+              decoration: const BoxDecoration(
+                color: AppColors.whiteColor,
+                shape: BoxShape.circle,
+              ),
+            )
           : null,
     );
   }
@@ -283,13 +291,17 @@ class BoostProfileScreen extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
-        width: double.infinity,
+        width: MediaQuery.sizeOf(Get.context!).width,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: selected ? Colors.transparent : AppColors.containerBackgroundColor,
+          color: selected
+              ? Colors.transparent
+              : AppColors.containerBackgroundColor,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: selected ? AppColors.whiteColor : AppColors.containerBorderColor,
+            color: selected
+                ? AppColors.whiteColor
+                : AppColors.containerBorderColor,
           ),
         ),
         child: Row(
@@ -305,14 +317,6 @@ class BoostProfileScreen extends StatelessWidget {
                     option.name.toString(),
                     style: GoogleFonts.montserrat(
                         color: AppColors.whiteColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'option.description',
-                    style: GoogleFonts.montserrat(
-                        color: AppColors.darkGreyColor,
                         fontSize: 16,
                         fontWeight: FontWeight.w600),
                   ),
@@ -336,9 +340,9 @@ class BoostProfileScreen extends StatelessWidget {
   }
 
   Widget _buildGoal(
-      BuildContext context,
-      BoostProfileController controller,
-      ) {
+    BuildContext context,
+    BoostProfileController controller,
+  ) {
     return Column(
       key: const ValueKey('goal'),
       children: [
@@ -346,7 +350,7 @@ class BoostProfileScreen extends StatelessWidget {
         Expanded(
           child: ListView.separated(
             padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
-            itemCount: controller.options_choose.length,
+            itemCount: controller.goalList.length,
             separatorBuilder: (_, __) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
               if (index == 0) {
@@ -356,20 +360,22 @@ class BoostProfileScreen extends StatelessWidget {
                     _sectionTitle('What do you want to achieve?'),
                     const SizedBox(height: 16),
                     Obx(
-                          () => _optionCard(
+                      () => _optionCard(
                         option: controller.goalList[index],
                         selected: controller.selectedGoalIndex.value == index,
-                        onTap: () => controller.selectGoal(index,controller.goalList[index].id!),
+                        onTap: () => controller.selectGoal(
+                            index, controller.goalList[index].id!),
                       ),
                     ),
                   ],
                 );
               }
               return Obx(
-                    () => _optionCard(
+                () => _optionCard(
                   option: controller.goalList[index],
                   selected: controller.selectedGoalIndex.value == index,
-                  onTap: () => controller.selectGoal(index,controller.goalList[index].id!),
+                  onTap: () => controller.selectGoal(
+                      index, controller.goalList[index].id!),
                 ),
               );
             },
@@ -379,7 +385,7 @@ class BoostProfileScreen extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
           child: _primaryButton(
             'Continue',
-                () => controller.clickContinueButton(1),
+            () => controller.clickContinueButton(1),
           ),
         ),
       ],
@@ -387,9 +393,9 @@ class BoostProfileScreen extends StatelessWidget {
   }
 
   Widget _buildAudience(
-      BuildContext context,
-      BoostProfileController controller,
-      ) {
+    BuildContext context,
+    BoostProfileController controller,
+  ) {
     return Column(
       key: const ValueKey('audience'),
       children: [
@@ -407,21 +413,23 @@ class BoostProfileScreen extends StatelessWidget {
                     _sectionTitle('Who should see your request?'),
                     const SizedBox(height: 16),
                     Obx(
-                          () => _optionCard(
+                      () => _optionCard(
                         option: controller.targetAudience[index],
                         selected:
-                        controller.selectedAudienceIndex.value == index,
-                        onTap: () => controller.selectAudience(index,controller!.targetAudience[index].id!.toInt()),
+                            controller.selectedAudienceIndex.value == index,
+                        onTap: () => controller.selectAudience(index,
+                            controller!.targetAudience[index].id!.toInt()),
                       ),
                     ),
                   ],
                 );
               }
               return Obx(
-                    () => _optionCard(
+                () => _optionCard(
                   option: controller.targetAudience[index],
                   selected: controller.selectedAudienceIndex.value == index,
-                  onTap: () => controller.selectAudience(index,controller!.targetAudience[index].id!.toInt()),
+                  onTap: () => controller.selectAudience(
+                      index, controller!.targetAudience[index].id!.toInt()),
                 ),
               );
             },
@@ -431,7 +439,7 @@ class BoostProfileScreen extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
           child: _primaryButton(
             'Continue',
-                () => controller.clickContinueButton(2),
+            () => controller.clickContinueButton(2),
           ),
         ),
       ],
@@ -439,9 +447,9 @@ class BoostProfileScreen extends StatelessWidget {
   }
 
   Widget _buildBudget(
-      BuildContext context,
-      BoostProfileController controller,
-      ) {
+    BuildContext context,
+    BoostProfileController controller,
+  ) {
     return Column(
       key: const ValueKey('budget'),
       children: [
@@ -499,7 +507,7 @@ class BoostProfileScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 Center(
                   child: Obx(
-                        () => Container(
+                    () => Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 4,
@@ -521,7 +529,7 @@ class BoostProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 37),
                 Obx(
-                      () => SliderTheme(
+                  () => SliderTheme(
                     data: SliderTheme.of(context).copyWith(
                       trackHeight: 5,
                       activeTrackColor: AppColors.whiteColor,
@@ -574,7 +582,7 @@ class BoostProfileScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               Obx(
-                                    () => Text(
+                                () => Text(
                                   controller.estimatedReach.value,
                                   style: GoogleFonts.montserrat(
                                       color: AppColors.whiteColor,
@@ -621,7 +629,7 @@ class BoostProfileScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 Obx(
-                                      () => Text(
+                                  () => Text(
                                     controller.boostDuration.value,
                                     style: GoogleFonts.montserrat(
                                         color: AppColors.whiteColor,
@@ -651,7 +659,7 @@ class BoostProfileScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Obx(
-                            () => _boostDateField(
+                        () => _boostDateField(
                           title: 'Start date',
                           value: controller.startDate.value,
                           icon: Icons.calendar_today_outlined,
@@ -662,7 +670,7 @@ class BoostProfileScreen extends StatelessWidget {
                     const SizedBox(width: 16),
                     Expanded(
                       child: Obx(
-                            () => _boostDateField(
+                        () => _boostDateField(
                           title: 'Start time',
                           value: controller.startTime.value,
                           icon: Icons.access_time,
@@ -688,7 +696,7 @@ class BoostProfileScreen extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
           child: _primaryButton(
             'Continue',
-                () => controller.clickContinueButton(3),
+            () => controller.clickContinueButton(3),
           ),
         ),
       ],
@@ -696,9 +704,9 @@ class BoostProfileScreen extends StatelessWidget {
   }
 
   Widget _buildReview(
-      BuildContext context,
-      BoostProfileController controller,
-      ) {
+    BuildContext context,
+    BoostProfileController controller,
+  ) {
     return Column(
       key: const ValueKey('review'),
       children: [
@@ -736,7 +744,8 @@ class BoostProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: AppColors.whiteColor.withAlpha(05),
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: AppColors.containerBorderColor),
+                            border: Border.all(
+                                color: AppColors.containerBorderColor),
                           ),
                           alignment: Alignment.center,
                           child: ClipRRect(
@@ -758,7 +767,8 @@ class BoostProfileScreen extends StatelessWidget {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      'NovaNest',
+                                      createFundsRaiseData!.companyName
+                                          .toString(),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.montserrat(
@@ -776,7 +786,7 @@ class BoostProfileScreen extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                'FinTech · Seed · Bengaluru',
+                                '${createFundsRaiseData!.industry.toString()} · ${createFundsRaiseData!.stage.toString()} · ${createFundsRaiseData!.location.toString()}, India',
                                 style: GoogleFonts.montserrat(
                                     color: AppColors.darkGreyColor,
                                     fontSize: 12,
@@ -785,6 +795,7 @@ class BoostProfileScreen extends StatelessWidget {
                             ],
                           ),
                         ),
+                        const SizedBox(width: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -796,7 +807,7 @@ class BoostProfileScreen extends StatelessWidget {
                                   fontWeight: FontWeight.w400),
                             ),
                             Text(
-                              '₹75L',
+                              '₹ ${createFundsRaiseData!.fundingGoal.toString()}/-',
                               style: GoogleFonts.montserrat(
                                   color: AppColors.whiteColor,
                                   fontSize: 16,
@@ -810,27 +821,48 @@ class BoostProfileScreen extends StatelessWidget {
                     Container(height: 1, color: AppColors.containerBorderColor),
                     const SizedBox(height: 20),
                     Obx(
-                          () => _reviewRow(
-                        asset: AppImages.boostGoal,
-                        glyphWidth: 14,
-                        glyphHeight: 14,
-                        label: 'Goal',
-                        value: controller.selectedGoalTitle,
-                      ),
+                          () {
+                        final goalIndex = controller.selectedGoalIndex.value;
+
+                        final goalTitle = goalIndex >= 0 &&
+                            goalIndex < controller.goalList.length
+                            ? controller.goalList[goalIndex].name?.toString() ?? 'Not selected'
+                            : 'Not selected';
+
+                        return _reviewRow(
+                          asset: AppImages.fundsRaiseIcon,
+                          glyphWidth: 14,
+                          glyphHeight: 14,
+                          label: 'Goal',
+                          value: goalTitle,
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    Obx(
+                          () {
+                        final audienceIndex = controller.selectedAudienceIndex.value;
+
+                        final audienceTitle = audienceIndex >= 0 &&
+                            audienceIndex < controller.targetAudience.length
+                            ? controller.targetAudience[audienceIndex].name?.toString() ??
+                            'Not selected'
+                            : 'Not selected';
+
+                        return _reviewRow(
+                          asset: AppImages.boostAudience,
+                          glyphWidth: 17.5,
+                          glyphHeight: 14,
+                          label: 'Audience',
+                          value: audienceTitle,
+                        );
+                      },
                     ),
                     const SizedBox(height: 16),
                     Obx(
-                          () => _reviewRow(
-                        asset: AppImages.boostAudience,
-                        glyphWidth: 17.5,
-                        glyphHeight: 14,
-                        label: 'Audience',
-                        value: controller.selectedAudienceTitle,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Obx(
-                          () => _reviewRow(
+                      () => _reviewRow(
                         asset: AppImages.boostBudget,
                         glyphWidth: 14,
                         glyphHeight: 14,
@@ -840,7 +872,7 @@ class BoostProfileScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Obx(
-                          () => _reviewRow(
+                      () => _reviewRow(
                         asset: AppImages.boostDuration,
                         glyphWidth: 12.25,
                         glyphHeight: 14,
@@ -850,7 +882,7 @@ class BoostProfileScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Obx(
-                          () => _reviewRow(
+                      () => _reviewRow(
                         asset: AppImages.boostReach,
                         glyphWidth: 14,
                         glyphHeight: 14,
@@ -905,12 +937,11 @@ class BoostProfileScreen extends StatelessWidget {
                         Text(
                           'Total',
                           style: GoogleFonts.montserrat(
-                              color: AppColors.darkGreyColor,
-                              fontSize: 12),
+                              color: AppColors.darkGreyColor, fontSize: 12),
                         ),
                         const SizedBox(height: 2),
                         Obx(
-                              () => Text(
+                          () => Text(
                             '₹${controller.boostAmount.value}',
                             style: GoogleFonts.montserrat(
                                 color: AppColors.whiteColor,
@@ -945,8 +976,7 @@ class BoostProfileScreen extends StatelessWidget {
                         Text(
                           '100% safe & secure',
                           style: GoogleFonts.montserrat(
-                              color: AppColors.darkGreyColor,
-                              fontSize: 10),
+                              color: AppColors.darkGreyColor, fontSize: 10),
                         ),
                       ],
                     ),
@@ -984,6 +1014,11 @@ class BoostProfileScreen extends StatelessWidget {
               asset,
               width: glyphWidth,
               height: glyphHeight,
+              fit: BoxFit.contain,
+              colorFilter:  const ColorFilter.mode(
+                AppColors.whiteColor,
+                BlendMode.srcIn,
+              ),
             ),
           ),
         ),
@@ -1020,8 +1055,7 @@ class BoostProfileScreen extends StatelessWidget {
         Text(
           title,
           style: GoogleFonts.montserrat(
-              color: AppColors.darkGreyColor,
-              fontSize: 11),
+              color: AppColors.darkGreyColor, fontSize: 11),
         ),
         const SizedBox(height: 8),
         GestureDetector(
@@ -1041,7 +1075,8 @@ class BoostProfileScreen extends StatelessWidget {
                     value,
                     style: GoogleFonts.montserrat(
                         color: AppColors.whiteColor,
-                        fontSize: 16, fontWeight: FontWeight.w600),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
                 Icon(icon, color: AppColors.darkGreyColor, size: 14),

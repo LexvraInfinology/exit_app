@@ -1,5 +1,6 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/models/boost_request_choose_option_list_model.dart';
+import 'package:exit_app/models/create_fund_model_class.dart';
 import 'package:exit_app/screens/notification_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ import '../models/choose_achieve_and_industry_model_class.dart';
 import '../screens/post_successfully_created_screen.dart';
 
 class BoostProfileController extends GetxController {
+  CreateFundsRaiseData createFundsRaiseData = CreateFundsRaiseData();
   final TextEditingController boostAmountController =
       TextEditingController(text: '100');
   final RxInt boostAmount = 100.obs;
@@ -63,11 +65,13 @@ class BoostProfileController extends GetxController {
     ),
   ];
 
-  RxInt selectedGoalIndex = 1.obs;
+  RxInt selectedGoalIndex = (-1).obs;
   RxInt selectedGoalIndexID = 1.obs;
   RxInt selectedAudienceIndex = 1.obs;
   RxInt selectedAudienceIndexID = 1.obs;
   RxInt currentStep = 0.obs;
+
+  // BoostProfileController(CreateFundsRaiseData? createFundsRaiseData);
 
   @override
   void onInit() {
@@ -84,7 +88,6 @@ class BoostProfileController extends GetxController {
   Future<void> loadHomePage() async {
     isLoading.value = true;
     update();
-
     try {
       final results = await Future.wait([
         _safeCall(getBoostRequestChooseOptionListApi),
@@ -294,9 +297,9 @@ class BoostProfileController extends GetxController {
       print("Message: ${response?.message}");
       if (response?.statusCode == 200) {
         isLoading.value = false;
-        goalList.clear();
+        // goalList.clear();
         goalList.value = response?.data?.goals ?? [];
-        targetAudience.clear();
+        // targetAudience.clear();
         targetAudience.value = response?.data?.targetAudiences ?? [];
       } else {
         isLoading.value = false;

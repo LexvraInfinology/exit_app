@@ -114,6 +114,8 @@ flutter:
     - assets/images/place_holder_image.png
     - assets/images/logout_icon.png
     - assets/images/set_prefrence_image.png
+    - assets/images/sell_your_company_icon.svg
+    - assets/images/fund_raise_icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

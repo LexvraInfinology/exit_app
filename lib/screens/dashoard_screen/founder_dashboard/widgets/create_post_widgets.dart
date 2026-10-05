@@ -2,15 +2,17 @@ import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/constants/app_images.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget CreatePostWidget(
-    {required IconData icon,
-    required String title,
-    required String description,
-    required String buttonText,
-    required VoidCallback onTap,
-    required BuildContext context}) {
+Widget CreatePostWidget({
+  required IconData icon,
+  required String title,
+  required String description,
+  required String buttonText,
+  required VoidCallback onTap,
+  required BuildContext context,
+}) {
   return Center(
     child: Container(
       width: MediaQuery.sizeOf(context).width / 2.4,
@@ -23,68 +25,91 @@ Widget CreatePostWidget(
           color: AppColors.containerBorderColor,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppColors.containerBackgroundColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(
-              icon,
-              color: const Color(0xFFAAAAAA),
-              size: 22,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.montserrat(
-              color: AppColors.whiteColor,
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 5),
-          Text(
-            description,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.montserrat(
-              color: AppColors.darkGreyColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              height: 1.6,
-            ),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
+          Image.asset(
+            AppImages.createFunds,
             width: MediaQuery.sizeOf(context).width,
-            height: 40,
-            child: ElevatedButton(
-              onPressed: onTap,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.whiteColor,
-                foregroundColor: AppColors.blackColor,
-                elevation: 0,
-                padding: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(22),
+            fit: BoxFit.cover,
+          ),
+          // SvgPicture.asset(
+          //   AppImages.fundsRaiseIcon,
+          //   width: MediaQuery.sizeOf(context).width,
+          //   fit: BoxFit.cover,
+          // ),
+
+
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: AppColors.containerBackgroundColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  icon,
+                  color: const Color(0xFFAAAAAA),
+                  size: 22,
                 ),
               ),
-              child: Text(
-                buttonText,
+
+              const SizedBox(height: 12),
+
+              Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.montserrat(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
+                  color: AppColors.whiteColor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-            ),
+
+              const SizedBox(height: 5),
+
+              Text(
+                description,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.montserrat(
+                  color: AppColors.darkGreyColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  height: 1.6,
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              SizedBox(
+                width: double.infinity,
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: onTap,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.whiteColor,
+                    foregroundColor: AppColors.blackColor,
+                    elevation: 0,
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(22),
+                    ),
+                  ),
+                  child: Text(
+                    buttonText,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
