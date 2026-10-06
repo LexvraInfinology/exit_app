@@ -7,8 +7,6 @@ import 'package:exit_app/models/marketplace_Industries_model.dart';
 import 'package:exit_app/models/need_attention_response.dart';
 import 'package:exit_app/models/portfollio_response_model.dart';
 import 'package:exit_app/models/profile_model.dart';
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/widgets/filtter_button_widget.dart';
-import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/founder_details_screen.dart';
 import 'package:exit_app/screens/help_and_support_screen.dart';
 import 'package:exit_app/screens/notification_list_screen.dart';
 import 'package:exit_app/screens/privacy_policy_screen.dart';
@@ -22,6 +20,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/app_color.dart';
 import '../constants/app_images.dart';
 import '../screens/chat_details_screen.dart';
+import '../screens/dashboard_screen/founder_dashboard/widgets/filtter_button_widget.dart';
+import '../screens/dashboard_screen/investor_dashboard_screen/founder_details_screen.dart';
 import '../screens/onboarding_screen.dart';
 
 class InvestorDashboardController extends GetxController {

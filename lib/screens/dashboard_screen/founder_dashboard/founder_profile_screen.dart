@@ -1,7 +1,7 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/controller/founder_dashboard_controller.dart';
 import 'package:exit_app/controller/kyc_controller.dart';
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/widgets/settings_row_widget.dart';
+import 'package:exit_app/screens/dashboard_screen/founder_dashboard/widgets/settings_row_widget.dart';
 import 'package:exit_app/screens/kyc_screens/kyc_identity_screen.dart';
 import 'package:exit_app/screens/notification_screen.dart';
 import 'package:flutter/cupertino.dart';

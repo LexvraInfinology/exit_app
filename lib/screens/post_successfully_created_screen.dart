@@ -1,10 +1,11 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/constants/app_images.dart';
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/founder_dashboard_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'dashboard_screen/founder_dashboard/founder_dashboard_screen.dart';
 
 class PostSuccefullyCreatedScreen extends StatelessWidget {
   final String title;

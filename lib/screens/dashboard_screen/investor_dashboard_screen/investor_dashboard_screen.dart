@@ -1,6 +1,4 @@
 import 'package:exit_app/controller/investor_dashboard_controller.dart';
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/chat_list_screen.dart';
-import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/investor_chat_list_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +7,7 @@ import 'package:get/get.dart';
 import '../../../constants/app_color.dart';
 import '../../../constants/app_images.dart';
 import 'founder_discover_screen.dart';
+import 'investor_chat_list_screen.dart';
 import 'investor_profile_screen.dart';
 import 'investor_home_screen.dart';
 import 'investor_portfolio_screen.dart';

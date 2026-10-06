@@ -1,6 +1,5 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/models/marketplace_Industries_model.dart';
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/widgets/filtter_button_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

@@ -1,6 +1,6 @@
 import 'package:exit_app/constants/app_color.dart';
 import 'package:exit_app/controller/founder_dashboard_controller.dart';
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/widgets/create_post_widgets.dart';
+import 'package:exit_app/screens/dashboard_screen/founder_dashboard/widgets/create_post_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

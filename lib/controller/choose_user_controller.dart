@@ -9,8 +9,6 @@ import 'package:exit_app/models/marketplace_Industries_model.dart'
     show MarketplaceIndustriesResponse, MarketplaceIndustry;
 import 'package:exit_app/screens/choose_plan_screen.dart';
 import 'package:exit_app/screens/create_profile_screen.dart';
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/founder_dashboard_screen.dart';
-import 'package:exit_app/screens/dashoard_screen/startup_dashboard_screen/startup_dashboard_screen.dart';
 import 'package:exit_app/screens/otp_screen.dart';
 import 'package:exit_app/screens/privacy_policy_screen.dart';
 import 'package:exit_app/screens/setpreferences_screen.dart';
@@ -20,7 +18,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../screens/dashoard_screen/investor_dashboard_screen/investor_dashboard_screen.dart';
+import '../screens/dashboard_screen/founder_dashboard/founder_dashboard_screen.dart';
+import '../screens/dashboard_screen/investor_dashboard_screen/investor_dashboard_screen.dart';
+import '../screens/dashboard_screen/startup_dashboard_screen/startup_dashboard_screen.dart';
 import '../screens/phone_number_screen.dart';
 import 'investor_dashboard_controller.dart';
 

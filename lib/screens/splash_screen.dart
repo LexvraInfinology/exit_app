@@ -3,9 +3,6 @@ import 'dart:ffi';
 import 'package:exit_app/api_utils/api_services.dart';
 import 'package:exit_app/constants/app_images.dart';
 import 'package:exit_app/controller/investor_dashboard_controller.dart';
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/founder_dashboard_screen.dart';
-import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/investor_dashboard_screen.dart';
-import 'package:exit_app/screens/dashoard_screen/startup_dashboard_screen/startup_dashboard_screen.dart';
 import 'package:exit_app/screens/new_chat_screen.dart';
 import 'package:exit_app/screens/onboarding_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'dashboard_screen/founder_dashboard/founder_dashboard_screen.dart';
+import 'dashboard_screen/investor_dashboard_screen/investor_dashboard_screen.dart';
+import 'dashboard_screen/startup_dashboard_screen/startup_dashboard_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

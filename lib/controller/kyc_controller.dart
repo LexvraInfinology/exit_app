@@ -3,9 +3,6 @@ import 'dart:io';
 import 'package:exit_app/api_utils/api_services.dart';
 import 'package:exit_app/models/kyc_response_model.dart';
 import 'package:exit_app/screens/card_details_enter_screen.dart';
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/founder_dashboard_screen.dart';
-import 'package:exit_app/screens/dashoard_screen/investor_dashboard_screen/investor_dashboard_screen.dart';
-import 'package:exit_app/screens/dashoard_screen/startup_dashboard_screen/startup_dashboard_screen.dart';
 import 'package:exit_app/screens/kyc_screens/choose_card_pattern_type_screen.dart';
 import 'package:exit_app/screens/kyc_screens/identity_verification_screen.dart';
 import 'package:exit_app/screens/kyc_screens/kyc_identity_screen.dart';
@@ -19,6 +16,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/app_color.dart';
 import '../constants/app_images.dart';
+import '../screens/dashboard_screen/founder_dashboard/founder_dashboard_screen.dart';
+import '../screens/dashboard_screen/investor_dashboard_screen/investor_dashboard_screen.dart';
+import '../screens/dashboard_screen/startup_dashboard_screen/startup_dashboard_screen.dart';
 
 RxInt currentStep = 0.obs;
 

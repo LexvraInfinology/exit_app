@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/founder_dashboard_screen.dart';
 import 'package:exit_app/screens/kyc_screens/kyc_verified_screen.dart';
 import 'package:exit_app/screens/post_successfully_created_screen.dart';
 import 'package:file_picker/file_picker.dart';
@@ -34,6 +33,10 @@ class RaiseFundsRequestController extends GetxController {
   TextEditingController();
 
   final RxString industry = 'FinTech'.obs;
+
+  Rx<File?> selectedPdf = Rx<File?>(null);
+  RxString pdfName = ''.obs;
+  RxString pdfSize = ''.obs;
 
   void changeIndustry(String value) {
     industry.value = value;
@@ -130,15 +133,30 @@ class RaiseFundsRequestController extends GetxController {
         return SafeArea(
           child: Wrap(
             children: [
-
               ListTile(
-                leading: const Icon(Icons.picture_as_pdf),
-                title: const Text('PDF'),
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Camera'),
                 onTap: () {
                   Navigator.pop(context);
-                  pickPdf();
+                  pickImage(ImageSource.camera);
                 },
               ),
+              ListTile(
+                leading: const Icon(Icons.photo),
+                title: const Text('Gallery'),
+                onTap: () {
+                  Navigator.pop(context);
+                  pickImage(ImageSource.gallery);
+                },
+              ),
+              // ListTile(
+              //   leading: const Icon(Icons.picture_as_pdf),
+              //   title: const Text('PDF'),
+              //   onTap: () {
+              //     Navigator.pop(context);
+              //     pickPdf();
+              //   },
+              // ),
             ],
           ),
         );
@@ -156,17 +174,34 @@ class RaiseFundsRequestController extends GetxController {
     }
   }
 
+  // Future<void> pickPdf() async {
+  //   final result = await FilePicker.platform.pickFiles(
+  //     type: FileType.custom,
+  //     allowedExtensions: ['pdf'],
+  //   );
+  //   if (result != null) {
+  //     final file = result.files.single;
+  //
+  //     update();
+  //
+  //     print('PDF path: ${file.path}');
+  //   }
+  // }
   Future<void> pickPdf() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
-    if (result != null) {
-      final file = result.files.single;
 
-      update();
+    if (result != null && result.files.single.path != null) {
+      final pickedFile = result.files.single;
 
-      print('PDF path: ${file.path}');
+      selectedPdf.value = File(pickedFile.path!);
+      pdfName.value = pickedFile.name;
+
+      final sizeInBytes = pickedFile.size;
+      final sizeInMb = sizeInBytes / (1024 * 1024);
+      pdfSize.value = '${sizeInMb.toStringAsFixed(2)} MB';
     }
   }
 
@@ -212,7 +247,7 @@ class RaiseFundsRequestController extends GetxController {
   }
 
   Future<void> createFundsRaiseApi() async {
-    final funding_goal = amountController.value.text.trim();
+    final fundingGoal = amountController.value.text.trim();
     final companyName = companyNameController.value.text.trim();
     final location = locationController.value.text.trim();
     final companyWebsite = companyWebsiteController.value.text.trim();
@@ -232,7 +267,7 @@ class RaiseFundsRequestController extends GetxController {
       try {
         isLoading.value = true;
         final response = await apiServices.createFundsRaiseApi(
-            funding_goal.replaceAll(',', ''),
+            fundingGoal.replaceAll(',', ''),
             "INR",
             (selectedStage.value + 1).toString(),
             (selectedPurpose.value + 1).toString(),
@@ -282,4 +317,11 @@ class RaiseFundsRequestController extends GetxController {
       }
     }
   }
+
+  void removePdf() {
+    selectedPdf.value = null;
+    pdfName.value = '';
+    pdfSize.value = '';
+  }
+
 }

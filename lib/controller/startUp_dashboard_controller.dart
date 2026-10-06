@@ -21,7 +21,7 @@ import '../models/InvestorActivity.dart';
 import '../models/create_fund_model_class.dart';
 import '../screens/boost_profile_screen.dart';
 import '../screens/chat_details_screen.dart';
-import '../screens/dashoard_screen/founder_dashboard/investor_details_screen.dart';
+import '../screens/dashboard_screen/founder_dashboard/investor_details_screen.dart';
 import '../screens/help_and_support_screen.dart';
 import '../screens/notification_list_screen.dart';
 import '../screens/post_details_screen.dart';
@@ -42,7 +42,6 @@ class StartUpDashBoardController extends GetxController {
   int? currentUserId;
   final RxBool isUpdatingPrivacy = false.obs;
 
-
   final ApiServices apiServices = ApiServices();
   final SharedPreferences prefs = Get.find<SharedPreferences>();
 
@@ -55,7 +54,6 @@ class StartUpDashBoardController extends GetxController {
   final RxList<CreateFundsRaiseData> createFundsList =
       <CreateFundsRaiseData>[].obs;
   CreateFundsRaiseData createFundsRaiseData = new CreateFundsRaiseData();
-
 
   @override
   void onInit() {
@@ -75,14 +73,12 @@ class StartUpDashBoardController extends GetxController {
     update();
   }
 
-
   void toggleVisibility() {
     final bool value = !isPrivate.value;
     updatePrivateAccount(value);
   }
 
   Future<void> updatePrivateAccount(bool value) async {
-
     if (isUpdatingPrivacy.value) {
       debugPrint('❌ Already updating, returning...');
       return;
@@ -90,7 +86,6 @@ class StartUpDashBoardController extends GetxController {
 
     try {
       isUpdatingPrivacy.value = true;
-
 
       final success = await apiServices.updatePrivateAccountApi(
         isPrivate: value,
@@ -127,6 +122,7 @@ class StartUpDashBoardController extends GetxController {
       debugPrint('========== UPDATE FINISHED ==========');
     }
   }
+
   void onItemSelected(int index) {
     selectedIndex.value = index;
   }
@@ -153,7 +149,8 @@ class StartUpDashBoardController extends GetxController {
     deleteCreatedFundsApi(item_id);
   }
 
-  void editPostOrDeletePost(int index, String ScreenType, String type, String item_id) {
+  void editPostOrDeletePost(
+      int index, String ScreenType, String type, String item_id) {
     selectedPostIndex.value = -1;
     if (type == 'delete') {
       showDeletePostDialog(Get.context!, index, item_id ?? '');
@@ -166,7 +163,6 @@ class StartUpDashBoardController extends GetxController {
     }
   }
 
-
   void onRaiseCapital() {}
 
   void onListBusiness() {}
@@ -174,9 +170,9 @@ class StartUpDashBoardController extends GetxController {
   void onViewPlan() {}
 
   void InvestorDetails(Results result) {
- if(currentUserId != null){
-   Get.to(() => InvestorDetailsScreen(result,currentUserId));
- }
+    if (currentUserId != null) {
+      Get.to(() => InvestorDetailsScreen(result, currentUserId));
+    }
   }
 
   void clickPlanDetails() {
@@ -228,7 +224,7 @@ class StartUpDashBoardController extends GetxController {
     removedInvestorApi(investor_id);
   }
 
-  void clickViewInterestInvestors(List<InvestorActivity>  investorActivity) {
+  void clickViewInterestInvestors(List<InvestorActivity> investorActivity) {
     Get.to(() => ViewInvestorActivityListScreen(investorActivity));
   }
 
@@ -518,7 +514,7 @@ class StartUpDashBoardController extends GetxController {
                             if (success) {
                               await prefs.clear();
                               Get.offAll(
-                                    () => const OnboardingScreen(),
+                                () => const OnboardingScreen(),
                               );
                             } else {
                               Get.snackbar(
@@ -780,7 +776,7 @@ class StartUpDashBoardController extends GetxController {
 
       resultProfile.value = response?.data!.results ?? [];
       currentUserId = resultProfile.first.id;
-      isPrivate.value = resultProfile.first.isPrivate??false;
+      isPrivate.value = resultProfile.first.isPrivate ?? false;
       print('click dat ${resultProfile.single.firstName}');
     } catch (e) {
       print('object ${e}');
@@ -818,7 +814,7 @@ class StartUpDashBoardController extends GetxController {
     try {
       isLoading.value = true;
       final CreateFundRaiseModel? response =
-      await apiServices.getCreateFundsRaiseApi();
+          await apiServices.getCreateFundsRaiseApi();
 
       if (response?.statusCode == 200) {
         if (response?.data != null) {
@@ -878,6 +874,4 @@ class StartUpDashBoardController extends GetxController {
       isLoading.value = false;
     }
   }
-
-
 }

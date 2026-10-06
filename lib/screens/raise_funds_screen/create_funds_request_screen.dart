@@ -14,6 +14,7 @@ import '../../constants/app_images.dart';
 class CreateFundsRequestScreen extends StatelessWidget {
   int selectedPurpose = 1;
   int selectedInvestor = 1;
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
@@ -382,7 +383,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                                 Icons.currency_rupee,
                                 color: AppColors.whiteColor,
                               ),
-                              hintText: 'Enter ammount...',
+                              hintText: 'Enter amount...',
                               prefixStyle: GoogleFonts.montserrat(
                                 color: AppColors.whiteColor,
                                 fontSize: 22,
@@ -459,7 +460,8 @@ class CreateFundsRequestScreen extends StatelessWidget {
                       final selected = controller.selectedStage.value == index;
                       return GestureDetector(
                         onTap: () {
-                          controller.selectStage(index, controller.stageList[index].name);
+                          controller.selectStage(
+                              index, controller.stageList[index].name);
 
                           controller.selectedStage.value = index;
                         },
@@ -554,7 +556,17 @@ class CreateFundsRequestScreen extends StatelessWidget {
                   height: 55,
                   child: ElevatedButton(
                     onPressed: () {
-                      controller.clickContinueButton(1);
+                      if (controller.amountController.text.isEmpty) {
+                        Get.snackbar(
+                          'Error',
+                          'Please enter amount',
+                          snackPosition: SnackPosition.TOP,
+                          backgroundColor: AppColors.blackColor,
+                          colorText: AppColors.whiteColor,
+                        );
+                      } else {
+                        controller.clickContinueButton(1);
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.whiteColor,
@@ -583,7 +595,6 @@ class CreateFundsRequestScreen extends StatelessWidget {
 
   Widget _buildCompany(
       BuildContext context, RaiseFundsRequestController controller) {
-
     final TextEditingController descriptionController = TextEditingController();
 
     return SingleChildScrollView(
@@ -813,7 +824,9 @@ class CreateFundsRequestScreen extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                'Tell investors a little about the company you’re\nraising for.',
+                'Tell investors a little about the company you’re raising for.',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.montserrat(
                   color: const Color(0xFF777777),
                   fontSize: 12,
@@ -821,46 +834,6 @@ class CreateFundsRequestScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 25),
-              Text(
-                'Company Name',
-                style: GoogleFonts.montserrat(
-                  color: Color(0xFF858585),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                height: 53,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF111111),
-                  borderRadius: BorderRadius.circular(11),
-                  border: Border.all(
-                    color: const Color(0xFF2B2B2B),
-                  ),
-                ),
-                child: TextField(
-                  controller: controller.companyNameController,
-                  style: const TextStyle(
-                    color: Color(0xFFE7E7E7),
-                    fontSize: 15,
-                  ),
-                  cursorColor: AppColors.whiteColor,
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 7),
-              Text(
-                'Use your registered or public company name.',
-                style: GoogleFonts.montserrat(
-                  color: Color(0xFF666666),
-                  fontSize: 11,
-                ),
-              ),
-              const SizedBox(height: 20),
 
               Text(
                 'Upload company logo',
@@ -1006,6 +979,47 @@ class CreateFundsRequestScreen extends StatelessWidget {
                           ),
                   )),
 
+              const SizedBox(height: 20),
+
+              Text(
+                'Company Name',
+                style: GoogleFonts.montserrat(
+                  color: Color(0xFF858585),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                height: 53,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF111111),
+                  borderRadius: BorderRadius.circular(11),
+                  border: Border.all(
+                    color: const Color(0xFF2B2B2B),
+                  ),
+                ),
+                child: TextField(
+                  controller: controller.companyNameController,
+                  style: const TextStyle(
+                    color: Color(0xFFE7E7E7),
+                    fontSize: 15,
+                  ),
+                  cursorColor: AppColors.whiteColor,
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 7),
+              Text(
+                'Use your registered or public company name.',
+                style: GoogleFonts.montserrat(
+                  color: Color(0xFF666666),
+                  fontSize: 11,
+                ),
+              ),
               const SizedBox(height: 20),
               Text(
                 'Industry',
@@ -1256,7 +1270,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
                     color: Color(0xFFE1E1E1),
                     fontSize: 15,
                   ),
-                  cursorColor: Colors.white,
+                  cursorColor: AppColors.whiteColor,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     prefixIcon: Icon(
@@ -1303,11 +1317,11 @@ class CreateFundsRequestScreen extends StatelessWidget {
                       cursorColor: AppColors.whiteColor,
                       decoration: InputDecoration(
                         hintText:
-                            'Tell investors what your company does in a\nfew sentences...',
+                            'Tell investors what your company does in a few sentences...',
                         hintStyle: GoogleFonts.montserrat(
-                          color: Color(0xFFD0D0D0),
-                          fontSize: 14,
-                        ),
+                            color: AppColors.darkGreyColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400),
                         border: InputBorder.none,
                         counterText: '',
                         contentPadding:
@@ -1345,7 +1359,42 @@ class CreateFundsRequestScreen extends StatelessWidget {
               height: 57,
               child: ElevatedButton(
                 onPressed: () {
-                  controller.clickContinueButton(2);
+                  if (controller.companyNameController.text.isEmpty) {
+                    Get.snackbar(
+                      'Error',
+                      'Please enter company name',
+                      snackPosition: SnackPosition.TOP,
+                      backgroundColor: AppColors.blackColor,
+                      colorText: AppColors.whiteColor,
+                    );
+                  } else if (controller.locationController.text.isEmpty) {
+                    Get.snackbar(
+                      'Error',
+                      'Please enter company location',
+                      snackPosition: SnackPosition.TOP,
+                      backgroundColor: AppColors.blackColor,
+                      colorText: AppColors.whiteColor,
+                    );
+                  } else if (controller.companyWebsiteController.text.isEmpty) {
+                    Get.snackbar(
+                      'Error',
+                      'Please enter company website',
+                      snackPosition: SnackPosition.TOP,
+                      backgroundColor: AppColors.blackColor,
+                      colorText: AppColors.whiteColor,
+                    );
+                  } else if (controller
+                      .companyDescriptionController.text.isEmpty) {
+                    Get.snackbar(
+                      'Error',
+                      'Please enter company description',
+                      snackPosition: SnackPosition.TOP,
+                      backgroundColor: AppColors.blackColor,
+                      colorText: AppColors.whiteColor,
+                    );
+                  } else {
+                    controller.clickContinueButton(2);
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.whiteColor,
@@ -1373,8 +1422,7 @@ class CreateFundsRequestScreen extends StatelessWidget {
   Widget _buildAboutRaise(
       BuildContext context, RaiseFundsRequestController controller) {
     final TextEditingController raiseController = TextEditingController(
-      text:
-          "We’re raising ₹75L to expand into 3 new cities, grow our sales team and improve our product.",
+      text: "",
     );
 
     String selectedFundingTime = '1–3 Months';
@@ -1639,10 +1687,10 @@ class CreateFundsRequestScreen extends StatelessWidget {
                   child: Stack(
                     children: [
                       TextField(
-                        controller: raiseController,
+                        controller: controller.raiseDescriptionController,
                         maxLines: 7,
                         maxLength: 500,
-                        cursorColor: Colors.white,
+                        cursorColor: AppColors.whiteColor,
                         style: const TextStyle(
                           color: Color(0xFFE7E7E7),
                           fontSize: 14,
@@ -1686,13 +1734,16 @@ class CreateFundsRequestScreen extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(
+              height: 20,
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'When do you need the funding?',
-                  style: TextStyle(
-                    color: Colors.white,
+                  style: GoogleFonts.montserrat(
+                    color: AppColors.whiteColor,
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                   ),
@@ -1739,260 +1790,160 @@ class CreateFundsRequestScreen extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(height: 6),
+                const SizedBox(height: 6),
 
                 Text(
                   'Help investors understand your business better',
-                  style: TextStyle(
-                    color: Color(0xFF747474),
-                    fontSize: 11,
-                    height: 1.5,
-                  ),
+                  style: GoogleFonts.montserrat(
+                      color: Color(0xFF747474),
+                      fontSize: 12,
+                      height: 1.5,
+                      fontWeight: FontWeight.w500),
                 ),
-
-
 
                 const SizedBox(height: 18),
-                Obx(() => DottedBorder(
-                  color: AppColors.darkGreyColor,
-                  strokeWidth: 1,
-                  dashPattern: [5, 4],
-                  borderType: BorderType.RRect,
-                  radius: const Radius.circular(12),
-                  child: controller.selectedImage.value == null
-                      ? Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration:
-                    BoxDecoration(border: Border.all(width: 1)),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
+
+                Obx(
+                      () => DottedBorder(
+                    color: AppColors.darkGreyColor,
+                    strokeWidth: 1,
+                    dashPattern: [5, 4],
+                    borderType: BorderType.RRect,
+                    radius: const Radius.circular(12),
+                    child: controller.selectedPdf.value == null
+                        ? Container(
+                      padding: const EdgeInsets.all(24),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                  color: AppColors.darkGreyColor,
-                                  width: 1)),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Select Your pdf file',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.montserrat(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: AppColors.whiteColor),
+                                color: AppColors.darkGreyColor,
+                                width: 1,
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  controller.showUploadOptions(context);
-                                },
-                                child: Text(
-                                  ' Upload',
-                                  style: GoogleFonts.montserrat(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 12,
-                                      color: AppColors.greenColor),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                      : Container(
-                    padding: EdgeInsets.all(24),
-                    decoration:
-                    BoxDecoration(border: Border.all(width: 1)),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 60,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: AppColors.darkGreyColor,
-                              width: 1,
+                            ),
+                            child: Icon(
+                              Icons.picture_as_pdf,
+                              size: 30,
+                              color: AppColors.greenColor,
                             ),
                           ),
-                          child: controller.selectedImage.value != null
-                              ? Image.file(
-                            controller.selectedImage.value!,
-                            fit: BoxFit.cover,
-                          )
-                              : const Icon(
-                            Icons.image,
-                            size: 30,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'images_text.png',
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,
-                                  color: AppColors.whiteColor),
-                            ),
-                            Row(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '1.5 MB',
+                                  'Select Your PDF file',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.montserrat(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 10,
-                                      color: AppColors.darkGreyColor),
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    color: AppColors.whiteColor,
+                                  ),
                                 ),
-                                Text(
-                                  ' Uploaded',
-                                  style: GoogleFonts.montserrat(
+                                GestureDetector(
+                                  onTap: () {
+                                    controller.pickPdf();
+                                  },
+                                  child: Text(
+                                    'Upload',
+                                    style: GoogleFonts.montserrat(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 12,
-                                      color: AppColors.greenColor),
+                                      color: AppColors.greenColor,
+                                    ),
+                                  ),
                                 ),
                               ],
-                            )
-                          ],
-                        ),
-                        Spacer(),
-                        GestureDetector(
-                          onTap: () {
-                            controller.selectedImage.value = null;
-                          },
-                          child: Icon(
-                            Icons.close,
-                            size: 32,
-                            color: AppColors.darkGreyColor,
+                            ),
                           ),
-                        )
-                      ],
+                        ],
+                      ),
+                    )
+                        : Container(
+                      padding: const EdgeInsets.all(24),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: AppColors.darkGreyColor,
+                                width: 1,
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.picture_as_pdf,
+                              size: 32,
+                              color: AppColors.greenColor,
+                            ),
+                          ),
+
+                          const SizedBox(width: 10),
+
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  controller.pdfName.value,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.montserrat(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16,
+                                    color: AppColors.whiteColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    Text(
+                                      controller.pdfSize.value,
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 10,
+                                        color: AppColors.darkGreyColor,
+                                      ),
+                                    ),
+                                    Text(
+                                      '  Uploaded',
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                        color: AppColors.greenColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          GestureDetector(
+                            onTap: () {
+                              controller.removePdf();
+                            },
+                            child: Icon(
+                              Icons.close,
+                              size: 32,
+                              color: AppColors.darkGreyColor,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                )),
+                ),
                 // _buildUploadedFile(),
               ],
-            ),
-            Container(
-              height: 74,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 14,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xFF0C0C0C),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: const Color(0xFF292929),
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                children: [
-                  // PDF icon
-                  Container(
-                    width: 42,
-                    height: 42,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF171717),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        const Icon(
-                          Icons.insert_drive_file,
-                          color: Color(0xFF858585),
-                          size: 23,
-                        ),
-                        Positioned(
-                          bottom: 8,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 2,
-                              vertical: 1,
-                            ),
-                            color: const Color(0xFF858585),
-                            child: const Text(
-                              'PDF',
-                              style: TextStyle(
-                                color: Color(0xFF171717),
-                                fontSize: 6,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(width: 14),
-
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'NovaNest_Pitch_Deck.pdf',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Color(0xFFD8D8D8),
-                            fontSize: 12,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: '2.4 MB · ',
-                                style: GoogleFonts.montserrat(
-                                  color: AppColors.darkGreyColor,
-                                  fontSize: 10,
-                                ),
-                              ),
-                              TextSpan(
-                                text: 'Uploaded',
-                                style: GoogleFonts.montserrat(
-                                  color: Color(0xFF49B887),
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(width: 8),
-
-                  const Icon(
-                    Icons.close,
-                    color: Color(0xFF9A9A9A),
-                    size: 20,
-                  ),
-                ],
-              ),
             ),
             const SizedBox(
               height: 100,
@@ -2002,7 +1953,17 @@ class CreateFundsRequestScreen extends StatelessWidget {
               height: 57,
               child: ElevatedButton(
                 onPressed: () {
-                  controller.clickContinueButton(3);
+                  if (controller.raiseDescriptionController.text.isEmpty) {
+                    Get.snackbar(
+                      'Error',
+                      'Please enter raise controller',
+                      snackPosition: SnackPosition.TOP,
+                      backgroundColor: AppColors.blackColor,
+                      colorText: AppColors.whiteColor,
+                    );
+                  } else {
+                    controller.clickContinueButton(3);
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.whiteColor,
@@ -2012,9 +1973,9 @@ class CreateFundsRequestScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(17),
                   ),
                 ),
-                child: const Text(
+                child:  Text(
                   'Continue',
-                  style: TextStyle(
+                  style: GoogleFonts.montserrat(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),
@@ -2472,7 +2433,8 @@ class CreateFundsRequestScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 7),
                             Text(
-                              controller.selectedStageStringValue.value.toString(),
+                              controller.selectedStageStringValue.value
+                                  .toString(),
                               style: GoogleFonts.montserrat(
                                 color: AppColors.whiteColor,
                                 fontSize: 13,
@@ -2945,5 +2907,4 @@ class CreateFundsRequestScreen extends StatelessWidget {
       ),
     );
   }
-
 }

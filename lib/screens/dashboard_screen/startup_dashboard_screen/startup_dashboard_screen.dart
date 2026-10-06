@@ -1,34 +1,32 @@
 import 'package:exit_app/constants/app_color.dart';
-import 'package:exit_app/constants/app_images.dart';
-import 'package:exit_app/controller/founder_dashboard_controller.dart';
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/chat_list_screen.dart';
-import 'package:exit_app/screens/raise_funds_screen/create_funds_request_screen.dart';
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/founder_home_screen.dart';
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/founder_profile_screen.dart';
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/funding_request_list_screen.dart';
-import 'package:exit_app/screens/dashoard_screen/founder_dashboard/view_all_investor_screen.dart';
+import 'package:exit_app/controller/startUp_dashboard_controller.dart';
+import 'package:exit_app/screens/dashboard_screen/startup_dashboard_screen/startup_all_investor_screen.dart';
+import 'package:exit_app/screens/dashboard_screen/startup_dashboard_screen/startup_chat_list_screen.dart';
+import 'package:exit_app/screens/dashboard_screen/startup_dashboard_screen/startup_home_screen.dart';
+import 'package:exit_app/screens/dashboard_screen/startup_dashboard_screen/startup_profile_screen.dart';
+import 'package:exit_app/screens/dashboard_screen/startup_dashboard_screen/startup_request_list_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
-class FounderDashboardScreen extends StatelessWidget {
-  FounderDashboardScreen({super.key});
+import '../../../constants/app_images.dart';
+import '../founder_dashboard/chat_list_screen.dart';
+import '../founder_dashboard/founder_profile_screen.dart';
+import '../founder_dashboard/funding_request_list_screen.dart';
 
-  final FounderDashboardController controller =
-      Get.put(FounderDashboardController());
+class StartupDashboardScreen extends StatelessWidget{
 
   final List<Widget> pages = [
-    FounderHomeScreen(),
-    ViewAllInvestorScreen(),
-    FundingRequestListScreen(),
-    ChatListScreen(),
-    FounderProfileScreen(),
+    const StartUpHomeScreen(),
+    StartUpAllInvestorScreen(),
+    const StartUpRequestListScreen(),
+    const StartUpChatListScreen(),
+    StartUpProfileScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
-   return GetBuilder(init: FounderDashboardController(), builder: (controller){
+   return GetBuilder(init: StartUpDashBoardController(), builder: (controller){
      return Obx(
            () => Scaffold(
          backgroundColor: AppColors.blackColor,
@@ -37,19 +35,21 @@ class FounderDashboardScreen extends StatelessWidget {
            children: pages,
          ),
 
-         bottomNavigationBar: _FounderBottomNavigation(
+         bottomNavigationBar: _StartUpBottomNavigation(
            controller: controller,
          ),
        ),
      );
    });
   }
+
+
 }
 
-class _FounderBottomNavigation extends StatelessWidget {
-  final FounderDashboardController controller;
+class _StartUpBottomNavigation extends StatelessWidget {
+  final StartUpDashBoardController controller;
 
-  const _FounderBottomNavigation({
+  const _StartUpBottomNavigation({
     required this.controller,
   });
 
@@ -138,9 +138,9 @@ class _FounderBottomNavigation extends StatelessWidget {
               switchInCurve: Curves.easeOutBack,
               switchOutCurve: Curves.easeIn,
               transitionBuilder: (
-                Widget child,
-                Animation<double> animation,
-              ) {
+                  Widget child,
+                  Animation<double> animation,
+                  ) {
                 return FadeTransition(
                   opacity: animation,
                   child: ScaleTransition(
@@ -151,27 +151,27 @@ class _FounderBottomNavigation extends StatelessWidget {
               },
               child: image != null
                   ? ImageIcon(
-                      AssetImage(
-                        isSelected && selectedImage != null
-                            ? selectedImage
-                            : image,
-                      ),
-                      key: ValueKey(
-                        isSelected ? 'selected-$index' : 'unselected-$index',
-                      ),
-                      size: 26,
-                      color: AppColors.whiteColor,
-                    )
+                AssetImage(
+                  isSelected && selectedImage != null
+                      ? selectedImage
+                      : image,
+                ),
+                key: ValueKey(
+                  isSelected ? 'selected-$index' : 'unselected-$index',
+                ),
+                size: 26,
+                color: AppColors.whiteColor,
+              )
                   : Icon(
-                      isSelected && selectedMaterialIcon != null
-                          ? selectedMaterialIcon
-                          : materialIcon,
-                      key: ValueKey(
-                        isSelected ? 'selected-$index' : 'unselected-$index',
-                      ),
-                      size: 26,
-                      color: AppColors.darkGreyColor,
-                    ),
+                isSelected && selectedMaterialIcon != null
+                    ? selectedMaterialIcon
+                    : materialIcon,
+                key: ValueKey(
+                  isSelected ? 'selected-$index' : 'unselected-$index',
+                ),
+                size: 26,
+                color: AppColors.darkGreyColor,
+              ),
             ),
           ),
         ),
