@@ -32,6 +32,7 @@ import '../models/boost_request_model.dart';
 import '../models/buy_plan_model.dart';
 import '../models/delete_funds_api_response.dart';
 import '../models/get_investor_list_model.dart';
+import '../models/search_suggestion_list_model.dart';
 import 'api_utils.dart';
 
 class ApiServices {
@@ -357,8 +358,7 @@ class ApiServices {
   }
 
   Future<BuyPlanModel?> payPlanApi(String plan_id, String mock_payment_success,
-      String payment_reference)
-  async {
+      String payment_reference) async {
     final token = prefs.getString('token');
     debugPrint('object${token}');
     final Uri url = Uri.parse(ApiUtils.payPlanApi);
@@ -1172,8 +1172,7 @@ class ApiServices {
 
   Future<bool> saveFounderApi({
     required int founderId,
-  })
-  async {
+  }) async {
     final token = prefs.getString('token');
 
     final Uri url = Uri.parse(ApiUtils.saveFounderApi);
@@ -1501,9 +1500,12 @@ class ApiServices {
     }
   }
 
-  Future<BoostRequestModel?> boostProfileRequestApi(String goal, String target_audience,
-      String amount,String boost_start_date,String boost_start_time)
-  async {
+  Future<BoostRequestModel?> boostProfileRequestApi(
+      String goal,
+      String target_audience,
+      String amount,
+      String boost_start_date,
+      String boost_start_time) async {
     final token = prefs.getString('token');
     final Uri url = Uri.parse(ApiUtils.boostRequestApi);
     var data = {
@@ -1535,5 +1537,41 @@ class ApiServices {
     return null;
   }
 
+  Future<SearchSuggestionListModel?> getSearchSuggestionListApi(
+      String industryValue,
+      String search,
+      String location,
+      String range,
+      String stage) async {
+    final token = prefs.getString('token');
+    print('object${token}');
 
+    final Uri url = Uri.parse(
+      '${ApiUtils.searchSuggestionListApi}/',
+    ).replace(
+      queryParameters: {
+        'industry': industryValue,
+        'search': search,
+        'location': location,
+        'range': range,
+        'stage': stage,
+      },
+    );
+    final response = await http.get(
+      url,
+      headers: {
+        "Accept": "application/json",
+        "Authorization": "token $token",
+      },
+    );
+    print("API URL: $url");
+    print("Status Code: ${response.statusCode}");
+    print("Response Body: ${response.body}");
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+      return SearchSuggestionListModel.fromJson(jsonResponse);
+    }
+  }
 }

@@ -23,10 +23,10 @@ class InvestorHomeScreen extends StatelessWidget {
         backgroundColor: AppColors.blackColor,
         body: SafeArea(
             child: homeController.isLoading.value
-                ? const Center(
+                ?  const Center(
                     child: CupertinoActivityIndicator(
                     radius: 15,
-                    color: Colors.white,
+                    color: AppColors.whiteColor,
                   ))
                 : Padding(
                     padding: const EdgeInsets.all(24.0),

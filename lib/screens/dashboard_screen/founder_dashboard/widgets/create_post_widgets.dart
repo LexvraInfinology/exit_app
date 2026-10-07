@@ -25,91 +25,75 @@ Widget CreatePostWidget({
           color: AppColors.containerBorderColor,
         ),
       ),
-      child: Stack(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            AppImages.createFunds,
-            width: MediaQuery.sizeOf(context).width,
-            fit: BoxFit.cover,
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.containerBackgroundColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              icon,
+              color: const Color(0xFFAAAAAA),
+              size: 22,
+            ),
           ),
-          // SvgPicture.asset(
-          //   AppImages.fundsRaiseIcon,
-          //   width: MediaQuery.sizeOf(context).width,
-          //   fit: BoxFit.cover,
-          // ),
 
+          const SizedBox(height: 12),
 
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: AppColors.containerBackgroundColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(
-                  icon,
-                  color: const Color(0xFFAAAAAA),
-                  size: 22,
+          Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.montserrat(
+              color: AppColors.whiteColor,
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+
+          const SizedBox(height: 5),
+
+          Text(
+            description,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.montserrat(
+              color: AppColors.darkGreyColor,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              height: 1.6,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          SizedBox(
+            width: MediaQuery.sizeOf(context).width,
+            height: 40,
+            child: ElevatedButton(
+              onPressed: onTap,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.whiteColor,
+                foregroundColor: AppColors.blackColor,
+                elevation: 0,
+                padding: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(22),
                 ),
               ),
-
-              const SizedBox(height: 12),
-
-              Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              child: Text(
+                buttonText,
                 style: GoogleFonts.montserrat(
-                  color: AppColors.whiteColor,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-
-              const SizedBox(height: 5),
-
-              Text(
-                description,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.montserrat(
-                  color: AppColors.darkGreyColor,
                   fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  height: 1.6,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-
-              const SizedBox(height: 8),
-
-              SizedBox(
-                width: double.infinity,
-                height: 40,
-                child: ElevatedButton(
-                  onPressed: onTap,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.whiteColor,
-                    foregroundColor: AppColors.blackColor,
-                    elevation: 0,
-                    padding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(22),
-                    ),
-                  ),
-                  child: Text(
-                    buttonText,
-                    style: GoogleFonts.montserrat(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ],
       ),

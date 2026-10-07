@@ -1,9 +1,10 @@
+import 'dart:async';
+
 import 'package:exit_app/models/create_fund_model_class.dart';
 import 'package:exit_app/models/get_investor_list_model.dart';
 import 'package:exit_app/screens/boost_profile_screen.dart';
 import 'package:exit_app/screens/chat_details_screen.dart';
 import 'package:exit_app/screens/edit_profile_screen.dart';
-import 'package:exit_app/screens/phone_number_screen.dart';
 import 'package:exit_app/screens/post_details_screen.dart';
 import 'package:exit_app/screens/raise_funds_screen/create_funds_request_screen.dart';
 import 'package:exit_app/screens/raise_funds_screen/sell_your_company_screen.dart';
@@ -20,8 +21,8 @@ import '../models/InvestorActivity.dart';
 import '../models/conversation_response.dart';
 import '../models/marketplace_Industries_model.dart';
 import '../models/profile_model.dart';
+import '../models/search_suggestion_list_model.dart';
 import '../screens/add_credits_screen.dart';
-import '../screens/choose_user_screen.dart';
 import '../screens/dashboard_screen/founder_dashboard/investor_details_screen.dart';
 import '../screens/dashboard_screen/founder_dashboard/widgets/filtter_button_widget.dart';
 import '../screens/help_and_support_screen.dart';
@@ -69,6 +70,13 @@ class FounderDashboardController extends GetxController {
   final List<MarketplaceIndustry> stagesList = <MarketplaceIndustry>[];
   final List<MarketplaceIndustry> rangesList = <MarketplaceIndustry>[];
   final List<MarketplaceIndustry> locationsList = <MarketplaceIndustry>[];
+  final RxList<SearchSuggestionListData> searchSuggestionList = <SearchSuggestionListData>[].obs;
+
+  final searchController = TextEditingController();
+
+  final result = <dynamic>[].obs;
+
+  Timer? _debounce;
 
 
 
@@ -80,6 +88,8 @@ class FounderDashboardController extends GetxController {
           FilterListModel(title: title, options: newOptions);
     }
   }
+
+
 
 
   MarketplaceIndustry? selectedFor(String title) {
@@ -121,6 +131,11 @@ class FounderDashboardController extends GetxController {
   void onInit() {
     super.onInit();
     loadHomePage();
+    searchController.addListener((){
+      print('object text');
+      getSearchSuggestionListApi(searchController.text);
+    });
+
   }
 
   Future<void> loadHomePage() async {
@@ -1023,4 +1038,53 @@ class FounderDashboardController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  void _onTextChanged() {
+    final text = searchController.text.trim();
+
+    _debounce?.cancel();
+
+    if (text.isEmpty) {
+      result.clear();
+      return;
+    }
+
+    _debounce = Timer(
+      const Duration(milliseconds: 2000),
+          () {
+
+      },
+    );
+  }
+
+  Future<void> getSearchSuggestionListApi(
+      String search,
+     ) async {
+    try {
+      isLoading.value = true;
+      final response = await apiServices.getSearchSuggestionListApi('', search, '', '', 'Series A');
+      print("Status Code: ${response?.statusCode}");
+      print("Message: ${response?.message}");
+      if (response?.statusCode == 200) {
+        isLoading.value = false;
+        searchSuggestionList.clear();
+        searchSuggestionList.value = response?.data ?? [];
+      } else {
+        isLoading.value = false;
+      }
+    } catch (e) {
+      isLoading.value = false;
+      Get.snackbar(
+        'Error',
+        'Something went wrong. Please try again.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.blackColor,
+        colorText: AppColors.whiteColor,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
 }

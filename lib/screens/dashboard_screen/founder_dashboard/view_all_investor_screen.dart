@@ -73,6 +73,7 @@ class ViewAllInvestorScreen extends StatelessWidget {
                     const SizedBox(width: 20),
                     Expanded(
                       child: TextField(
+                        controller: controller.searchController,
                         style: GoogleFonts.montserrat(
                           color: AppColors.whiteColor,
                           fontSize: 14,
