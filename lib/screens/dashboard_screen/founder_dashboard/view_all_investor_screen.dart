@@ -65,7 +65,7 @@ class ViewAllInvestorScreen extends StatelessWidget {
                 child: Row(
                   children: [
                     const SizedBox(width: 20),
-                    Icon(
+                    const Icon(
                       Icons.search,
                       color: AppColors.whiteColor,
                       size: 20,
