@@ -3,7 +3,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiUtils{
-  static const String baseUrl = 'https://7ea6-2401-4900-1c6f-4bfa-24a3-debe-c219-1da5.ngrok-free.app/api';
+  static const String baseUrl = 'https://a807-2409-4055-2dc9-2ea9-9448-2f76-df77-2ed5.ngrok-free.app/api';
 
   static const String sendOTPApi = '$baseUrl/accounts/send-otp/';
   static const String verifyOTPApi = '$baseUrl/accounts/verify-otp/';
