@@ -30,6 +30,8 @@ class AppImages {
   static const String dashboardIcon = 'assets/images/dashboard_icon.png';
   static const String choosePlanImage = 'assets/images/choose_plan_screen.png';
   static const String createFunds = 'assets/images/create_funds_bg.png';
+  static const String fundsRaiseBG = 'assets/images/raise_now_icon.png';
+  static const String sellCompanyListBG = 'assets/images/sell_company_icon.png';
   static const String exitPlanBg = 'assets/images/exit_plan_bg.png';
   static const String launchPlanBg = 'assets/images/launch_plan_bg.png';
   static const String scalePlanBg = 'assets/images/scale_plan_bg.png';

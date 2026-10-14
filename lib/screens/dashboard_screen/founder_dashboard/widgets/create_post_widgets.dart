@@ -19,7 +19,7 @@ Widget CreatePostWidget({
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
         image: const DecorationImage(
-            image: AssetImage(AppImages.createFunds), fit: BoxFit.cover),
+            image: AssetImage(AppImages.fundsRaiseIcon), fit: BoxFit.cover),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: AppColors.containerBorderColor,
