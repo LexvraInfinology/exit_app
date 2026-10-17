@@ -70,15 +70,14 @@ class FounderDashboardController extends GetxController {
   final List<MarketplaceIndustry> stagesList = <MarketplaceIndustry>[];
   final List<MarketplaceIndustry> rangesList = <MarketplaceIndustry>[];
   final List<MarketplaceIndustry> locationsList = <MarketplaceIndustry>[];
-  final RxList<SearchSuggestionListData> searchSuggestionList = <SearchSuggestionListData>[].obs;
+  final RxList<SearchSuggestionListData> searchSuggestionList =
+      <SearchSuggestionListData>[].obs;
 
   final searchController = TextEditingController();
 
   final result = <dynamic>[].obs;
 
   Timer? _debounce;
-
-
 
   void _replaceItemOptions(String title, List<MarketplaceIndustry> newOptions) {
     if (newOptions.isEmpty) return;
@@ -88,9 +87,6 @@ class FounderDashboardController extends GetxController {
           FilterListModel(title: title, options: newOptions);
     }
   }
-
-
-
 
   MarketplaceIndustry? selectedFor(String title) {
     debugPrint("Checking ===> $title");
@@ -131,11 +127,9 @@ class FounderDashboardController extends GetxController {
   void onInit() {
     super.onInit();
     loadHomePage();
-    searchController.addListener((){
-      print('object text');
+    searchController.addListener(() {
       getSearchSuggestionListApi(searchController.text);
     });
-
   }
 
   Future<void> loadHomePage() async {
@@ -156,7 +150,7 @@ class FounderDashboardController extends GetxController {
   Future<void> getMarketplaceIndustriesApi() async {
     try {
       final MarketplaceIndustriesResponse? response =
-      await apiServices.getMarketplaceIndustriesApi();
+          await apiServices.getMarketplaceIndustriesApi();
 
       if (response?.statusCode == 200) {
         industriesList.assignAll(response?.data ?? []);
@@ -176,7 +170,7 @@ class FounderDashboardController extends GetxController {
     try {
       isLoading.value = true;
       final MarketplaceIndustriesResponse? response =
-      await apiServices.getMarketplaceStagesApi();
+          await apiServices.getMarketplaceStagesApi();
 
       if (response?.statusCode == 200) {
         stagesList.assignAll(response?.data ?? []);
@@ -195,7 +189,7 @@ class FounderDashboardController extends GetxController {
     try {
       isLoading.value = true;
       final MarketplaceIndustriesResponse? response =
-      await apiServices.getMarketplaceRangesApi();
+          await apiServices.getMarketplaceRangesApi();
 
       if (response?.statusCode == 200) {
         rangesList.assignAll(response?.data ?? []);
@@ -214,7 +208,7 @@ class FounderDashboardController extends GetxController {
     try {
       isLoading.value = true;
       final MarketplaceIndustriesResponse? response =
-      await apiServices.getMarketplaceLocationsApi();
+          await apiServices.getMarketplaceLocationsApi();
 
       if (response?.statusCode == 200) {
         locationsList.assignAll(response?.data ?? []);
@@ -228,7 +222,6 @@ class FounderDashboardController extends GetxController {
       Get.snackbar('Error', 'Something went wrong. Please try again.');
     }
   }
-
 
   void toggleVisibility() {
     final bool value = !isPrivate.value;
@@ -981,10 +974,9 @@ class FounderDashboardController extends GetxController {
           createFundsList.value = response?.data?.results ?? [];
           update();
           print('object testing if');
-        }else
-          {
-            print('object testing');
-          }
+        } else {
+          print('object testing');
+        }
       } else {
         Get.snackbar(
             'Failed', response?.message ?? 'Failed to fetch industries');
@@ -1051,18 +1043,21 @@ class FounderDashboardController extends GetxController {
 
     _debounce = Timer(
       const Duration(milliseconds: 2000),
-          () {
-
-      },
+      () {},
     );
   }
 
   Future<void> getSearchSuggestionListApi(
-      String search,
-     ) async {
+    String search,
+  ) async {
     try {
       isLoading.value = true;
-      final response = await apiServices.getSearchSuggestionListApi('', search, '', '', 'Series A');
+      final response = await apiServices.getSearchSuggestionListApi(
+          selectedIndustry.value.toString()??'',
+          search,
+          selectedLocation.value.toString()??'',
+          selectedRange.value.toString()??'',
+          selectedStage.value.toString()??'');
       print("Status Code: ${response?.statusCode}");
       print("Message: ${response?.message}");
       if (response?.statusCode == 200) {
@@ -1085,6 +1080,4 @@ class FounderDashboardController extends GetxController {
       isLoading.value = false;
     }
   }
-
-
 }

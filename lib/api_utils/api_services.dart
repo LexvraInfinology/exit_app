@@ -1538,11 +1538,11 @@ class ApiServices {
   }
 
   Future<SearchSuggestionListModel?> getSearchSuggestionListApi(
-      String industryValue,
-      String search,
-      String location,
-      String range,
-      String stage) async {
+      String? industryValue,
+      String? search,
+      String? location,
+      String? range,
+      String? stage) async {
     final token = prefs.getString('token');
     print('object${token}');
 
