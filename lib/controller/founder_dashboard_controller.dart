@@ -1050,6 +1050,7 @@ class FounderDashboardController extends GetxController {
   Future<void> getSearchSuggestionListApi(
     String search,
   ) async {
+
     try {
       isLoading.value = true;
       final response = await apiServices.getSearchSuggestionListApi(
@@ -1061,6 +1062,7 @@ class FounderDashboardController extends GetxController {
       print("Status Code: ${response?.statusCode}");
       print("Message: ${response?.message}");
       if (response?.statusCode == 200) {
+
         isLoading.value = false;
         searchSuggestionList.clear();
         searchSuggestionList.value = response?.data ?? [];
