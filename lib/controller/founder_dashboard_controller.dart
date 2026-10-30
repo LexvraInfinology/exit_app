@@ -1052,7 +1052,6 @@ class FounderDashboardController extends GetxController {
   ) async {
 
     try {
-
       isLoading.value = true;
       final response = await apiServices.getSearchSuggestionListApi(
           selectedIndustry.value.toString()??'',

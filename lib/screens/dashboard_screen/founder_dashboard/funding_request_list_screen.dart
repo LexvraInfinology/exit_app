@@ -72,6 +72,7 @@ class FundingRequestListScreen extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 5),
+
                                 Text(
                                   'Start a new raise and connect with investors.',
                                   style: GoogleFonts.montserrat(
@@ -490,6 +491,7 @@ class FundingRequestListScreen extends StatelessWidget {
                     }),
               ),
             ),
+
           ]),
         ),
       );
